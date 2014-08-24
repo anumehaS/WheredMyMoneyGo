@@ -143,7 +143,11 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 				    	IncomeListFragment inc = (IncomeListFragment)  getFragmentManager().findFragmentByTag(INCOME_TAG);
 						inc.restartLoader();	  
 				    }
-				  break;				  
+				  break;
+			  case 03: 
+				  ExpenseListFragment expdel = (ExpenseListFragment)  getFragmentManager().findFragmentByTag(EXPENSE_TAG);
+				  expdel.restartLoader();  
+				  break;
 			  
 			  case 10:  if (data.hasExtra("result") && data.getExtras().getString("result").equals("added")) { 
 					ExpenseListFragment exp = (ExpenseListFragment)  getFragmentManager().findFragmentByTag(EXPENSE_TAG);

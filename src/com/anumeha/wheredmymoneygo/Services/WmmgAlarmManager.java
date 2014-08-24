@@ -36,15 +36,17 @@ public class WmmgAlarmManager extends Activity{
 		
 		if(remove) //delete
 			cancelRecurrence(alarmMgr,this,id,old_freq,isIncome,old_notify);
-		if(add) //insert
-			addRecurrence(alarmMgr,this,id,freq,isIncome,notify);
-		else // edit 
-		{
-			cancelRecurrence(alarmMgr,this,id,old_freq,isIncome,old_notify);
-			if(!freq.equals("Do not repeat")) {
+		else {
+			if(add) //insert
 				addRecurrence(alarmMgr,this,id,freq,isIncome,notify);
+			else // edit 
+			{
+				cancelRecurrence(alarmMgr,this,id,old_freq,isIncome,old_notify);
+				if(!freq.equals("Do not repeat")) {
+					addRecurrence(alarmMgr,this,id,freq,isIncome,notify);
+				}
+				
 			}
-			
 		}
 		
 		endActivity("rec added");
@@ -79,7 +81,7 @@ public class WmmgAlarmManager extends Activity{
 		
 		switch(pos) {
 		case 1: //daily
-			duration = 1000*60;
+			duration = 1000*60*5;
 			//duration = AlarmManager.INTERVAL_DAY;
 			break;
 		case 2: //weekly

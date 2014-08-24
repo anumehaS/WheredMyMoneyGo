@@ -27,6 +27,7 @@ import android.widget.TextView;
 
 public class ExpenseListFragment extends Fragment implements LoaderCallbacks<Cursor> {
 	
+	private static final int EXP_DEL = 03;
 	private ListView listview;
 	private TextView t;
 	private ExpenseCursorAdapter expAdapter;
@@ -153,6 +154,7 @@ public class ExpenseListFragment extends Fragment implements LoaderCallbacks<Cur
 		                 dialog.cancel(); 
 	                 } else {
 	                	 startRecActivity();
+	                	 restartLoader();
 	                	 dialog.cancel();
 	                 }
 	            }
@@ -167,7 +169,8 @@ public class ExpenseListFragment extends Fragment implements LoaderCallbacks<Cur
 	} 
 	 protected void startRecActivity() {
 		 Intent i =  new Intent (activity,com.anumeha.wheredmymoneygo.Expense.ExpenseAlarmManager.class);	 
-		 i.putExtra("rec_id", expId);
+		 long id = expId;
+		 i.putExtra("rec_id", id);
 		 i.putExtra("rec_freq",expFreq );
 		 i.putExtra("rec_add",false );
 		 i.putExtra("rec_isIncome",false );
@@ -175,7 +178,7 @@ public class ExpenseListFragment extends Fragment implements LoaderCallbacks<Cur
 		 i.putExtra("rec_notify", expNotify);
 		 i.putExtra("old_freq",expFreq);
 		 i.putExtra("old_notify", expNotify);
-		 this.startActivity(i);
+		 this.startActivityForResult(i,EXP_DEL);
 		
 	}
 	
