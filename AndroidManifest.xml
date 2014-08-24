@@ -73,7 +73,7 @@
               android:theme="@android:style/Theme.Holo.Dialog" />
         
           <receiver
-   			 android:name="com.anumeha.wheredmymoneygo.receiver.AlarmReceiver">
+   			 android:name="com.anumeha.wheredmymoneygo.receivers.RecEventReceiver">
    		 </receiver>
    		 
           <activity 

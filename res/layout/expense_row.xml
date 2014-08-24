@@ -17,6 +17,16 @@
          android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone" />
+       
+       <TextView android:id="@+id/expenseFreq"
+         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+       
+        <TextView android:id="@+id/expenseNotify"
+         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
       
       <TextView android:id="@+id/expenseDate"
          android:layout_width="wrap_content"

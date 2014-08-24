@@ -16,7 +16,7 @@ public class WmmgAlarmManager extends Activity{
 	
 	private int id;
 	private String freq, old_freq;
-	private boolean  add,remove,isIncome, notify;
+	private boolean  add,remove,isIncome, notify, old_notify;
 	private AlarmManager alarmMgr;
 	
 	@Override
@@ -30,17 +30,20 @@ public class WmmgAlarmManager extends Activity{
 		remove = getIntent().getBooleanExtra("rec_rem",true);
 		notify = getIntent().getBooleanExtra("rec_notify",false);
 		old_freq = getIntent().getStringExtra("old_freq");
+		old_notify = getIntent().getBooleanExtra("rec_notify",false);
 		
 		alarmMgr = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
 		
-		if(remove) 
-			cancelRecurrence(alarmMgr,this,id,old_freq,isIncome,notify);
-		if(add)
+		if(remove) //delete
+			cancelRecurrence(alarmMgr,this,id,old_freq,isIncome,old_notify);
+		if(add) //insert
 			addRecurrence(alarmMgr,this,id,freq,isIncome,notify);
-		else
+		else // edit 
 		{
-			cancelRecurrence(alarmMgr,this,id,old_freq,isIncome,notify);
-			addRecurrence(alarmMgr,this,id,freq,isIncome,notify);
+			cancelRecurrence(alarmMgr,this,id,old_freq,isIncome,old_notify);
+			if(!freq.equals("Do not repeat")) {
+				addRecurrence(alarmMgr,this,id,freq,isIncome,notify);
+			}
 			
 		}
 		
@@ -80,15 +83,14 @@ public class WmmgAlarmManager extends Activity{
 			//duration = AlarmManager.INTERVAL_DAY;
 			break;
 		case 2: //weekly
-			duration = 1000*60;
-			//duration = AlarmManager.INTERVAL_DAY*7;		
+			duration = AlarmManager.INTERVAL_DAY*7;		
 		case 3: //monthly
 			Calendar calendar = Calendar.getInstance();
 			calendar.setTimeInMillis(calendar.getTimeInMillis());
 			calendar.add(Calendar.SECOND, 30);
 			calendar.add(Calendar.MONTH, 1);
-			//duration = calendar.getTimeInMillis();
-			duration = 1000*60*2;
+			duration = calendar.getTimeInMillis();
+			
 			break;	
 		}
 		PendingIntent alarmIntent = PendingIntent.getBroadcast(this, id, intent, 0);

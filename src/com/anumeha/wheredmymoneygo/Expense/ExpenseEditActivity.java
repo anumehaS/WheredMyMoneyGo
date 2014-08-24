@@ -24,6 +24,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -62,9 +63,12 @@ public class ExpenseEditActivity extends Activity implements OnClickListener, Lo
 	CategoryCursorLoader loader;
 	boolean valid = true, noChanges =true;
 	int expId;
+	Intent i;
+	boolean hasRec;
 	
 	CurrencyConverter convFrag;
 	final static int DATE_DIALOG_ID = 999;
+	private static final int REC_EDITED = 01;
 	 @Override
 	    public void onCreate(Bundle savedInstanceState) {
 	        super.onCreate(savedInstanceState);
@@ -103,7 +107,7 @@ public class ExpenseEditActivity extends Activity implements OnClickListener, Lo
 			getLoaderManager().initLoader(1,null, this ); //load categories
 			getLoaderManager().initLoader(0,null, this ); //get expense with that id.
 			getLoaderManager().initLoader(5,null, this ); //get currencies
-	 
+			i = new Intent (this,com.anumeha.wheredmymoneygo.Expense.ExpenseAlarmManager.class);
 	    }
 	 
 	 public void endActivity(String res) {	
@@ -188,18 +192,31 @@ public class ExpenseEditActivity extends Activity implements OnClickListener, Lo
 					
 				}
 				String e_freq_edit = frequency.getSelectedItem().toString();
-				if(frequency.getSelectedItemPosition()!= e_freq) noChanges = false;
 				
+				if(frequency.getSelectedItemPosition()!= e_freq) noChanges = false;
+				if(frequency.getSelectedItemPosition() > 0) {
+					hasRec = true;
+				}
 				boolean e_notify_edit = ask.isChecked();
 				if(e_notify_edit != e_notify) noChanges = false;
 				
+				i.putExtra("rec_freq",e_freq_edit );
+	 			i.putExtra("rec_add",false );
+	 			i.putExtra("rec_isIncome",false );
+				i.putExtra("rec_rem", false);
+				i.putExtra("rec_notify", e_notify_edit);
+				Resources res = getResources();
+				String[] freqs = res.getStringArray(R.array.frequency_spinner_items);
+				i.putExtra("old_freq",freqs[e_freq] );
+				i.putExtra("old_notify", e_notify);
 				
 				if(valid && !noChanges) {	
 					if(!e_currency_edit.equals(e_currency)) {
 						convFrag.getConvertedRate(new CurrencyConverter.ResultListener<Long>() {	
 		 					@Override
-		 					public void OnSuccess(Long rate) {
-		 						endActivity("edited");
+		 					public void OnSuccess(Long id) {
+		 						//endActivity("edited");
+		 						startRecActivity(expId);
 		 					}	
 		 					@Override
 		 					public void OnFaiure(int errCode) {
@@ -207,7 +224,8 @@ public class ExpenseEditActivity extends Activity implements OnClickListener, Lo
 		 					}  },new Expense(expId,e_name_edit,e_desc_edit,e_date_edit,e_currency_edit,amount,e_category1_edit,e_freq_edit,e_notify_edit),true); 
 					} else {
 						dbh.updateExpense(new Expense(e_name_edit,e_desc_edit,e_date_edit,e_currency_edit,amount,e_category1_edit,e_freq_edit,e_notify_edit),expId);
-						endActivity("edited");
+						//endActivity("edited");
+						startRecActivity(expId);
 					}
             		
 				}
@@ -234,6 +252,30 @@ public class ExpenseEditActivity extends Activity implements OnClickListener, Lo
 				}				
 			}	 
 	 }
+	 
+	 protected void startRecActivity(long id) {
+		 if(hasRec) {
+		 i.putExtra("rec_id", id);
+		 this.startActivityForResult(i,REC_EDITED);
+		 } else {
+			 endActivity("edited");
+		 }
+		
+	}
+	 
+	 @Override
+		protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		  if (resultCode == RESULT_OK ) {
+			  
+			  switch(requestCode) {
+			  case 01: 
+				  endActivity("edited");
+			  break;
+			  }
+		}				  
+		
+	  }
+
 
 	 public void showDatePickerDialog(View view) {
 			DialogFragment newFragment = new SelectDateFragment();

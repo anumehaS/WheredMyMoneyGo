@@ -17,6 +17,16 @@
          android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone" />
+       
+        <TextView android:id="@+id/incomeFreq"
+         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+        
+         <TextView android:id="@+id/incomeNotify"
+         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
       
       <TextView android:id="@+id/incomeDate"
          android:layout_width="wrap_content"

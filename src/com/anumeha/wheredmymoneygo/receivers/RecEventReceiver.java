@@ -18,7 +18,7 @@ public class RecEventReceiver extends BroadcastReceiver{
 		boolean isIncome = intent.getBooleanExtra("isIncome",false);
 		boolean notify = intent.getBooleanExtra("rec_notify", false );
 		String freq = intent.getStringExtra("freq");
-		long id = intent.getLongExtra("id",0);
+		int id = intent.getIntExtra("id",0);
 		
 		System.out.println("Freq:" + freq);
 		AlarmOps ops = new AlarmOps(ctx,isIncome);

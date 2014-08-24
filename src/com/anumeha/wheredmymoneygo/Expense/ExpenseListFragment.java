@@ -33,6 +33,8 @@ public class ExpenseListFragment extends Fragment implements LoaderCallbacks<Cur
 	private Activity activity;
 	View view;
 	private int expId;
+	private String expFreq;
+	private boolean expNotify;
 	private static int EDIT_EXPENSE= 11; //1 FOR EXPENSE 1 FOR EDIT	
 	
 	
@@ -110,7 +112,9 @@ public class ExpenseListFragment extends Fragment implements LoaderCallbacks<Cur
 	      String id = ((TextView)info.targetView.findViewById(R.id.expenseId)).getText().toString();
 		  expId = Integer.parseInt(id);
 		  System.out.println("expense id is  "+expId);
-	    
+		  expFreq= ((TextView)info.targetView.findViewById(R.id.expenseFreq)).getText().toString();
+		  String notify = ((TextView)info.targetView.findViewById(R.id.expenseNotify)).getText().toString();
+		  expNotify = notify.equals("yes")?true:false;
 	  }  
 	}
 	
@@ -144,8 +148,13 @@ public class ExpenseListFragment extends Fragment implements LoaderCallbacks<Cur
 	            public void onClick(DialogInterface dialog, int id) {
 	            	ExpenseDbHelper dbh = new ExpenseDbHelper(activity);
 	            	 dbh.deleteExpense(expId);
-	            	 restartLoader();
-	                 dialog.cancel();
+	            	 if(expFreq.equals("Do not repeat")) {
+		            	 restartLoader();
+		                 dialog.cancel(); 
+	                 } else {
+	                	 startRecActivity();
+	                	 dialog.cancel();
+	                 }
 	            }
 	        });
 	        AlertDialog alert = builder.create();
@@ -156,5 +165,18 @@ public class ExpenseListFragment extends Fragment implements LoaderCallbacks<Cur
 
 	  return true;
 	} 
-
+	 protected void startRecActivity() {
+		 Intent i =  new Intent (activity,com.anumeha.wheredmymoneygo.Expense.ExpenseAlarmManager.class);	 
+		 i.putExtra("rec_id", expId);
+		 i.putExtra("rec_freq",expFreq );
+		 i.putExtra("rec_add",false );
+		 i.putExtra("rec_isIncome",false );
+		 i.putExtra("rec_rem", true);
+		 i.putExtra("rec_notify", expNotify);
+		 i.putExtra("old_freq",expFreq);
+		 i.putExtra("old_notify", expNotify);
+		 this.startActivity(i);
+		
+	}
+	
 }
