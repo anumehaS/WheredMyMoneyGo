@@ -27,12 +27,15 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 
 public class IncomeListFragment extends Fragment implements LoaderCallbacks<Cursor> {
 	
+	private static final int INC_DEL = 04;
 	private ListView listview;
 	private TextView t;
 	private IncomeCursorAdapter incAdapter;
 	private Activity activity;
 	View view;
 	private int incId;
+	private String incFreq;
+	private boolean incNotify;
 	private static int EDIT_INCOME = 01; //0 FOR INCOME 1 FOR EDIT	
 	
 	@Override
@@ -108,6 +111,9 @@ public class IncomeListFragment extends Fragment implements LoaderCallbacks<Curs
 	      String id = ((TextView)info.targetView.findViewById(R.id.incomeId)).getText().toString();
 		  incId = Integer.parseInt(id);
 		  System.out.println("income id is  "+incId);
+		  incFreq= ((TextView)info.targetView.findViewById(R.id.incomeFreq)).getText().toString();
+		  String notify = ((TextView)info.targetView.findViewById(R.id.incomeNotify)).getText().toString();
+		  incNotify = notify.equals("yes")?true:false;
 	    
 	  }  
 	}
@@ -142,8 +148,14 @@ public class IncomeListFragment extends Fragment implements LoaderCallbacks<Curs
 	            public void onClick(DialogInterface dialog, int id) {
 	            	IncomeDbHelper dbh = new IncomeDbHelper(activity);
 	            	 dbh.deleteIncome(incId);
-	            	 restartLoader();
-	                 dialog.cancel();
+	            	 if(incFreq.equals("Do not repeat")) {
+		            	 restartLoader();
+		                 dialog.cancel(); 
+	                 } else {
+	                	 startRecActivity();
+	                	 restartLoader();
+	                	 dialog.cancel();
+	                 }
 	            }
 	        });
 	        AlertDialog alert = builder.create();
@@ -154,6 +166,19 @@ public class IncomeListFragment extends Fragment implements LoaderCallbacks<Curs
 
 	  return true;
 	} 
-
+	 protected void startRecActivity() {
+		 Intent i =  new Intent (activity,com.anumeha.wheredmymoneygo.Expense.ExpenseAlarmManager.class);	 
+		 long id = incId;
+		 i.putExtra("rec_id", id);
+		 i.putExtra("rec_freq",incFreq );
+		 i.putExtra("rec_add",false );
+		 i.putExtra("rec_isIncome",false );
+		 i.putExtra("rec_rem", true);
+		 i.putExtra("rec_notify", incNotify);
+		 i.putExtra("old_freq",incFreq);
+		 i.putExtra("old_notify", incNotify);
+		 this.startActivityForResult(i,INC_DEL);
+		
+	}
 
 }

@@ -27,6 +27,15 @@ public class Income extends CashFlow{
 	        this._source = source;
 	         
 	    }
+	    
+
+		// constructor
+	    public Income(String name, String desc, String date, String currency, float amount, String source, float convToDef, String freq, boolean ask){
+	       
+	    	super(name,desc,date,currency,amount,convToDef, freq,ask);
+	        this._source = source;
+	         
+	    }
 	     
 	    
 	    // getting category1

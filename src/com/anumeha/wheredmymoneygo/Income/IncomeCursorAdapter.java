@@ -39,6 +39,13 @@ String defaultCurrency;
 		TextView e_Id = (TextView)view.findViewById(R.id.incomeId);
 		e_Id.setText(cursor.getString(0));
 		
+		//set expense frequency-- invisible but will be used for editing
+		TextView e_Freq = (TextView)view.findViewById(R.id.incomeFreq);
+		e_Freq.setText(cursor.getString(8));
+		//set expense notify-- invisible but will be used for editing
+		TextView e_Notify = (TextView)view.findViewById(R.id.incomeNotify);
+		e_Notify.setText(cursor.getString(9));
+		
 		//set income name
 		TextView e_Name = (TextView)view.findViewById(R.id.incomeName);
 		e_Name.setText(cursor.getString(1));

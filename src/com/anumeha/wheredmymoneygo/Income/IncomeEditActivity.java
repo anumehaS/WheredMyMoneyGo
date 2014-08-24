@@ -360,7 +360,7 @@ public class IncomeEditActivity extends Activity implements OnClickListener, Loa
 				i_currency =  c.getString(4);
 				i_amount = c.getFloat(5);
 				i_source = c.getString(6);
-				String freq = c.getString(7);
+				String freq = c.getString(8);
 				for(int i =0;i<freqadapter.getCount();i++) {
 					if(freq.equals(freqadapter.getItem(i))) {
 						frequency.setSelection(i);
@@ -368,7 +368,7 @@ public class IncomeEditActivity extends Activity implements OnClickListener, Loa
 						break;
 					}
 				}
-				String askTemp = c.getString(8);
+				String askTemp = c.getString(9);
 				if(askTemp.equals("yes")) {
 					ask.setChecked(true);
 					i_notify = true;

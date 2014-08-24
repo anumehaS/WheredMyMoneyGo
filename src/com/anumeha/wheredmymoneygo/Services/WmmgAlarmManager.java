@@ -96,7 +96,7 @@ public class WmmgAlarmManager extends Activity{
 			break;	
 		}
 		PendingIntent alarmIntent = PendingIntent.getBroadcast(this, id, intent, 0);
-		alarmMgr.setRepeating(AlarmManager.RTC, duration, duration, alarmIntent);
+		alarmMgr.setRepeating(AlarmManager.RTC, System.currentTimeMillis() + duration, duration, alarmIntent);
 	}
 	private void cancelRecurrence(AlarmManager alarmMgr, Context ctx, int id, String old_freq, boolean isIncome, boolean notify) {
 		Intent intent = new Intent(this, RecEventReceiver.class);

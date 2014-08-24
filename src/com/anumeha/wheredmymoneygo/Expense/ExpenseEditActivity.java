@@ -28,6 +28,7 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
@@ -353,15 +354,17 @@ public class ExpenseEditActivity extends Activity implements OnClickListener, Lo
 				e_currency =  c.getString(4);
 				e_amount = c.getFloat(5);
 				e_category1 = c.getString(6);
-				String freq = c.getString(7);
+				String freq = c.getString(8);
+				Log.d("Edit Activity","Frequency is "+freq);
 				for(int i =0;i<freqadapter.getCount();i++) {
-					if(freq.equals(freqadapter.getItem(i))) {
+					if(freq.equals(freqadapter.getItem(i).toString())) {
 						frequency.setSelection(i);
 						e_freq = i;
+						Log.d("Edit Activity","selection is "+i);
 						break;
 					}
 				}
-				String askTemp = c.getString(8);
+				String askTemp = c.getString(9);
 				if(askTemp.equals("yes")) {
 					ask.setChecked(true);
 					e_notify = true;

@@ -43,10 +43,10 @@ public class ExpenseCursorAdapter extends ResourceCursorAdapter{
 		
 		//set expense frequency-- invisible but will be used for editing
 		TextView e_Freq = (TextView)view.findViewById(R.id.expenseFreq);
-		e_Freq.setText(cursor.getString(7));
+		e_Freq.setText(cursor.getString(8));
 		//set expense notify-- invisible but will be used for editing
 		TextView e_Notify = (TextView)view.findViewById(R.id.expenseNotify);
-		e_Notify.setText(cursor.getString(8));
+		e_Notify.setText(cursor.getString(9));
 		
 		//set expense name
 		TextView e_Name = (TextView)view.findViewById(R.id.expenseName);

@@ -28,6 +28,14 @@ public class Expense extends CashFlow{
         this._category1 = category1;
          
     }
+    
+ // constructor
+    public Expense(String name, String desc, String date, String currency, float amount, String category1,float convToDef, String freq, boolean ask){
+       
+    	super(name,desc,date,currency,amount,convToDef,freq,ask);
+        this._category1 = category1;
+         
+    }
      
     
     // getting category1
