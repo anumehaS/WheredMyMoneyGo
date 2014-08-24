@@ -5,18 +5,40 @@
     android:orientation="vertical"
     tools:context=".MainActivity" >
      
-     <Button
-        android:id="@+id/listPie"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Pie"/>
+     <LinearLayout
+         android:id="@+id/ButtonLayout"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:orientation="horizontal"
+         android:paddingBottom="10dp"
+         android:paddingLeft="5dp"
+         android:paddingRight="5dp"
+         android:paddingTop="10dp"
+         android:visibility="visible" >
+         
+         <Button
+             android:id="@+id/listPie"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:paddingBottom="10dp"
+             android:paddingLeft="10dp"
+             android:paddingRight="10dp"
+             android:paddingTop="10dp"
+             android:text="Pie" />
+      	  
+      	  <Button
+      	      android:id="@+id/filterOptions"
+      	      android:layout_width="wrap_content"
+      	      android:layout_height="wrap_content"
+      	      android:paddingBottom="10dp"
+      	      android:paddingLeft="10dp"
+      	      android:paddingRight="10dp"
+      	      android:paddingTop="10dp"
+      	      android:text="Filter Options"
+      	      android:onClick="showOptionsDialog" /> 
      
-     <Button
-        android:id="@+id/filterOptions"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Filter Options"
-        android:onClick="showOptionsDialog" />
+     </LinearLayout>
+
      
     <FrameLayout
         android:id="@+id/fragment_cashflow"

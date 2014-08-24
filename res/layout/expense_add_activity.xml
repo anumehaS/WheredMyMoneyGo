@@ -75,7 +75,9 @@
         <EditText
             android:id="@+id/inputExpenseAmount"
             android:layout_width="185dp"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:maxLines="1" >
 
         </EditText>
         
