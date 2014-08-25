@@ -20,6 +20,8 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.app.LoaderManager.LoaderCallbacks;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
@@ -103,6 +105,13 @@ public class ExpenseEditActivity extends Activity implements OnClickListener, Lo
 	        }
 			
 			expId = getIntent().getIntExtra("id",0);
+			if(getIntent().hasExtra("notify")) { // has been started by notification - then remove notification
+				if (Context.NOTIFICATION_SERVICE!=null) {
+			        String ns = Context.NOTIFICATION_SERVICE;
+			        NotificationManager nMgr = (NotificationManager) getApplicationContext().getSystemService(ns);
+			        nMgr.cancel(0);
+			    }
+			}
 			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 			dateFormat = prefs.getString("def_dateformat", "MM-dd-yyyy");
 			getLoaderManager().initLoader(1,null, this ); //load categories

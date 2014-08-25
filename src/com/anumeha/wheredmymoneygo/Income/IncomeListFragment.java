@@ -172,7 +172,7 @@ public class IncomeListFragment extends Fragment implements LoaderCallbacks<Curs
 		 i.putExtra("rec_id", id);
 		 i.putExtra("rec_freq",incFreq );
 		 i.putExtra("rec_add",false );
-		 i.putExtra("rec_isIncome",false );
+		 i.putExtra("rec_isIncome",true );
 		 i.putExtra("rec_rem", true);
 		 i.putExtra("rec_notify", incNotify);
 		 i.putExtra("old_freq",incFreq);

@@ -54,7 +54,8 @@
         
          <activity
             android:name="com.anumeha.wheredmymoneygo.Expense.ExpenseEditActivity"
-            android:label="@string/expEditAct_name" />
+            android:label="@string/expEditAct_name" >
+         </activity>
       
         
           <activity
@@ -64,7 +65,8 @@
         
          <activity
             android:name="com.anumeha.wheredmymoneygo.Income.IncomeEditActivity"
-            android:label="@string/incEditAct_name" />
+            android:label="@string/incEditAct_name"  >
+         </activity>
        
         
          <activity 

@@ -60,7 +60,7 @@ public class WmmgAlarmManager extends Activity{
 			this.finish();			
 		}
 
-	private void addRecurrence(AlarmManager alarmMgr, Context ctx, int id, String freq, boolean isIncome, boolean notify) {
+	public void addRecurrence(AlarmManager alarmMgr, Context ctx, int id, String freq, boolean isIncome, boolean notify) {
 		long duration = AlarmManager.INTERVAL_DAY;
 			Intent intent = new Intent(this, RecEventReceiver.class);
 			intent.putExtra("isIncome", isIncome);
@@ -81,7 +81,7 @@ public class WmmgAlarmManager extends Activity{
 		
 		switch(pos) {
 		case 1: //daily
-			duration = 1000*60*5;
+			duration = 1000*60;
 			//duration = AlarmManager.INTERVAL_DAY;
 			break;
 		case 2: //weekly
@@ -98,7 +98,7 @@ public class WmmgAlarmManager extends Activity{
 		PendingIntent alarmIntent = PendingIntent.getBroadcast(this, id, intent, 0);
 		alarmMgr.setRepeating(AlarmManager.RTC, System.currentTimeMillis() + duration, duration, alarmIntent);
 	}
-	private void cancelRecurrence(AlarmManager alarmMgr, Context ctx, int id, String old_freq, boolean isIncome, boolean notify) {
+	 public void cancelRecurrence(AlarmManager alarmMgr, Context ctx, int id, String old_freq, boolean isIncome, boolean notify) {
 		Intent intent = new Intent(this, RecEventReceiver.class);
 		intent.putExtra("isIncome", isIncome);
 		intent.putExtra("rec_notify", notify );
