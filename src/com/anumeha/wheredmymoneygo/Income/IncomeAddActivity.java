@@ -155,7 +155,7 @@ public class IncomeAddActivity extends Activity implements OnClickListener, Load
 
 		 			i.putExtra("rec_freq",freq );
 		 			i.putExtra("rec_add",true );
-		 			i.putExtra("rec_isIncome",false );
+		 			i.putExtra("rec_isIncome",true );
 					i.putExtra("rec_rem", false);
 					i.putExtra("rec_notify", notify);
 					i.putExtra("old_freq","" );
