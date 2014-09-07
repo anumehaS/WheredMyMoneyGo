@@ -54,6 +54,7 @@ public class ExpenseEditActivity extends Activity implements OnClickListener, Lo
 	private int e_freq;
 	private boolean e_notify;
     private static float e_amount;	
+    private static float e_convAmt;	
     private static ArrayAdapter<String> dataAdapter1, dataAdapter2;
     private ArrayAdapter<CharSequence> freqadapter;
     static String dateFormat;
@@ -235,7 +236,7 @@ public class ExpenseEditActivity extends Activity implements OnClickListener, Lo
 		 						endActivity("edited");
 		 					}  },new Expense(expId,e_name_edit,e_desc_edit,e_date_edit,e_currency_edit,amount,e_category1_edit,e_freq_edit,e_notify_edit),true); 
 					} else {
-						dbh.updateExpense(new Expense(e_name_edit,e_desc_edit,e_date_edit,e_currency_edit,amount,e_category1_edit,e_freq_edit,e_notify_edit),expId);
+						dbh.updateExpense(new Expense(e_name_edit,e_desc_edit,e_date_edit,e_currency_edit,amount,e_category1_edit,e_convAmt,e_freq_edit,e_notify_edit),expId);
 						//endActivity("edited");
 						startRecActivity(expId);
 					}
@@ -243,11 +244,12 @@ public class ExpenseEditActivity extends Activity implements OnClickListener, Lo
 				} else if (valid && fromNoti) {
 					
 					String newDate = getCurrentDate();
-					Expense e = new Expense(e_name,e_desc,newDate,e_currency,amount,e_category1,freqs[e_freq],e_notify);
+					Expense e = new Expense(e_name,e_desc,newDate,e_currency,amount,e_category1,e_convAmt,freqs[e_freq],e_notify);
 					dbh.updateExpense(e,expId);
 					e.setDate(e_date); 
 					e.setFreq("Do not repeat");
 					e.setAmount(e_amount);
+					
 					dbh.addExpense(e);	
 					endActivity("edited");
 					
@@ -366,7 +368,7 @@ public class ExpenseEditActivity extends Activity implements OnClickListener, Lo
 		
 			if(c == null || c.getCount() == 0) {
 				//no entry found with this id
-				AlertDialog.Builder builder = new AlertDialog.Builder(this);
+				AlertDialog.Builder builder = new AlertDialog.Builder(ExpenseEditActivity.this);
 		        builder.setTitle("Sorry!")
 		        .setMessage("This expense no longer exists!")
 		        .setCancelable(false)
@@ -378,63 +380,65 @@ public class ExpenseEditActivity extends Activity implements OnClickListener, Lo
 		        });
 		        AlertDialog alert = builder.create();
 		        alert.show();
-			}
+		        
+			} else {
 			
-		c.moveToFirst(); 
+					c.moveToFirst(); 
+					
+					e_name = c.getString(1);
+					e_desc =  c.getString(2);
+					e_date = c.getString(3);
+					e_date_edit = e_date; //dates are in the format yyyy-MM-dd for storage
 				
-				e_name = c.getString(1);
-				e_desc =  c.getString(2);
-				e_date = c.getString(3);
-				e_date_edit = e_date; //dates are in the format yyyy-MM-dd for storage
-			
-				String tempdate="";
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-				SimpleDateFormat sdf1 = new SimpleDateFormat(dateFormat);
-				try {
-					tempdate = sdf1.format((sdf.parse(e_date))); //show the date in user specified format
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} 
-				e_currency =  c.getString(4);
-				e_amount = c.getFloat(5);
-				e_category1 = c.getString(6);
-				String freq = c.getString(8);
-				Log.d("Edit Activity","Frequency is "+freq);
-				for(int i =0;i<freqadapter.getCount();i++) {
-					if(freq.equals(freqadapter.getItem(i).toString())) {
-						frequency.setSelection(i);
-						e_freq = i;
-						Log.d("Edit Activity","selection is "+i);
-						break;
+					String tempdate="";
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+					SimpleDateFormat sdf1 = new SimpleDateFormat(dateFormat);
+					try {
+						tempdate = sdf1.format((sdf.parse(e_date))); //show the date in user specified format
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} 
+					e_currency =  c.getString(4);
+					e_amount = c.getFloat(5);
+					e_category1 = c.getString(6);
+					e_convAmt = c.getFloat(7);
+					String freq = c.getString(8);
+					Log.d("Edit Activity","Frequency is "+freq);
+					for(int i =0;i<freqadapter.getCount();i++) {
+						if(freq.equals(freqadapter.getItem(i).toString())) {
+							frequency.setSelection(i);
+							e_freq = i;
+							Log.d("Edit Activity","selection is "+i);
+							break;
+						}
 					}
-				}
-				String askTemp = c.getString(9);
-				if(askTemp.equals("yes")) {
-					ask.setChecked(true);
-					e_notify = true;
-				}
-	
-				
-				EditText name = ((EditText)findViewById(R.id.inputExpenseNameEdit));
-				name.setText(e_name);
-				
-				((EditText)findViewById(R.id.inputExpenseAmountEdit)).setText(Float.toString(e_amount));
-				EditText des = ((EditText)findViewById(R.id.inputExpenseDescEdit));
-				des.setText(e_desc);
-				//((EditText)findViewById(R.id.inputExpenseCurrencyEdit)).setText(e_currency);
-				((TextView)findViewById(R.id.expenseDateEdit)).setText(tempdate);
-				
-				if(fromNoti) {
-					name.setEnabled(false);
-					des.setEnabled(false);
-					category1.setClickable(false);
-					frequency.setClickable(false);
-					currency.setClickable(false);
-				}
-				
-				loadFinished1= true;
-
+					String askTemp = c.getString(9);
+					if(askTemp.equals("yes")) {
+						ask.setChecked(true);
+						e_notify = true;
+					}
+		
+					
+					EditText name = ((EditText)findViewById(R.id.inputExpenseNameEdit));
+					name.setText(e_name);
+					
+					((EditText)findViewById(R.id.inputExpenseAmountEdit)).setText(Float.toString(e_amount));
+					EditText des = ((EditText)findViewById(R.id.inputExpenseDescEdit));
+					des.setText(e_desc);
+					//((EditText)findViewById(R.id.inputExpenseCurrencyEdit)).setText(e_currency);
+					((TextView)findViewById(R.id.expenseDateEdit)).setText(tempdate);
+					
+					if(fromNoti) {
+						name.setEnabled(false);
+						des.setEnabled(false);
+						category1.setClickable(false);
+						frequency.setClickable(false);
+						currency.setClickable(false);
+					}
+					
+					loadFinished1= true;
+			}
 		}
 		
 		if(loadFinished1 && loadFinished2 && loadFinished3){ 
