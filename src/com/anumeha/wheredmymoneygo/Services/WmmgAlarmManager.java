@@ -30,7 +30,7 @@ public class WmmgAlarmManager extends Activity{
 		remove = getIntent().getBooleanExtra("rec_rem",true);
 		notify = getIntent().getBooleanExtra("rec_notify",false);
 		old_freq = getIntent().getStringExtra("old_freq");
-		old_notify = getIntent().getBooleanExtra("rec_notify",false);
+		old_notify = getIntent().getBooleanExtra("old_notify",false);
 		
 		alarmMgr = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
 		

@@ -11,6 +11,7 @@ import java.util.Locale;
 import com.anumeha.wheredmymoneygo.Category.CategoryCursorLoader;
 import com.anumeha.wheredmymoneygo.Currency.CurrencyCursorLoader;
 import com.anumeha.wheredmymoneygo.DBhelpers.IncomeDbHelper;
+import com.anumeha.wheredmymoneygo.Expense.Expense;
 import com.anumeha.wheredmymoneygo.Income.Income;
 import com.anumeha.wheredmymoneygo.Income.IncomeCursorLoader;
 import com.anumeha.wheredmymoneygo.Services.CurrencyConverter;
@@ -23,7 +24,9 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
+import android.app.NotificationManager;
 import android.app.LoaderManager.LoaderCallbacks;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
@@ -55,6 +58,7 @@ public class IncomeEditActivity extends Activity implements OnClickListener, Loa
 	private int i_freq;
 	private boolean i_notify;
     private static float i_amount;	
+    private static float i_convAmt;	
     private static ArrayAdapter<String> dataAdapter1, dataAdapter2;
     private ArrayAdapter<CharSequence> freqadapter;
     private CheckBox ask;
@@ -69,7 +73,7 @@ public class IncomeEditActivity extends Activity implements OnClickListener, Loa
 	int incId;
 	CurrencyConverter convFrag;
 	Intent i;
-	boolean hasRec;
+	boolean hasRec, fromNoti = false;
 	
 	final static int DATE_DIALOG_ID = 999;
 	private static final int REC_EDITED = 01;
@@ -108,6 +112,15 @@ public class IncomeEditActivity extends Activity implements OnClickListener, Loa
 	        }
 			
 			incId = getIntent().getIntExtra("id",0);
+			if(getIntent().hasExtra("notify")) { // has been started by notification - then remove notification
+				fromNoti = true;
+				if (Context.NOTIFICATION_SERVICE!=null) {
+			        String ns = Context.NOTIFICATION_SERVICE;
+			        NotificationManager nMgr = (NotificationManager) getApplicationContext().getSystemService(ns);
+			        nMgr.cancel(0);
+			    }
+				
+			}
 			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 			dateFormat = prefs.getString("def_dateformat", "MM-dd-yyyy");
 			getLoaderManager().initLoader(1,null, this ); //load sources
@@ -220,7 +233,7 @@ public class IncomeEditActivity extends Activity implements OnClickListener, Loa
 				i.putExtra("old_freq",freqs[i_freq] );
 				i.putExtra("old_notify", i_notify);
 				
-				if(valid && !noChanges) {	
+				if(valid && !noChanges && (!fromNoti || i_notify!=i_notify_edit)) {	
 					if(!i_currency_edit.equals(i_currency)) {
 					convFrag.getConvertedRate(new CurrencyConverter.ResultListener<Long>() {	
 	 					@Override
@@ -233,10 +246,20 @@ public class IncomeEditActivity extends Activity implements OnClickListener, Loa
 	 						endActivity("edited");
 	 					}  },new Income(incId,i_name_edit,i_desc_edit,i_date_edit,i_currency_edit,amount,i_source,i_freq_edit,i_notify_edit),true); 
 					} else {
-						dbh.updateIncome(new Income(i_name_edit,i_desc_edit,i_date_edit,i_currency_edit,amount,i_source,i_freq_edit,i_notify_edit),incId);
+						dbh.updateIncome(new Income(i_name_edit,i_desc_edit,i_date_edit,i_currency_edit,amount,i_source,i_convAmt,i_freq_edit,i_notify_edit),incId);
 						//endActivity("edited");
 						startRecActivity(incId);
 					}
+				} else if (valid && fromNoti) {
+					String newDate = getCurrentDate();
+					Income inc = new Income(i_name,i_desc,newDate,i_currency,amount,i_source,i_convAmt,freqs[i_freq],i_notify);
+					dbh.updateIncome(inc,incId);
+					inc.setDate(i_date); 
+					inc.setFreq("Do not repeat");
+					inc.setAmount(i_amount);
+					
+					dbh.addIncome(inc);	
+					endActivity("edited");
 				}
 				
 				else
@@ -262,7 +285,15 @@ public class IncomeEditActivity extends Activity implements OnClickListener, Loa
 			}	 
 	 }
 	 
-	 protected void startRecActivity(long id) {
+	 public String getCurrentDate() {			 
+		    Calendar cal = Calendar.getInstance();	    
+		    Date  myDate = cal.getTime();
+		    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); 
+		    String date = sdf.format(myDate);
+		    return date;
+		 }
+
+	protected void startRecActivity(long id) {
 		 if(hasRec) {
 		 i.putExtra("rec_id", id);
 		 this.startActivityForResult(i,REC_EDITED);
@@ -360,6 +391,7 @@ public class IncomeEditActivity extends Activity implements OnClickListener, Loa
 				i_currency =  c.getString(4);
 				i_amount = c.getFloat(5);
 				i_source = c.getString(6);
+				i_convAmt = c.getFloat(7);
 				String freq = c.getString(8);
 				for(int i =0;i<freqadapter.getCount();i++) {
 					if(freq.equals(freqadapter.getItem(i))) {
