@@ -12,6 +12,7 @@ import com.anumeha.wheredmymoneygo.Category.CategoryCursorLoader;
 import com.anumeha.wheredmymoneygo.Currency.CurrencyCursorLoader;
 import com.anumeha.wheredmymoneygo.DBhelpers.IncomeDbHelper;
 import com.anumeha.wheredmymoneygo.Expense.Expense;
+import com.anumeha.wheredmymoneygo.Expense.ExpenseEditActivity;
 import com.anumeha.wheredmymoneygo.Income.Income;
 import com.anumeha.wheredmymoneygo.Income.IncomeCursorLoader;
 import com.anumeha.wheredmymoneygo.Services.CurrencyConverter;
@@ -372,6 +373,23 @@ public class IncomeEditActivity extends Activity implements OnClickListener, Loa
 		}
 		else {
 			
+			if(c == null || c.getCount() == 0) {
+				//no entry found with this id
+				AlertDialog.Builder builder = new AlertDialog.Builder(IncomeEditActivity.this);
+		        builder.setTitle("Sorry!")
+		        .setMessage("This expense no longer exists!")
+		        .setCancelable(false)
+		        .setNegativeButton("Close",new DialogInterface.OnClickListener() {
+		            public void onClick(DialogInterface dialog, int id) {
+		                dialog.cancel();
+		                endActivity("cancelled");
+		            }
+		        });
+		        AlertDialog alert = builder.create();
+		        alert.show();
+		        
+			}
+			else {
 		c.moveToFirst(); 
 				
 				i_name = c.getString(1);
@@ -414,7 +432,7 @@ public class IncomeEditActivity extends Activity implements OnClickListener, Loa
 				
 				
 				loadFinished1= true;
-
+			}
 		}
 		
 		if(loadFinished1 && loadFinished2&& loadFinished3){
