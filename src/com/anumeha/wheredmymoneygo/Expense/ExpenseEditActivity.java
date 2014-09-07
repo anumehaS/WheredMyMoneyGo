@@ -64,7 +64,7 @@ public class ExpenseEditActivity extends Activity implements OnClickListener, Lo
 	
 	ExpenseDbHelper dbh;
 	CategoryCursorLoader loader;
-	boolean valid = true, noChanges =true;
+	boolean valid = true, noChanges =true, fromNoti = false;
 	int expId;
 	Intent i;
 	boolean hasRec;
@@ -106,11 +106,13 @@ public class ExpenseEditActivity extends Activity implements OnClickListener, Lo
 			
 			expId = getIntent().getIntExtra("id",0);
 			if(getIntent().hasExtra("notify")) { // has been started by notification - then remove notification
+				fromNoti = true;
 				if (Context.NOTIFICATION_SERVICE!=null) {
 			        String ns = Context.NOTIFICATION_SERVICE;
 			        NotificationManager nMgr = (NotificationManager) getApplicationContext().getSystemService(ns);
 			        nMgr.cancel(0);
 			    }
+				
 			}
 			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 			dateFormat = prefs.getString("def_dateformat", "MM-dd-yyyy");
@@ -220,7 +222,7 @@ public class ExpenseEditActivity extends Activity implements OnClickListener, Lo
 				i.putExtra("old_freq",freqs[e_freq] );
 				i.putExtra("old_notify", e_notify);
 				
-				if(valid && !noChanges) {	
+				if(valid && !noChanges && (!fromNoti || e_notify!=e_notify_edit)) {	
 					if(!e_currency_edit.equals(e_currency)) {
 						convFrag.getConvertedRate(new CurrencyConverter.ResultListener<Long>() {	
 		 					@Override
@@ -238,8 +240,17 @@ public class ExpenseEditActivity extends Activity implements OnClickListener, Lo
 						startRecActivity(expId);
 					}
             		
-				}
-				
+				} else if (valid && fromNoti) {
+					
+					String newDate = getCurrentDate();
+					Expense e = new Expense(e_name,e_desc,newDate,e_currency,amount,e_category1,freqs[e_freq],e_notify);
+					dbh.updateExpense(e,expId);
+					e.setDate(e_date); 
+					e.setFreq("Do not repeat");
+					dbh.addExpense(e);	
+					endActivity("edited");
+					
+				}			
 				else
 				{
 					String title = "Invalid Entries";
@@ -263,7 +274,15 @@ public class ExpenseEditActivity extends Activity implements OnClickListener, Lo
 			}	 
 	 }
 	 
-	 protected void startRecActivity(long id) {
+	 public String getCurrentDate() {			 
+		    Calendar cal = Calendar.getInstance();	    
+		    Date  myDate = cal.getTime();
+		    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); 
+		    String date = sdf.format(myDate);
+		    return date;
+		 }
+
+	protected void startRecActivity(long id) {
 		 if(hasRec) {
 		 i.putExtra("rec_id", id);
 		 this.startActivityForResult(i,REC_EDITED);
@@ -380,12 +399,22 @@ public class ExpenseEditActivity extends Activity implements OnClickListener, Lo
 				}
 	
 				
-				((EditText)findViewById(R.id.inputExpenseNameEdit)).setText(e_name);
+				EditText name = ((EditText)findViewById(R.id.inputExpenseNameEdit));
+				name.setText(e_name);
+				
 				((EditText)findViewById(R.id.inputExpenseAmountEdit)).setText(Float.toString(e_amount));
-				((EditText)findViewById(R.id.inputExpenseDescEdit)).setText(e_desc);
+				EditText des = ((EditText)findViewById(R.id.inputExpenseDescEdit));
+				des.setText(e_desc);
 				//((EditText)findViewById(R.id.inputExpenseCurrencyEdit)).setText(e_currency);
 				((TextView)findViewById(R.id.expenseDateEdit)).setText(tempdate);
 				
+				if(fromNoti) {
+					name.setEnabled(false);
+					des.setEnabled(false);
+					category1.setClickable(false);
+					frequency.setClickable(false);
+					currency.setClickable(false);
+				}
 				
 				loadFinished1= true;
 
