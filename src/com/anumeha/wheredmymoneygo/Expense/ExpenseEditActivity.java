@@ -247,6 +247,7 @@ public class ExpenseEditActivity extends Activity implements OnClickListener, Lo
 					dbh.updateExpense(e,expId);
 					e.setDate(e_date); 
 					e.setFreq("Do not repeat");
+					e.setAmount(e_amount);
 					dbh.addExpense(e);	
 					endActivity("edited");
 					
@@ -362,6 +363,22 @@ public class ExpenseEditActivity extends Activity implements OnClickListener, Lo
 			loadFinished3 = true;
 		}
 		else {
+		
+			if(c == null || c.getCount() == 0) {
+				//no entry found with this id
+				AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		        builder.setTitle("Sorry!")
+		        .setMessage("This expense no longer exists!")
+		        .setCancelable(false)
+		        .setNegativeButton("Close",new DialogInterface.OnClickListener() {
+		            public void onClick(DialogInterface dialog, int id) {
+		                dialog.cancel();
+		                endActivity("cancelled");
+		            }
+		        });
+		        AlertDialog alert = builder.create();
+		        alert.show();
+			}
 			
 		c.moveToFirst(); 
 				
