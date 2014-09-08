@@ -22,7 +22,7 @@ public class SourceDbHelper {
 	
 	 public SourceDbHelper(Context context){
 			
-		dbh = new DBHandler(context);			
+		dbh = DBHandler.getInstance(context);			
 	 }
 	 
 	 // add a Source

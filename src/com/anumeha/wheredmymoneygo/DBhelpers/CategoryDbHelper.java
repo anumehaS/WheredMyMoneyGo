@@ -30,7 +30,7 @@ public class CategoryDbHelper {
 	
 	 public CategoryDbHelper(Context context){
 			
-		dbh = new DBHandler(context);			
+		dbh = DBHandler.getInstance(context);			
 	 }
 	 
 	 // add a category 

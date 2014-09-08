@@ -18,7 +18,7 @@ import android.graphics.Color;
 
 public class DBHandler extends SQLiteOpenHelper{
 	
-	AssetManager assetManager;
+	private static AssetManager assetManager;
 	/** class variables  - database**/
 	private static final int DATABASE_VERSION = 1;	  
 	private static final String DATABASE_NAME = "WMMGDatabase";
@@ -67,14 +67,14 @@ public class DBHandler extends SQLiteOpenHelper{
     public static final String KEY_S_NAME = "s_name";
     public static final String KEY_S_COLOR = "s_color";
     
-    /** Recurrences Table**/
+    /** Recurrences Table
     private static final String TABLE_RECURRENCE = "Recurrences";
     
     private static final String KEY_R_ID = "_id";
     private static final String KEY_R_IS_EI = "expense_or_income";
     private static final String KEY_R_EI_ID = "ei_id"; //  income or expense ID
     private static final String KEY_R_FREQUENCY = "frequency"; //one time - weekly -monthly or annual
-    private static final String KEY_R_DATE = "recurrence_date";
+    private static final String KEY_R_DATE = "recurrence_date"; **/
     
     /** Currency Table**/
     private static final String TABLE_CURRENCY = "Currency";
@@ -85,13 +85,13 @@ public class DBHandler extends SQLiteOpenHelper{
     private static final String KEY_Cu_SYMBOL = "symbol";
     private static final String KEY_Cu_TS = "timestamp";
     
-    /** Alerts Table**/
+    /** Alerts Table
     private static final String TABLE_ALERTS = "Alerts"; // basically a reminder to pay bills etc
     
     private static final String KEY_A_ID = "_id";
     private static final String KEY_A_TEXT = "alert_text"; 
     private static final String KEY_A_FREQUENCY = "frequency"; //one time - weekly -monthly or annual
-    private static final String KEY_A_DATE = "recurrence_date";
+    private static final String KEY_A_DATE = "recurrence_date"; **/
  
     /** Colors Table**/
     private static final String TABLE_COLORS = "Colors"; 
@@ -99,10 +99,24 @@ public class DBHandler extends SQLiteOpenHelper{
     private static final String KEY_Co_COLOR = "color_code";
     private static final String KEY_Co_TAKEN = "taken";  
 
-	 public DBHandler(Context context) {
+    /*Make it singleton*/
+    private static DBHandler sInstance;
+    
+    public static DBHandler getInstance(Context context) {
+       
+        if (sInstance == null) {
+          sInstance = new DBHandler(context.getApplicationContext());
+          if(assetManager == null)
+	        	assetManager = context.getApplicationContext().getAssets();
+          
+        }
+        return sInstance;
+      }
+	 private DBHandler(Context context) {
 	        super(context, DATABASE_NAME, null, DATABASE_VERSION);
-	        assetManager = context.getAssets();
-	    }
+	        if(assetManager == null)
+	        	assetManager = context.getApplicationContext().getAssets();
+	  }
 	 
 	 /** Creating tables **/
 	 
@@ -156,16 +170,7 @@ public class DBHandler extends SQLiteOpenHelper{
 	        		+ KEY_S_COLOR + " REAL"
 	                + ")";
 	        db.execSQL(CREATE_SOURCE_TABLE);
-	        
-	      //Recurrence Table    
-	        String CREATE_RECURRENCE_TABLE = "CREATE TABLE " + TABLE_RECURRENCE + "("
-	                + KEY_R_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," 
-	        		+ KEY_R_IS_EI + " TEXT," 
-	                + KEY_R_EI_ID + " INTEGER," 
-	        		+ KEY_R_FREQUENCY + " TEXT,"
-	                + KEY_R_DATE + " datetime" + ")";
-	        db.execSQL(CREATE_RECURRENCE_TABLE);
-	        
+	         
 	        //Currency Table    
 	        String CREATE_CURRENCY_TABLE = "CREATE TABLE " + TABLE_CURRENCY + "("
 	                + KEY_Cu_ID + " TEXT PRIMARY KEY," 
@@ -206,10 +211,8 @@ public class DBHandler extends SQLiteOpenHelper{
 	        db.execSQL("DROP TABLE IF EXISTS " + TABLE_INCOME);
 	        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CATEGORY);
 	        db.execSQL("DROP TABLE IF EXISTS " + TABLE_SOURCE);
-	        db.execSQL("DROP TABLE IF EXISTS " + TABLE_RECURRENCE);
 	        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CURRENCY);
-	        db.execSQL("DROP TABLE IF EXISTS " + TABLE_ALERTS);
-	 
+
 	        // Create tables again
 	        onCreate(db);
 	    }

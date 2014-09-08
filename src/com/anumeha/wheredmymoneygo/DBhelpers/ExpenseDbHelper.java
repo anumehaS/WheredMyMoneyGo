@@ -34,10 +34,9 @@ public class ExpenseDbHelper {
 	private SharedPreferences prefs;
 	private float convRate;
 	
-	
 	public ExpenseDbHelper(Context context){
 		
-		dbh = new DBHandler(context);
+		dbh = DBHandler.getInstance(context);
 		prefs = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());	
 	}
 	

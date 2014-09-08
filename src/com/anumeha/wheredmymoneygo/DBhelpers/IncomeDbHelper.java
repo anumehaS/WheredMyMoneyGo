@@ -34,7 +34,7 @@ public class IncomeDbHelper {
 	
 	public IncomeDbHelper(Context context){
 		
-		dbh = new DBHandler(context);
+		dbh = DBHandler.getInstance(context);
 		prefs = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());	
 	}
 	

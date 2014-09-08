@@ -21,7 +21,7 @@ public class ColorDbHelper {
 	
 	 public ColorDbHelper(Context context){
 			
-		dbh = new DBHandler(context);			
+		dbh = DBHandler.getInstance(context);			
 	 }
 	 
 	 public ColorDbHelper(SQLiteDatabase sqldb){

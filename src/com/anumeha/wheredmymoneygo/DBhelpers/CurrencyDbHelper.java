@@ -27,7 +27,7 @@ public class CurrencyDbHelper {
 	
 	 public CurrencyDbHelper(Context context){
 			
-		dbh = new DBHandler(context);			
+		dbh = DBHandler.getInstance(context);			
 	 }
 	 
 	 public Cursor getAllCurrencies() {

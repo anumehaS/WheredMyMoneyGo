@@ -428,8 +428,7 @@ public class IncomeEditActivity extends Activity implements OnClickListener, Loa
 				((EditText)findViewById(R.id.inputIncomeAmountEdit)).setText(Float.toString(i_amount));
 				((EditText)findViewById(R.id.inputIncomeDescEdit)).setText(i_desc);
 				//((EditText)findViewById(R.id.inputIncomeCurrencyEdit)).setText(i_currency);
-				((TextView)findViewById(R.id.incomeDateEdit)).setText(tempdate);
-				
+				((TextView)findViewById(R.id.incomeDateEdit)).setText(tempdate);			
 				
 				loadFinished1= true;
 			}

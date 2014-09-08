@@ -24,7 +24,7 @@ public class RecurrenceDbHelper {
 	
 	 public RecurrenceDbHelper(Context context){
 			
-		dbh = new DBHandler(context);			
+		dbh = DBHandler.getInstance(context);			
 	 }
 	 
 	 // add a recurrence
