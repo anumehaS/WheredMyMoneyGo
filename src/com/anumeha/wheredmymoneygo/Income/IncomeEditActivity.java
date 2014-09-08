@@ -245,9 +245,9 @@ public class IncomeEditActivity extends Activity implements OnClickListener, Loa
 	 					@Override
 	 					public void OnFaiure(int errCode) {
 	 						endActivity("edited");
-	 					}  },new Income(incId,i_name_edit,i_desc_edit,i_date_edit,i_currency_edit,amount,i_source,i_freq_edit,i_notify_edit),true); 
+	 					}  },new Income(incId,i_name_edit,i_desc_edit,i_date_edit,i_currency_edit,amount,i_source_edit,i_freq_edit,i_notify_edit),true); 
 					} else {
-						dbh.updateIncome(new Income(i_name_edit,i_desc_edit,i_date_edit,i_currency_edit,amount,i_source,i_convAmt,i_freq_edit,i_notify_edit),incId);
+						dbh.updateIncome(new Income(i_name_edit,i_desc_edit,i_date_edit,i_currency_edit,amount,i_source_edit,i_convAmt,i_freq_edit,i_notify_edit),incId);
 						//endActivity("edited");
 						startRecActivity(incId);
 					}
