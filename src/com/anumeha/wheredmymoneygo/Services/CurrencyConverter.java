@@ -127,27 +127,23 @@ public class CurrencyConverter extends Fragment{
 			
 			Float rate = getRate(params[0],params[1],db);	
 			
-			if(isExpense) {
-				if(rate.isNaN() || rate == -1) {
-					e.set_convToDef(0);	
-				} else {
-					e.set_convToDef(rate);
-				}
-				if(!update) {
-					id = expDb.addExpense(e); 
-				} else {
-					expDb.updateExpense(e, e.getID());
-				}
+			if(rate.isNaN()|| rate == -1) {
+				rate = -1f;
 			} else {
-				if(rate.isNaN() || rate == -1) {
-					i.set_convToDef(0);	
+				if(isExpense) {
+						e.set_convToDef(rate);
+					if(!update) {
+						id = expDb.addExpense(e); 
+					} else {
+						expDb.updateExpense(e, e.getID());
+					}
 				} else {
-					i.set_convToDef(rate);
-				}
-				if(!update) {
-					id=incDb.addIncome(i); 
-				}else {
-					incDb.updateIncome(i, i.getID());
+						i.set_convToDef(rate);
+					if(!update) {
+						id=incDb.addIncome(i); 
+					}else {
+						incDb.updateIncome(i, i.getID());
+					}
 				}
 			}
 			return rate;

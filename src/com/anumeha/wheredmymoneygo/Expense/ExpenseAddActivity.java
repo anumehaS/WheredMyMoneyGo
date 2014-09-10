@@ -51,6 +51,9 @@ public class ExpenseAddActivity extends Activity implements OnClickListener, Loa
 	CheckBox ask;
 	Intent i;
 	boolean hasRec = false;
+	String e_name,e_desc,e_currency,e_category1,freq;
+	float amount;
+	boolean notify;
 	
 	final static int DATE_DIALOG_ID = 999;
 	private static final int REC_ADDED = 0;
@@ -115,14 +118,14 @@ public class ExpenseAddActivity extends Activity implements OnClickListener, Loa
 			else if(arg0.getId() == R.id.expAddSubmit) {
 				
 				//name
-				String e_name = ((EditText)findViewById(R.id.inputExpenseName)).getText().toString();
+				e_name = ((EditText)findViewById(R.id.inputExpenseName)).getText().toString();
 				if(e_name.trim().equals("")){
 					sb.append("- Expense Name cannot be blank. \n");
 					valid = false;
 				}
 				
 				//amount
-				float amount = 0;
+				//float amount = 0;
 				String e_amount = ((EditText)findViewById(R.id.inputExpenseAmount)).getText().toString();
 				if(e_amount.trim().equals("")){
 					sb.append("- Expense Amount cannot be blank. \n");
@@ -139,22 +142,22 @@ public class ExpenseAddActivity extends Activity implements OnClickListener, Loa
 				}
 				
 				//currency
-				String e_currency = ((Spinner) findViewById(R.id.inputExpenseCurrency)).getSelectedItem().toString(); 
+				e_currency = ((Spinner) findViewById(R.id.inputExpenseCurrency)).getSelectedItem().toString(); 
 				
 				
 				//category 1
-				String e_category1 = ((Spinner) findViewById(R.id.expCategory1)).getSelectedItem().toString(); 
+				e_category1 = ((Spinner) findViewById(R.id.expCategory1)).getSelectedItem().toString(); 
 				
-				String e_desc = ((EditText)findViewById(R.id.inputExpenseDesc)).getText().toString();
+			    e_desc = ((EditText)findViewById(R.id.inputExpenseDesc)).getText().toString();
 				if(e_desc.trim().equals("")) {
 					e_desc =" ";
 				}
 				
-				String freq = frequency.getSelectedItem().toString(); 
+				freq = frequency.getSelectedItem().toString(); 
 				if(frequency.getSelectedItemPosition() > 0) {
 					hasRec = true;
 				}
-				boolean notify = ask.isChecked();
+				notify = ask.isChecked();
 			
 					
 		 			i.putExtra("rec_freq",freq );
@@ -176,7 +179,8 @@ public class ExpenseAddActivity extends Activity implements OnClickListener, Loa
 	 					@Override
 	 					public void OnFaiure(int errCode) {
 	 						//add code for asking user to input rate manually
-	 						endActivity("added");
+	 						showConvRateAlert(errCode);	 						
+	 						
 	 					}  },new Expense(e_name,e_desc,e_date,e_currency,amount,e_category1,freq,notify),false);          		
 				}
 				
@@ -208,6 +212,48 @@ public class ExpenseAddActivity extends Activity implements OnClickListener, Loa
 		 }
 		
 	}
+	
+	 protected void showConvRateAlert(int errCode){
+		 final EditText rate = new EditText(ExpenseAddActivity.this);
+			String msg = "We couldn't find a conversion rate! You can use this rate from before or enter your own";
+			if(errCode == -1) {
+				msg = "Please enter valid a conversion rate from your currency choice to USD";
+				} else {
+					//rate.setText(errCode);
+				}
+
+				AlertDialog.Builder builder = new AlertDialog.Builder(ExpenseAddActivity.this);
+		        builder.setTitle("Could not find conversion rate!")
+		        .setMessage(msg)
+		        .setView(rate)
+		        .setCancelable(true)
+		        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+				  String value = rate.getText().toString();
+				  try {
+					  float convRate = Float.parseFloat(value);
+					  ExpenseDbHelper expDb= new ExpenseDbHelper(ExpenseAddActivity.this);
+					  expDb.addExpense(new Expense(e_name,e_desc,e_date,e_currency,amount,e_category1,convRate,freq,notify));
+					  endActivity("added");
+				  } catch (Exception e) {  
+					  showConvRateAlert(-1);
+				  }
+				  }
+				})
+		        .setNegativeButton("Close",new DialogInterface.OnClickListener() {
+		            public void onClick(DialogInterface dialog, int id) {
+		                dialog.cancel();
+		                endActivity("cancelled");
+		            }
+		        });
+		       
+		        AlertDialog alert = builder.create();
+		        
+		        alert.show();
+		        
+		        if(errCode != -1)
+		        	rate.setText(errCode);
+	 }
 	 
 	 @Override
 		protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -327,6 +373,10 @@ public class ExpenseAddActivity extends Activity implements OnClickListener, Loa
 		dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // layout style -> list view with radio button   
         currency.setAdapter(dataAdapter);  // attaching data adapter toc urrency spinner
         
+	}
+
+	private void createConvRateDialog(int errCode, boolean validRate){
+		
 	}
 
 }
