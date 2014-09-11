@@ -71,6 +71,13 @@ public class ExpenseEditActivity extends Activity implements OnClickListener, Lo
 	boolean hasRec;
 	
 	CurrencyConverter convFrag;
+	protected String e_name_edit;
+	protected String e_desc_edit;
+	protected String e_currency_edit;
+	protected float amount;
+	protected String e_category1_edit;
+	protected String e_freq_edit;
+	protected boolean e_notify_edit;
 	final static int DATE_DIALOG_ID = 999;
 	private static final int REC_EDITED = 01;
 	 @Override
@@ -145,7 +152,7 @@ public class ExpenseEditActivity extends Activity implements OnClickListener, Lo
 			else if(arg0.getId() == R.id.expSaveEdit) {
 				
 				//name
-				String e_name_edit = ((EditText)findViewById(R.id.inputExpenseNameEdit)).getText().toString();
+				 e_name_edit = ((EditText)findViewById(R.id.inputExpenseNameEdit)).getText().toString();
 				if(e_name_edit.trim().equals("")){
 					sb.append("- Expense Name cannot be blank. \n");
 					valid = false;
@@ -161,7 +168,7 @@ public class ExpenseEditActivity extends Activity implements OnClickListener, Lo
 				}
 				
 				//amount
-				float amount = 0;
+				
 				String e_amount_edit = ((EditText)findViewById(R.id.inputExpenseAmountEdit)).getText().toString();
 				if(e_amount_edit.trim().equals("")){
 					sb.append("- Expense Amount cannot be blank. \n");
@@ -183,14 +190,14 @@ public class ExpenseEditActivity extends Activity implements OnClickListener, Lo
 				}
 				
 				//currency
-				String e_currency_edit = ((Spinner) findViewById(R.id.inputExpenseCurrencyEdit)).getSelectedItem().toString(); 
+				e_currency_edit = ((Spinner) findViewById(R.id.inputExpenseCurrencyEdit)).getSelectedItem().toString(); 
 				if(noChanges && !e_currency_edit.trim().equals(e_currency)){
 					noChanges = false;
 				
 				}
 				
 				//category 1
-				String e_category1_edit = ((Spinner) findViewById(R.id.expCategory1Edit)).getSelectedItem().toString(); 
+				e_category1_edit = ((Spinner) findViewById(R.id.expCategory1Edit)).getSelectedItem().toString(); 
 				if(noChanges && !e_category1_edit.trim().equals(e_category1)){
 					noChanges = false;
 				
@@ -210,7 +217,7 @@ public class ExpenseEditActivity extends Activity implements OnClickListener, Lo
 				if(frequency.getSelectedItemPosition() > 0) {
 					hasRec = true;
 				}
-				boolean e_notify_edit = ask.isChecked();
+				e_notify_edit = ask.isChecked();
 				if(e_notify_edit != e_notify) noChanges = false;
 				
 				i.putExtra("rec_freq",e_freq_edit );
@@ -233,7 +240,7 @@ public class ExpenseEditActivity extends Activity implements OnClickListener, Lo
 		 					}	
 		 					@Override
 		 					public void OnFaiure(int errCode) {
-		 						endActivity("edited");
+		 						showConvRateAlert(errCode);	 	
 		 					}  },new Expense(expId,e_name_edit,e_desc_edit,e_date_edit,e_currency_edit,amount,e_category1_edit,e_freq_edit,e_notify_edit),true); 
 					} else {
 						dbh.updateExpense(new Expense(e_name_edit,e_desc_edit,e_date_edit,e_currency_edit,amount,e_category1_edit,e_convAmt,e_freq_edit,e_notify_edit),expId);
@@ -277,6 +284,49 @@ public class ExpenseEditActivity extends Activity implements OnClickListener, Lo
 			}	 
 	 }
 	 
+	 protected void showConvRateAlert(int errCode){
+		 final EditText rate = new EditText(ExpenseEditActivity.this);
+			String msg = "We couldn't find a conversion rate! You can use this rate from before or enter your own";
+			if(errCode == -1) {
+				msg = "Please enter valid a conversion rate from your currency choice to USD";
+				} else {
+					//rate.setText(errCode);
+				}
+
+				AlertDialog.Builder builder = new AlertDialog.Builder(ExpenseEditActivity.this);
+		        builder.setTitle("Could not find conversion rate!")
+		        .setMessage(msg)
+		        .setView(rate)
+		        .setCancelable(true)
+		        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+				  String value = rate.getText().toString();
+				  try {
+					  float convRate = Float.parseFloat(value);
+					  ExpenseDbHelper expDb= new ExpenseDbHelper(ExpenseEditActivity.this);
+						dbh.updateExpense(new Expense(e_name_edit,e_desc_edit,e_date_edit,e_currency_edit,amount,e_category1_edit,convRate,e_freq_edit,e_notify_edit),expId);
+						//endActivity("edited");
+						startRecActivity(expId);
+				  } catch (Exception e) {  
+					  showConvRateAlert(-1);
+				  }
+				  }
+				})
+		        .setNegativeButton("Close",new DialogInterface.OnClickListener() {
+		            public void onClick(DialogInterface dialog, int id) {
+		                dialog.cancel();
+		                endActivity("cancelled");
+		            }
+		        });
+		       
+		        AlertDialog alert = builder.create();
+		        
+		        alert.show();
+		        
+		        if(errCode != -1)
+		        	rate.setText(errCode);
+	 }
+
 	 public String getCurrentDate() {			 
 		    Calendar cal = Calendar.getInstance();	    
 		    Date  myDate = cal.getTime();

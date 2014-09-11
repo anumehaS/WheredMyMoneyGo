@@ -9,7 +9,10 @@ import java.util.Locale;
 
 import com.anumeha.wheredmymoneygo.Category.CategoryCursorLoader;
 import com.anumeha.wheredmymoneygo.Currency.CurrencyCursorLoader;
+import com.anumeha.wheredmymoneygo.DBhelpers.ExpenseDbHelper;
 import com.anumeha.wheredmymoneygo.DBhelpers.IncomeDbHelper;
+import com.anumeha.wheredmymoneygo.Expense.Expense;
+import com.anumeha.wheredmymoneygo.Expense.ExpenseAddActivity;
 import com.anumeha.wheredmymoneygo.Income.Income;
 import com.anumeha.wheredmymoneygo.Services.CurrencyConverter;
 import com.anumeha.wheredmymoneygo.Source.SourceCursorLoader;
@@ -50,7 +53,9 @@ public class IncomeAddActivity extends Activity implements OnClickListener, Load
 	CheckBox ask;
 	Intent i;
 	boolean hasRec = false;
-	
+	String i_name,i_desc,i_currency,freq,i_source;
+	float amount;
+	boolean notify;
 	final static int DATE_DIALOG_ID = 999;
 	private static final int REC_ADDED = 0;
 	 @Override
@@ -114,14 +119,14 @@ public class IncomeAddActivity extends Activity implements OnClickListener, Load
 			else if(arg0.getId() == R.id.incAddSubmit) {
 				
 				//name
-				String i_name = ((EditText)findViewById(R.id.inputIncomeName)).getText().toString();
+				i_name = ((EditText)findViewById(R.id.inputIncomeName)).getText().toString();
 				if(i_name.trim().equals("")){
 					sb.append("- Income Name cannot be blank. \n");
 					valid = false;
 				}
 				
 				//amount
-				float amount = 0;
+				amount = 0;
 				String i_amount = ((EditText)findViewById(R.id.inputIncomeAmount)).getText().toString();
 				if(i_amount.trim().equals("")){
 					sb.append("- Income Amount cannot be blank. \n");
@@ -138,20 +143,20 @@ public class IncomeAddActivity extends Activity implements OnClickListener, Load
 				}
 				
 				//currency
-				String i_currency = ((Spinner) findViewById(R.id.inputIncomeCurrency)).getSelectedItem().toString(); 
+				i_currency = ((Spinner) findViewById(R.id.inputIncomeCurrency)).getSelectedItem().toString(); 
 				
-				//category 1
-				String i_source = ((Spinner) findViewById(R.id.incSource)).getSelectedItem().toString(); 
+				//source
+				i_source = ((Spinner) findViewById(R.id.incSource)).getSelectedItem().toString(); 
 				
-				String i_desc = ((EditText)findViewById(R.id.inputIncomeDesc)).getText().toString();
+				i_desc = ((EditText)findViewById(R.id.inputIncomeDesc)).getText().toString();
 				if(i_desc.trim().equals("")) {
 					i_desc =" ";
 				}
-				String freq = frequency.getSelectedItem().toString(); 
+				freq = frequency.getSelectedItem().toString(); 
 				if(frequency.getSelectedItemPosition() > 0) {
 					hasRec = true;
 				}
-				boolean notify = ask.isChecked();
+				notify = ask.isChecked();
 
 		 			i.putExtra("rec_freq",freq );
 		 			i.putExtra("rec_add",true );
@@ -225,6 +230,48 @@ public class IncomeAddActivity extends Activity implements OnClickListener, Load
 		
 		sdf = new SimpleDateFormat("yyyy-MM-dd"); 
 	    i_date = sdf.format(myDate);
+	 }
+
+	 protected void showConvRateAlert(int errCode){
+		 final EditText rate = new EditText(IncomeAddActivity.this);
+			String msg = "We couldn't find a conversion rate! You can use this rate from before or enter your own";
+			if(errCode == -1) {
+				msg = "Please enter valid a conversion rate from your currency choice to USD";
+				} else {
+					//rate.setText(errCode);
+				}
+
+				AlertDialog.Builder builder = new AlertDialog.Builder(IncomeAddActivity.this);
+		        builder.setTitle("Could not find conversion rate!")
+		        .setMessage(msg)
+		        .setView(rate)
+		        .setCancelable(true)
+		        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+				  String value = rate.getText().toString();
+				  try {
+					  float convRate = Float.parseFloat(value);
+					  IncomeDbHelper incDb= new IncomeDbHelper(IncomeAddActivity.this);
+					  long temp = incDb.addIncome(new Income(i_name,i_desc,i_date,i_currency,amount,i_source,convRate,freq,notify));
+					  startRecActivity(temp);
+				  } catch (Exception e) {  
+					  showConvRateAlert(-1);
+				  }
+				  }
+				})
+		        .setNegativeButton("Close",new DialogInterface.OnClickListener() {
+		            public void onClick(DialogInterface dialog, int id) {
+		                dialog.cancel();
+		                endActivity("cancelled");
+		            }
+		        });
+		       
+		        AlertDialog alert = builder.create();
+		        
+		        alert.show();
+		        
+		        if(errCode != -1)
+		        	rate.setText(errCode);
 	 }
 	 
 	 public void showDatePickerDialog(View view) {

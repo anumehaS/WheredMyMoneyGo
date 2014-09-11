@@ -10,6 +10,7 @@ import java.util.Locale;
 
 import com.anumeha.wheredmymoneygo.Category.CategoryCursorLoader;
 import com.anumeha.wheredmymoneygo.Currency.CurrencyCursorLoader;
+import com.anumeha.wheredmymoneygo.DBhelpers.ExpenseDbHelper;
 import com.anumeha.wheredmymoneygo.DBhelpers.IncomeDbHelper;
 import com.anumeha.wheredmymoneygo.Expense.Expense;
 import com.anumeha.wheredmymoneygo.Expense.ExpenseEditActivity;
@@ -67,6 +68,9 @@ public class IncomeEditActivity extends Activity implements OnClickListener, Loa
 	boolean loadFinished1 =false;
 	boolean loadFinished2 =false;
 	boolean loadFinished3 =false;
+	String i_name_edit,i_desc_edit,i_currency_edit,i_source_edit,i_freq_edit;
+	boolean i_notify_edit;
+	float amount;
 	
 	IncomeDbHelper dbh;
 	CategoryCursorLoader loader;
@@ -244,7 +248,8 @@ public class IncomeEditActivity extends Activity implements OnClickListener, Loa
 	 					}	
 	 					@Override
 	 					public void OnFaiure(int errCode) {
-	 						endActivity("edited");
+	 						showConvRateAlert(errCode);	
+	 						//endActivity("edited");
 	 					}  },new Income(incId,i_name_edit,i_desc_edit,i_date_edit,i_currency_edit,amount,i_source_edit,i_freq_edit,i_notify_edit),true); 
 					} else {
 						dbh.updateIncome(new Income(i_name_edit,i_desc_edit,i_date_edit,i_currency_edit,amount,i_source_edit,i_convAmt,i_freq_edit,i_notify_edit),incId);
@@ -286,6 +291,50 @@ public class IncomeEditActivity extends Activity implements OnClickListener, Loa
 			}	 
 	 }
 	 
+	 protected void showConvRateAlert(int errCode){
+		 final EditText rate = new EditText(IncomeEditActivity.this);
+			String msg = "We couldn't find a conversion rate! You can use this rate from before or enter your own";
+			if(errCode == -1) {
+				msg = "Please enter valid a conversion rate from your currency choice to USD";
+				} else {
+					//rate.setText(errCode);
+				}
+
+				AlertDialog.Builder builder = new AlertDialog.Builder(IncomeEditActivity.this);
+		        builder.setTitle("Could not find conversion rate!")
+		        .setMessage(msg)
+		        .setView(rate)
+		        .setCancelable(true)
+		        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+				  String value = rate.getText().toString();
+				  try {
+					  float convRate = Float.parseFloat(value);
+					  ExpenseDbHelper expDb= new ExpenseDbHelper(IncomeEditActivity.this);
+						dbh.updateIncome(new Income(i_name_edit,i_desc_edit,i_date_edit,i_currency_edit,amount,i_source_edit,convRate,i_freq_edit,i_notify_edit),incId);
+						//endActivity("edited");
+						startRecActivity(incId);
+				  } catch (Exception e) {  
+					  showConvRateAlert(-1);
+				  }
+				  }
+				})
+		        .setNegativeButton("Close",new DialogInterface.OnClickListener() {
+		            public void onClick(DialogInterface dialog, int id) {
+		                dialog.cancel();
+		                endActivity("cancelled");
+		            }
+		        });
+		       
+		        AlertDialog alert = builder.create();
+		        
+		        alert.show();
+		        
+		        if(errCode != -1)
+		        	rate.setText(errCode);
+	 }
+
+
 	 public String getCurrentDate() {			 
 		    Calendar cal = Calendar.getInstance();	    
 		    Date  myDate = cal.getTime();

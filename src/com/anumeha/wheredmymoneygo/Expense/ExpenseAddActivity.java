@@ -233,8 +233,8 @@ public class ExpenseAddActivity extends Activity implements OnClickListener, Loa
 				  try {
 					  float convRate = Float.parseFloat(value);
 					  ExpenseDbHelper expDb= new ExpenseDbHelper(ExpenseAddActivity.this);
-					  expDb.addExpense(new Expense(e_name,e_desc,e_date,e_currency,amount,e_category1,convRate,freq,notify));
-					  endActivity("added");
+					  long temp = expDb.addExpense(new Expense(e_name,e_desc,e_date,e_currency,amount,e_category1,convRate,freq,notify));
+					  startRecActivity(temp);
 				  } catch (Exception e) {  
 					  showConvRateAlert(-1);
 				  }
