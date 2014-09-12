@@ -330,8 +330,6 @@ public class IncomeEditActivity extends Activity implements OnClickListener, Loa
 		        
 		        alert.show();
 		        
-		        if(errCode != -1)
-		        	rate.setText(errCode);
 	 }
 
 

@@ -1,3 +1,4 @@
+
 package com.anumeha.wheredmymoneygo.DBhelpers;
 
 import java.util.ArrayList;
@@ -44,7 +45,6 @@ public class ExpenseDbHelper {
     public long addExpense(Expense expense) {
 	    database = dbh.getWritableDatabase();
 
-	    System.out.println("Conv Rate gotten as: "+convRate);
 	    ContentValues values = new ContentValues();
 	    values.put(KEY_E_NAME, expense.getName()); // Expense Name
 	    values.put(KEY_E_DESC, expense.getDesc()); // Expense description
@@ -65,7 +65,7 @@ public class ExpenseDbHelper {
 	//getting all expenses
     public Cursor getAllExpenses() {
     	
-    	StringBuffer temp = new StringBuffer();
+    	StringBuffer selectionTemp = new StringBuffer();
     	StringBuffer temp2 = new StringBuffer();
     	ArrayList<String> temp1 = new ArrayList<String>();
     	String orderBy = null, selection = null;
@@ -88,9 +88,9 @@ public class ExpenseDbHelper {
     	 // add selection args if "inrange" is selected
     	 if(prefs.getString("exp_viewBy","").equals("inRange")){
         	 
-    		temp.append("date(");
-    		temp.append(KEY_E_DATE);
-    		temp.append(") BETWEEN ? AND ?");
+    		selectionTemp.append("date(");
+    		selectionTemp.append(KEY_E_DATE);
+    		selectionTemp.append(") BETWEEN ? AND ?");
     	//	temp.append(KEY_E_DATE);
     	//	temp.append(") <= ?");
     		
@@ -102,19 +102,31 @@ public class ExpenseDbHelper {
     	 
     	 if(!prefs.getString("exp_filter","").equals(""))
     	 {
-    		 if(temp.length() > 0)
+    		 if(selectionTemp.length() > 0)
     		 {
-    			 temp.append(" AND ");
+    			 selectionTemp.append(" AND ");
     		 }
     		 
-    		 temp.append(KEY_E_CATEGORY1);
-    		 temp.append(" = ?");
+    		 selectionTemp.append(KEY_E_CATEGORY1);
+    		 selectionTemp.append(" = ?");
     		 temp1.add(prefs.getString("exp_filter","")); // add selection args
     	 }
-    	
-    	 if(temp.length() > 0) {
     	 
-	    	 selection = temp.toString();	    	 
+    	 if(prefs.getString("exp_view_rec","").equals("on"))
+    	 {
+    		 if(selectionTemp.length() > 0)
+    		 {
+    			 selectionTemp.append(" AND ");
+    		 }
+    		 
+    		 selectionTemp.append(KEY_E_FREQ);
+    		 selectionTemp.append(" != ?");
+    		 temp1.add("Do not repeat"); // add selection args to find only recurrances
+    	 }
+    	
+    	 if(selectionTemp.length() > 0) {
+    	 
+	    	 selection = selectionTemp.toString();	    	 
 	    	 selectionArgs = (String[]) temp1.toArray(new String[temp1.size()]);    	 
     	 } 
     	 

@@ -323,8 +323,6 @@ public class ExpenseEditActivity extends Activity implements OnClickListener, Lo
 		        
 		        alert.show();
 		        
-		        if(errCode != -1)
-		        	rate.setText(errCode);
 	 }
 
 	 public String getCurrentDate() {			 

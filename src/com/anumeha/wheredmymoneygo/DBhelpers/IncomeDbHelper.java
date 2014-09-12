@@ -61,7 +61,7 @@ public class IncomeDbHelper {
     //getting all income
     public Cursor getAllIncome() {
     	
-    	StringBuffer temp = new StringBuffer();
+    	StringBuffer selectionTemp = new StringBuffer();
     	StringBuffer temp2 = new StringBuffer();
     	ArrayList<String> temp1 = new ArrayList<String>();
     	String orderBy = null, selection = null;
@@ -83,11 +83,11 @@ public class IncomeDbHelper {
     	 // add selection args if "inrange" is selected
     	 if(prefs.getString("inc_viewBy","").equals("inRange")){
         	 
-    		temp.append("date(");
-    		temp.append(KEY_I_DATE);
-    		temp.append(") >= ? AND date(");
-    		temp.append(KEY_I_DATE);
-    		temp.append(") <= ?");
+    		selectionTemp.append("date(");
+    		selectionTemp.append(KEY_I_DATE);
+    		selectionTemp.append(") >= ? AND date(");
+    		selectionTemp.append(KEY_I_DATE);
+    		selectionTemp.append(") <= ?");
     		
     		temp1.add(prefs.getString("inc_startDate",""));
     		temp1.add(prefs.getString("inc_endDate",""));
@@ -97,19 +97,28 @@ public class IncomeDbHelper {
     	 
     	 if(!prefs.getString("inc_filter","").equals(""))
     	 {
-    		 if(temp.length() > 0)
+    		 if(selectionTemp.length() > 0)
     		 {
-    			 temp.append(" AND ");
+    			 selectionTemp.append(" AND ");
     		 }
     		 
-    		 temp.append(KEY_I_SOURCE);
-    		 temp.append(" = ?");
+    		 selectionTemp.append(KEY_I_SOURCE);
+    		 selectionTemp.append(" = ?");
     		 temp1.add(prefs.getString("inc_filter","")); // add selection args
     	 }
-    	
-    	 if(temp.length() > 0) {
+    	 if(prefs.getString("inc_view_rec","").equals("on")) {
+    		 if(selectionTemp.length() > 0)
+    		 {
+    			 selectionTemp.append(" AND ");
+    		 }
+    		 
+    		 selectionTemp.append(KEY_I_FREQ);
+    		 selectionTemp.append(" != ?");
+    		 temp1.add("Do not repeat"); // add selection args to find only recurrances
+    	 }
+    	 if(selectionTemp.length() > 0) {
     	 
-	    	 selection = temp.toString();	    	 
+	    	 selection = selectionTemp.toString();	    	 
 	    	 selectionArgs = (String[]) temp1.toArray(new String[temp1.size()]);    	 
     	 } 
     	 

@@ -269,9 +269,7 @@ public class IncomeAddActivity extends Activity implements OnClickListener, Load
 		        AlertDialog alert = builder.create();
 		        
 		        alert.show();
-		        
-		        if(errCode != -1)
-		        	rate.setText(errCode);
+		      
 	 }
 	 
 	 public void showDatePickerDialog(View view) {

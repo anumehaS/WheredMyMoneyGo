@@ -38,11 +38,11 @@ import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Spinner;
 
-public class OptionsDialog extends Activity implements OnClickListener, LoaderCallbacks<Cursor>{
+public class OptionsDialog extends Activity implements LoaderCallbacks<Cursor>{
 	
 	private String currentTab;
 	private static Spinner sortOrder,filters;
-	private CheckBox convert;
+	private CheckBox convert, showRec;
 	private static boolean dateRange, startDateClicked = true;
 	private RadioGroup viewBy;
 	private LinearLayout dateRangeLayout;
@@ -50,9 +50,9 @@ public class OptionsDialog extends Activity implements OnClickListener, LoaderCa
 	String defFilterVal,defSortOrderVal,defOrderByVal, defViewByVal;
 	static String defStartDateVal = null;
 	static String defEndDateVal = null;
-	String defConvVal;
-	String filterVal, sortOrderVal, orderByVal,  viewByVal, convVal;
-	String filterKey, sortOrderKey, orderByKey,  viewByKey, startDateKey, endDateKey,convKey;
+	String defConvVal, defOnlyRecVal;
+	String filterVal, sortOrderVal, orderByVal,  viewByVal, convVal, onlyRecVal;
+	String filterKey, sortOrderKey, orderByKey,  viewByKey, startDateKey, endDateKey,convKey,onlyRecKey;
 	DefaultPreferenceAccess prefAccess; 
 	
 	@Override
@@ -73,6 +73,7 @@ public class OptionsDialog extends Activity implements OnClickListener, LoaderCa
 	   		  startDateKey = "exp_startDate";
 	   		  endDateKey = "exp_endDate";
 	   		  convKey = "exp_conv";
+	   		  onlyRecKey = "exp_view_rec";
 		} else {
 			  filterKey = "inc_filter";
 			  sortOrderKey = "inc_cur_sortOrder";
@@ -81,6 +82,7 @@ public class OptionsDialog extends Activity implements OnClickListener, LoaderCa
 			  startDateKey = "inc_startDate";
 	   		  endDateKey = "inc_endDate";
 	   		  convKey = "inc_conv";
+	   		  onlyRecKey = "inc_view_rec";
 		}
 		
 		List<String> keys = new ArrayList<String>();
@@ -91,6 +93,7 @@ public class OptionsDialog extends Activity implements OnClickListener, LoaderCa
 		keys.add(startDateKey);
 		keys.add(endDateKey);
 		keys.add(convKey);
+		keys.add(onlyRecKey);
 		
 		prefAccess.getValues(new PrefLoadedListener<List<String>>(){
 
@@ -106,6 +109,7 @@ public class OptionsDialog extends Activity implements OnClickListener, LoaderCa
 				defStartDateVal = data.get(4);
 				defEndDateVal = data.get(5);
 				defConvVal = data.get(6);
+				defOnlyRecVal = data.get(7);
 				
 				
 				sortOrder = (Spinner)findViewById(R.id.sortOrder);
@@ -144,6 +148,11 @@ public class OptionsDialog extends Activity implements OnClickListener, LoaderCa
 				if(defConvVal.equals("on")) {
 					convert.setChecked(true);
 				}
+				
+				showRec = (CheckBox)findViewById(R.id.onlyRec);
+				if(defOnlyRecVal.equals("on")) {
+					showRec.setChecked(true);
+				}
 				OptionsDialog.this.getLoaderManager().initLoader(1,null, OptionsDialog.this ); // 1 for category
 				OptionsDialog.this.getLoaderManager().initLoader(2,null, OptionsDialog.this ); // 2 for sources
 			}
@@ -173,44 +182,6 @@ public class OptionsDialog extends Activity implements OnClickListener, LoaderCa
 		}
 			
 			return position;
-	}
-
-	@Override
-	public void onClick(View v) {	 
-	      Button b = (Button)v;
- 
-		if(v.getId() == R.id.convertCur) {
-			 SharedPreferences prefs= PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-		      Editor editor = prefs.edit();
-			
-			if(currentTab.equals(MainActivity.EXPENSE_TAG)) {
-				if(prefs.getString("exp_conv", "off").equals("off")) {
-					editor.putString("exp_conv", "on");
-					b.setText("convert to Original");					
-				}
-				else {
-					editor.putString("exp_conv", "off");
-					b.setText("convert to Default");
-				}
-				editor.commit();
-				/*ExpenseListFragment exp = (ExpenseListFragment)  getFragmentManager().findFragmentByTag("expense");
-				exp.restartLoader();*/
-			} else {
-				if(prefs.getString("inc_conv", "off").equals("off")) {
-					editor.putString("inc_conv", "on");
-					b.setText("convert to Original");
-				}
-				else {
-					editor.putString("inc_conv", "off");
-					b.setText("convert to Default");					
-				}
-				editor.commit();
-				/*	IncomeListFragment inc = (IncomeListFragment)  getFragmentManager().findFragmentByTag("income");
-					inc.restartLoader();*/
-			}
-			
-		}
-		
 	}
 	
 	public void cancelOptions(View v){
@@ -269,6 +240,13 @@ public class OptionsDialog extends Activity implements OnClickListener, LoaderCa
 	   	  } else {
 	   		  convVal = "off";
 	   	  }
+	   	  
+	   	  //show only recurrences 
+	   	  if(showRec.isChecked()) {
+	   		  onlyRecVal = "on";
+	   	  } else {
+	   		  onlyRecVal = "off";
+	   	  }
 	   	  keys.add(filterKey);
 	   	  values.add(filterVal);
 	   	  keys.add(sortOrderKey);
@@ -285,6 +263,8 @@ public class OptionsDialog extends Activity implements OnClickListener, LoaderCa
 	   	  }
 	   	  keys.add(convKey);
 	   	  values.add(convVal);
+	   	  keys.add(onlyRecKey);
+	   	  values.add(onlyRecVal);
 	   	  
 	   	  
 	   	  prefAccess.addValues(new PrefAddedListener<List<String>>(){
