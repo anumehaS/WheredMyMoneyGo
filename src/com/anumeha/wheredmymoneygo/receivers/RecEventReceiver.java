@@ -1,5 +1,7 @@
 package com.anumeha.wheredmymoneygo.receivers;
 
+import com.anumeha.wheredmymoneygo.DBhelpers.ExpenseDbHelper;
+import com.anumeha.wheredmymoneygo.DBhelpers.IncomeDbHelper;
 import com.anumeha.wheredmymoneygo.Services.AlarmOps;
 import com.anumeha.wheredmymoneygo.Services.AlarmOps.OnAlarmOpsCompleted;
 import com.anumeha.wheredmymoneygo.Services.WmmgAlarmManager;
@@ -9,6 +11,7 @@ import android.app.AlarmManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.util.Log;
 
 public class RecEventReceiver extends BroadcastReceiver{
@@ -20,9 +23,20 @@ public class RecEventReceiver extends BroadcastReceiver{
 	private static final String DEBUG_TAG = "RecEventReceiver";
 	@Override
 	public void onReceive(Context ctx, Intent intent) {
-			
-		//check if notification needed and add info to open dialog for it
-		//ELSE 
+		
+		 if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
+	           //reset alarms for expenses
+			 	ExpenseDbHelper expDb = new ExpenseDbHelper(ctx);
+			 	Cursor c = expDb.getAllRecurences();
+			 	resetAllAlarms(ctx,c,false);
+			 	
+			 	//reset alarms for Incomes
+			 	IncomeDbHelper incDb = new IncomeDbHelper(ctx);
+			 	c = incDb.getAllRecurences();
+			 	resetAllAlarms(ctx,c,true);
+
+	      }
+		
 		Log.d(DEBUG_TAG,"In receiver");
 		
 		boolean isIncome = intent.getBooleanExtra("isIncome",false);
@@ -69,6 +83,20 @@ public class RecEventReceiver extends BroadcastReceiver{
 		
 	}
 	
+	private void resetAllAlarms(Context ctx,Cursor c, boolean isExp) {
+		WmmgAlarmManager alarm = new WmmgAlarmManager();
+		AlarmManager mgr = (AlarmManager)ctx.getSystemService(Context.ALARM_SERVICE);
+		c.moveToFirst();
+		do{
+			int id = c.getInt(0);
+			String freq = c.getString(8);
+			boolean notify = c.getString(9).equals("yes");
+			alarm.addRecurrence(mgr, ctx,id, freq, isExp, notify);
+			
+		}while(c.moveToNext());
+		
+	}
+
 	void rescheduleMonthlyRec(Context ctx) {
 		WmmgAlarmManager alarm = new WmmgAlarmManager();
 		AlarmManager mgr = (AlarmManager)ctx.getSystemService(Context.ALARM_SERVICE);

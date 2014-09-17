@@ -38,7 +38,7 @@ public class PieChart extends Drawable {
 	
 		int view_w = v.getWidth();
 		int view_h = v.getHeight();
-		System.out.println("Height" + view_w);
+		//System.out.println("Height" + view_w);
 		
 		//chart area rectangle 
 		pie_bounds= new RectF(0.20f*view_w,0.1f*view_h, 0.8f*view_w, 0.8f*view_h);

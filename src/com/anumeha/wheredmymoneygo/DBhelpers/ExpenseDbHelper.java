@@ -33,11 +33,10 @@ public class ExpenseDbHelper {
 	private SQLiteDatabase database;
 	private DBHandler dbh;
 	private SharedPreferences prefs;
-	private float convRate;
 	
 	public ExpenseDbHelper(Context context){
 		
-		dbh = DBHandler.getInstance(context);
+		dbh = DBHandler.getInstance(context.getApplicationContext());
 		prefs = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());	
 	}
 	
@@ -139,6 +138,15 @@ public class ExpenseDbHelper {
          
          return cursor;
     	
+    }
+
+    public Cursor getAllRecurences(){
+
+    	 String selection = KEY_E_FREQ + " !=?";
+    	 String[] selectionArgs = {"Do not repeat"};
+    	 SQLiteDatabase db = dbh.getWritableDatabase();
+    	 Cursor cursor = db.query(TABLE_EXPENSES, null, selection, selectionArgs, null , null, null);
+    	 return cursor;
     }
     
     public Cursor getExpenseById(long old_id) {

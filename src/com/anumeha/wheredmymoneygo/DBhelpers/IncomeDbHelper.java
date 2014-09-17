@@ -134,6 +134,15 @@ public class IncomeDbHelper {
     	
     }
 
+    public Cursor getAllRecurences(){
+
+   	 String selection = KEY_I_FREQ + " !=?";
+   	 String[] selectionArgs = {"Do not repeat"};
+   	 SQLiteDatabase db = dbh.getWritableDatabase();
+   	 Cursor cursor = db.query(TABLE_INCOME, null, selection, selectionArgs, null , null, null);
+   	 return cursor;
+   }
+    
     public Cursor getIncomeById(long id) {
     	
       	 SQLiteDatabase db = dbh.getWritableDatabase();   	 
