@@ -1,9 +1,13 @@
 package com.anumeha.wheredmymoneygo;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.anumeha.wheredmymoneygo.Expense.ExpenseListFragment;
 import com.anumeha.wheredmymoneygo.Expense.ExpensePieFragment;
 import com.anumeha.wheredmymoneygo.Income.IncomeListFragment;
+import com.anumeha.wheredmymoneygo.Services.DefaultPreferenceAccess;
 import com.example.wheredmymoneygo.R;
 
 import android.app.ActionBar;
@@ -37,9 +41,12 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 	
 	private Button options,listPie;
 	private MyTabListener expenseTab,incomeTab,IvETab;
+	DefaultPreferenceAccess prefAccess; 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		prefAccess = new DefaultPreferenceAccess();
+		
 		setContentView(R.layout.activity_main);
 
 		setDefaults();
