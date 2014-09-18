@@ -73,25 +73,29 @@ public class AlarmOps {
 			long newId = -1;
 			if(isIncome) {
 				Cursor c = incDb.getIncomeById(oldId);
-				c.moveToFirst();
-				oldDate = c.getString(3);
-				newDate = getCurrentDate();
-				Income i = new Income(c.getString(1),c.getString(2),newDate,c.getString(4),c.getFloat(5),c.getString(6),c.getFloat(7),c.getString(8),c.getString(9).equals("yes"));
-				incDb.updateIncome(i,oldId);
-				i.setDate(oldDate); 
-				i.setFreq("Do not repeat");
-				newId = incDb.addIncome(i);				
+				if(c != null && c.getCount() > 0) {
+					c.moveToFirst();
+					oldDate = c.getString(3);
+					newDate = getCurrentDate();
+					Income i = new Income(c.getString(1),c.getString(2),newDate,c.getString(4),c.getFloat(5),c.getString(6),c.getFloat(7),c.getString(8),c.getString(9).equals("yes"));
+					incDb.updateIncome(i,oldId);
+					i.setDate(oldDate); 
+					i.setFreq("Do not repeat");
+					newId = incDb.addIncome(i);		
+				}
 			} else {
 				Cursor c = expDb.getExpenseById(oldId);
-				c.moveToFirst();
-				oldDate = c.getString(3);
-				newDate = getCurrentDate();
-			
-				Expense e = new Expense(c.getString(1),c.getString(2),newDate,c.getString(4),c.getFloat(5),c.getString(6),c.getFloat(7),c.getString(8),c.getString(9).equals("yes"));
-				expDb.updateExpense(e,oldId);
-				e.setDate(oldDate); 
-				e.setFreq("Do not repeat");
-				newId = expDb.addExpense(e);	
+				if(c != null && c.getCount() > 0) {
+					c.moveToFirst();
+					oldDate = c.getString(3);
+					newDate = getCurrentDate();
+				
+					Expense e = new Expense(c.getString(1),c.getString(2),newDate,c.getString(4),c.getFloat(5),c.getString(6),c.getFloat(7),c.getString(8),c.getString(9).equals("yes"));
+					expDb.updateExpense(e,oldId);
+					e.setDate(oldDate); 
+					e.setFreq("Do not repeat");
+					newId = expDb.addExpense(e);	
+				}
 			}
 			return newId;
 		}

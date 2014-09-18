@@ -105,11 +105,12 @@ public class DBHandler extends SQLiteOpenHelper{
     public static DBHandler getInstance(Context context) {
        
         if (sInstance == null) {
-          sInstance = new DBHandler(context.getApplicationContext());
+           	sInstance = new DBHandler(context.getApplicationContext());
+
           if(assetManager == null)
 	        	assetManager = context.getApplicationContext().getAssets();
-          
         }
+        
         return sInstance;
       }
 	 private DBHandler(Context context) {

@@ -58,7 +58,7 @@ public class IncomeEditActivity extends Activity implements OnClickListener, Loa
 	private String i_source;
 	private String i_currency;
 	private int i_freq;
-	private boolean i_notify;
+	private boolean i_notify = false;
     private static float i_amount;	
     private static float i_convAmt;	
     private static ArrayAdapter<String> dataAdapter1, dataAdapter2;
@@ -219,14 +219,19 @@ public class IncomeEditActivity extends Activity implements OnClickListener, Loa
 					noChanges = false;
 					
 				}
+				
 				String i_freq_edit = frequency.getSelectedItem().toString();
-				if(frequency.getSelectedItemPosition()!= i_freq) noChanges = false;
-				if(frequency.getSelectedItemPosition() > 0) {
+				int newFreqPos = frequency.getSelectedItemPosition();
+				if(newFreqPos != i_freq){ 
+					noChanges = false;			
 					hasRec = true;
 				}
 				
 				boolean i_notify_edit = ask.isChecked();
-				if(i_notify_edit != i_notify) noChanges = false;
+				if(i_notify_edit != i_notify){ 
+					noChanges = false;
+					hasRec = true;
+				}
 				
 				i.putExtra("rec_freq",i_freq_edit );
 	 			i.putExtra("rec_add",false );

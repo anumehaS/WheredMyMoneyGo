@@ -52,7 +52,7 @@ public class ExpenseEditActivity extends Activity implements OnClickListener, Lo
 	private String e_category1;
 	private String e_currency;
 	private int e_freq;
-	private boolean e_notify;
+	private boolean e_notify = false;
     private static float e_amount;	
     private static float e_convAmt;	
     private static ArrayAdapter<String> dataAdapter1, dataAdapter2;
@@ -213,12 +213,17 @@ public class ExpenseEditActivity extends Activity implements OnClickListener, Lo
 				}
 				String e_freq_edit = frequency.getSelectedItem().toString();
 				
-				if(frequency.getSelectedItemPosition()!= e_freq) noChanges = false;
-				if(frequency.getSelectedItemPosition() > 0) {
+				int newFreqPos = frequency.getSelectedItemPosition();
+				if(newFreqPos != e_freq){ 
+					noChanges = false;			
 					hasRec = true;
 				}
+				
 				e_notify_edit = ask.isChecked();
-				if(e_notify_edit != e_notify) noChanges = false;
+				if(e_notify_edit != e_notify){ 
+					noChanges = false;
+					hasRec = true;
+				}
 				
 				i.putExtra("rec_freq",e_freq_edit );
 	 			i.putExtra("rec_add",false );
