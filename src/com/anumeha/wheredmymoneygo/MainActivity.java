@@ -189,6 +189,36 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 		        	  startActivity(intent1);
 		        	  return true;
 		        	  
+		        case android.R.id.action_reset:
+		        	//build alert
+		        	 AlertDialog.Builder builder = new AlertDialog.Builder(this);
+					    builder.setTitle("Are you sure you want to reset the app? This will clear all data that you have saved, including recurring transactions.")
+					           .setPositiveButton("Yep!", new DialogInterface.OnClickListener() {
+					               @Override
+					               public void onClick(DialogInterface dialog, int id) {
+					            	 //if yes, remove rec (start activity for result)
+					            	   Intent i = new Intent(MainActivity.this,com.anumeha.wheredmymoneygo.Services.WmmgAlarmManager.class);
+					            	   i.putExtra("ClearAll", true);
+					            	   startActivityForResult();
+					               }
+					           })
+					           .setNegativeButton("No No!", new DialogInterface.OnClickListener() {
+					               @Override
+					               public void onClick(DialogInterface dialog, int id) {
+					                 
+					               }
+					           });
+					    
+					    AlertDialog d = builder.create();
+					    d.show();
+		        	
+		        	
+		        	//clear db
+		        	//shared prefs clear
+		        	//restart app
+		        	
+		        	  return true;
+		        	  
 		        default:
 		            return super.onOptionsItemSelected(item);
 		    }
