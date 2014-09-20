@@ -52,6 +52,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 	private MyTabListener expenseTab,incomeTab,IvETab;
 	DefaultPreferenceAccess prefAccess; 
 	DefaultsLoader defLoader;
+	 static SharedPreferences prefs;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -103,9 +104,9 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 			}
 			
 		}, keys, values, this);
-		
+		prefs= PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 	}
-
+	
 	void setUpMainActivty() {
 		setContentView(R.layout.activity_main);
 
@@ -323,10 +324,20 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 	            ft.attach(currentFrag);
 	        }	      
 	        currentTab = tag;	
-	        if(pie)
-	        	listPie.setText("List");        	
-	         else 
-	        	listPie.setText("Pie");    
+	        if(currentTab.equals(EXPENSE_TAG)){
+	        	if(prefs.getString("exp_cur_viewAs", "list").equals("list")) {
+	        		listPie.setText("Pie");   
+	        	}else {
+	        		listPie.setText("List");   
+	        	}
+	        }  	
+	         else {
+		        	if(prefs.getString("inc_cur_viewAs", "list").equals("list")) {
+		        		listPie.setText("Pie");   
+		        	}else {
+		        		listPie.setText("List");   
+		        	}
+		      }  	
 		}
 
 		@Override
@@ -352,7 +363,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 	@Override
 	public void onClick(View v) {
 		
-		 SharedPreferences prefs= PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+		
 	      Editor editor = prefs.edit();
 	      Button b = (Button)v;
 		
