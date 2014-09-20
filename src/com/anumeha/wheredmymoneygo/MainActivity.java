@@ -8,13 +8,20 @@ import com.anumeha.wheredmymoneygo.Expense.ExpenseListFragment;
 import com.anumeha.wheredmymoneygo.Expense.ExpensePieFragment;
 import com.anumeha.wheredmymoneygo.Income.IncomeListFragment;
 import com.anumeha.wheredmymoneygo.Services.DefaultPreferenceAccess;
+import com.anumeha.wheredmymoneygo.Services.DefaultPreferenceAccess.PrefAddedListener;
+import com.anumeha.wheredmymoneygo.Services.DefaultsLoader;
+import com.anumeha.wheredmymoneygo.Services.DefaultsLoader.DefaultsLoadedListener;
 import com.example.wheredmymoneygo.R;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -31,7 +38,8 @@ import android.widget.Button;
 public class MainActivity extends FragmentActivity implements OnClickListener{
 
 
-	static String currentTab ;
+	static String currentTab, defCurrency;	
+	static boolean pie = false;
 	private int INCOME_ADDED = 00;
 	private int EXPENSE_ADDED = 10;
 	private int OPTIONS = 99;
@@ -39,19 +47,68 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 	static String EXPENSE_TAG = "expense";
 	private static String INCOME_TAG = "income";
 	
-	private Button options,listPie;
+	private Button options;
+	private static Button listPie;
 	private MyTabListener expenseTab,incomeTab,IvETab;
 	DefaultPreferenceAccess prefAccess; 
+	DefaultsLoader defLoader;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		prefAccess = new DefaultPreferenceAccess();
 		
+		prefAccess = new DefaultPreferenceAccess();
+		defLoader = new DefaultsLoader();
+		
+		defLoader.setDefaults(new DefaultsLoadedListener<List<String>>(){
+
+			@Override
+			public void defaultsLoaded(List<String> data) {
+				SelectCurrencyDialog dialog = new SelectCurrencyDialog(data.toArray(new String[data.size()]));
+				dialog.show(getFragmentManager(), "Select Currency");
+			}
+
+			@Override
+			public void notFirstTime(List<String> data) {
+				if(!data.get(0).equals("list")){
+					pie = true;
+				}
+				setUpMainActivty();
+			}
+			
+		}, this);
+
+	}
+	
+	protected void populateDefaultCurrency(String defCurrency) {
+		List<String> keys = new ArrayList<String>();
+		keys.add("base_currency");
+		keys.add("def_currency");
+		
+		List<String> values = new ArrayList<String>();
+		values.add(defCurrency);
+		values.add(defCurrency);
+		
+		prefAccess.addValues(new PrefAddedListener<List<String>>() {
+
+			@Override
+			public void OnSuccess() {
+				
+				setUpMainActivty();
+			}
+
+			@Override
+			public void OnFaiure(int errCode) {
+				//end app
+				
+			}
+			
+		}, keys, values, this);
+		
+	}
+
+	void setUpMainActivty() {
 		setContentView(R.layout.activity_main);
 
-		setDefaults();
-	
-		
 		listPie = (Button)findViewById(R.id.listPie);
 		listPie.setOnClickListener(this);	
 		
@@ -66,7 +123,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 		actionBar.addTab(actionBar.newTab().setText(R.string.title_expensetab).setTabListener(expenseTab));
 		actionBar.addTab(actionBar.newTab().setText(R.string.title_incometab).setTabListener(incomeTab));
 	//	actionBar.addTab(actionBar.newTab().setText(R.string.title_expvsinctab).setTabListener(new TwoFragTabListener(this, "tag5", "evi", ExpenseOptionsFragment.class, ExpenseListFragment.class )));
-		
 	}
 	
 	@Override
@@ -83,8 +139,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 	    outState.putInt("Navigation_item_state", getActionBar()
 	        .getSelectedNavigationIndex());
 	  }
-
-	
 
 	  @Override
 		public boolean onCreateOptionsMenu(Menu menu) {
@@ -269,6 +323,10 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 	            ft.attach(currentFrag);
 	        }	      
 	        currentTab = tag;	
+	        if(pie)
+	        	listPie.setText("List");        	
+	         else 
+	        	listPie.setText("Pie");    
 		}
 
 		@Override
@@ -308,6 +366,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 				if(prefs.getString("exp_cur_viewAs", "list").equals("list")) {
 					editor.putString("exp_cur_viewAs", "pie");
 					b.setText("List");	
+					pie = true;
 					editor.commit();
 					f = Fragment.instantiate(MainActivity.this, PieFragment.class.getName());
 					ft = fm.beginTransaction();
@@ -318,6 +377,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 				else {
 					editor.putString("exp_cur_viewAs", "list");
 					b.setText("Pie");	
+					pie = false;
 					editor.commit();
 					f = Fragment.instantiate(MainActivity.this, ExpenseListFragment.class.getName());
 					ft = fm.beginTransaction();
@@ -329,7 +389,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 			} else {
 				if(prefs.getString("inc_cur_viewAs", "list").equals("list")) {
 					editor.putString("inc_cur_viewAs", "pie");
-					b.setText("List");	
+					b.setText("List");
+					pie = true;
 					editor.commit();
 					f = Fragment.instantiate(MainActivity.this, PieFragment.class.getName());
 					ft = fm.beginTransaction();
@@ -340,6 +401,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 				else {
 					editor.putString("inc_cur_viewAs", "list");
 					b.setText("Pie");	
+					pie = false;
 					editor.commit();
 					f = Fragment.instantiate(MainActivity.this, IncomeListFragment.class.getName());
 					ft = fm.beginTransaction();
@@ -362,4 +424,36 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 		
 		this.startActivityForResult(i,OPTIONS);
 	}
+	
+	private class SelectCurrencyDialog extends DialogFragment {
+		String [] currencyList;
+		SelectCurrencyDialog(String[] currencyList){
+			this.currencyList = currencyList;
+		}
+		int currentSelection = 0;
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			
+			 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+			    // Set the dialog title
+			    builder.setTitle("Select a  default Currency (Cannot be changed later)")
+			           .setSingleChoiceItems(currencyList, 0,
+			                      new DialogInterface.OnClickListener() {
+			               @Override
+			               public void onClick(DialogInterface dialog, int which) {			                  
+			                     currentSelection = which;
+			               }
+			           })
+			           .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+			               @Override
+			               public void onClick(DialogInterface dialog, int id) {
+			                  String  defCurrency = currencyList[currentSelection];
+			                  populateDefaultCurrency(defCurrency);	
+			               }
+			           });
+			    
+			    return builder.create();
+		}
+	}
+
 }
