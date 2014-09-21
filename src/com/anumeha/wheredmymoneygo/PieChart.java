@@ -1,8 +1,5 @@
 package com.anumeha.wheredmymoneygo;
 
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
 import android.database.Cursor;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -35,13 +32,19 @@ public class PieChart extends Drawable {
 	@Override
 	public void draw(Canvas canvas) {
 		
-	
-		int view_w = v.getWidth();
-		int view_h = v.getHeight();
-		//System.out.println("Height" + view_w);
+		
+		float xPieCenter = canvas.getWidth()/2 ;
+		float yPieCenter = canvas.getHeight()/8 ;
+		float maxRadius = (xPieCenter > yPieCenter) ? yPieCenter : xPieCenter;
+		float radiusPie = (float) (maxRadius);
+		
+		//System.out.println("Dimensions of canvas :" + canvas.getHeight() +"," + canvas.getWidth());
 		
 		//chart area rectangle 
-		pie_bounds= new RectF(0.20f*view_w,0.1f*view_h, 0.8f*view_w, 0.8f*view_h);
+		pie_bounds= new RectF( xPieCenter - radiusPie, 
+							   yPieCenter - radiusPie, 
+							   xPieCenter + radiusPie,
+							   yPieCenter + radiusPie );
 		
 		float sum =0;
 		//sum of amounts
