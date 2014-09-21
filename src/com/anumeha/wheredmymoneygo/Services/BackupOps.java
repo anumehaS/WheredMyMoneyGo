@@ -103,6 +103,7 @@ public class BackupOps {
 		private boolean writeBackupToFile(Cursor c, String fileName, File dir) {
 			
 			File file = new File(dir,fileName);
+			file.setReadable(true, false);
 			FileWriter writer; 
 			c.moveToFirst();
 			

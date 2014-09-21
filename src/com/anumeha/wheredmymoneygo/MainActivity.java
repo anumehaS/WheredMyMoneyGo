@@ -1,6 +1,7 @@
 package com.anumeha.wheredmymoneygo;
 
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +28,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
@@ -193,7 +195,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 						@Override
 						public void OnSuccess(String data) {
 							//create alret and ask for email.
-							Toast.makeText(getApplicationContext(), "backup created in " + data, Toast.LENGTH_SHORT).show();
+							Toast.makeText(getApplicationContext(), "backup created in " + data, Toast.LENGTH_LONG).show();
+							sendEmail(data);
 						}
 
 						@Override
@@ -266,6 +269,20 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 			  } 
 		  }
 	  }
+	private void sendEmail(String filePath){
+		
+		String[] fileNames = {"/wmmgExpensebackup.csv","/wmmgIncomebackup.csv","/wmmgCategorybackup.csv","/wmmgSourcebackup.csv"};
+		ArrayList<Uri> uris = new ArrayList<Uri>();
+		for(String s: fileNames){
+		Uri uri = Uri.parse("file://"+filePath+s);
+		uris.add(uri);
+		}
+		Intent i = new Intent(Intent.ACTION_SEND_MULTIPLE);
+		i.setType("plain/text");
+		i.putExtra(Intent.EXTRA_SUBJECT, "Backup - Where\'d my money go?");
+		i.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+		startActivity(Intent.createChooser(i,"Email:"));
+	}
 	
 	 private void setDefaults() {
 		  
