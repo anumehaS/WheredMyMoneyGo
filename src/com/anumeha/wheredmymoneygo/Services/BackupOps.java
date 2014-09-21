@@ -62,15 +62,27 @@ public class BackupOps {
 			} else {
 				dir = internalDir;
 			}
-			
+			boolean success;
 			Cursor c = expDbh.getExpensesForBackup();
-			writeBackupToFile(c, "wmmgExpensebackup.csv",dir);
+			success = writeBackupToFile(c, "wmmgExpensebackup.csv",dir);
+			if(!success) {
+				return null;
+			}
 			c = incDbh.getIncomesForBackup();
-			writeBackupToFile(c, "wmmgIncomebackup.csv",dir);
+			success = writeBackupToFile(c, "wmmgIncomebackup.csv",dir);
+			if(!success) {
+				return null;
+			}
 			c = catDbh.getAllCategories();
-			writeBackupToFile(c, "wmmgCategorybackup.csv",dir);
+			success = writeBackupToFile(c, "wmmgCategorybackup.csv",dir);
+			if(!success) {
+				return null;
+			}
 			c = souDbh.getAllSources();
-			writeBackupToFile(c, "wmmgSourcebackup.csv",dir);
+			success = writeBackupToFile(c, "wmmgSourcebackup.csv",dir);
+			if(!success) {
+				return null;
+			}
 			return dir.toString();
 		}
 		
@@ -88,31 +100,35 @@ public class BackupOps {
 			
 		}
 		
-		private void writeBackupToFile(Cursor c, String fileName, File dir) {
+		private boolean writeBackupToFile(Cursor c, String fileName, File dir) {
 			
 			File file = new File(dir,fileName);
 			FileWriter writer; 
 			c.moveToFirst();
 			
-			do{
-				try {
-					writer = new FileWriter(file);
-					boolean first = true;
-					for(int i =0; i< c.getColumnCount();i++) {
-						if(first) {
-							writer.append(c.getString(i));
-							first = false;
-						} else {
-							writer.append(","+c.getString(i));
-						}
-					}
-					writer.append('\n');
-				}catch(Exception e){
+			try {
+				writer = new FileWriter(file);
+				do{
 					
-				}
-			}while(c.moveToNext());
-			
+						boolean first = true;
+						for(int i =0; i< c.getColumnCount();i++) {
+							if(first) {
+								writer.append(c.getString(i));
+								first = false;
+							} else {
+								writer.append(","+c.getString(i));
+							}
+						}
+						writer.append('\n');
+					
+				}while(c.moveToNext());
+				writer.flush();
+				writer.close();
+			}catch(Exception e){
+				return false;
+			}
 			c.close();
+			return true;
 		}
 		public boolean isExternalStorageWritable() {
 		    String state = Environment.getExternalStorageState();
