@@ -195,13 +195,13 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 						@Override
 						public void OnSuccess(String data) {
 							//create alret and ask for email.
-							Toast.makeText(getApplicationContext(), "backup created in " + data, Toast.LENGTH_LONG).show();
+							//Toast.makeText(getApplicationContext(), "backup created in " + data, Toast.LENGTH_LONG).show();
 							sendEmail(data);
 						}
 
 						@Override
 						public void OnFaiure(int errCode) {
-							Toast.makeText(getApplicationContext(), "could not create backup ", Toast.LENGTH_SHORT).show();
+							Toast.makeText(getApplicationContext(), "Could not create backup ", Toast.LENGTH_SHORT).show();
 							
 						}},this);
 		            return true;
