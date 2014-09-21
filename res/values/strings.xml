@@ -8,8 +8,8 @@
     <string name="souEditAct_name">Edit Source</string>
     <string name="action_categories">Categories</string>
     <string name="action_sources">Sources</string>
-    <string name="action_recurences">Recurrences</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_backup">Backup to Email</string>
+    <string name="action_reset">Reset App</string>
     <string name="title_expensetab">Expense</string>
     <string name="title_incometab">Income</string>
     <string name="title_expvsinctab">Exp vs Inc</string>

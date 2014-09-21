@@ -7,6 +7,8 @@ import java.util.List;
 import com.anumeha.wheredmymoneygo.Expense.ExpenseListFragment;
 import com.anumeha.wheredmymoneygo.Expense.ExpensePieFragment;
 import com.anumeha.wheredmymoneygo.Income.IncomeListFragment;
+import com.anumeha.wheredmymoneygo.Services.BackupOps;
+import com.anumeha.wheredmymoneygo.Services.BackupOps.BackupCreatedListener;
 import com.anumeha.wheredmymoneygo.Services.DefaultPreferenceAccess;
 import com.anumeha.wheredmymoneygo.Services.DefaultPreferenceAccess.PrefAddedListener;
 import com.anumeha.wheredmymoneygo.Services.DefaultsLoader;
@@ -33,6 +35,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.Toast;
 
 
 public class MainActivity extends FragmentActivity implements OnClickListener{
@@ -59,7 +62,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 		
 		prefAccess = new DefaultPreferenceAccess();
 		defLoader = new DefaultsLoader();
-		
+		prefs= PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 		defLoader.setDefaults(new DefaultsLoadedListener<List<String>>(){
 
 			@Override
@@ -104,7 +107,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 			}
 			
 		}, keys, values, this);
-		prefs= PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+		
 	}
 	
 	void setUpMainActivty() {
@@ -183,6 +186,22 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 					
 		            return true;
 		            
+		        case R.id.action_backup:
+		        	  BackupOps backup = new BackupOps();
+		        	  backup.createBackup(new BackupCreatedListener<String>(){
+
+						@Override
+						public void OnSuccess(String data) {
+							//create alret and ask for email.
+							Toast.makeText(getApplicationContext(), "backup created in " + data, Toast.LENGTH_SHORT).show();
+						}
+
+						@Override
+						public void OnFaiure(int errCode) {
+							Toast.makeText(getApplicationContext(), "could not create backup ", Toast.LENGTH_SHORT).show();
+							
+						}},this);
+		            return true;
 		        case android.R.id.home:
 		        	  Intent intent1 = new Intent(this, MainActivity.class);
 		        	  intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -325,14 +344,14 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 	        }	      
 	        currentTab = tag;	
 	        if(currentTab.equals(EXPENSE_TAG)){
-	        	if(prefs.getString("exp_cur_viewAs", "list").equals("list")) {
+	        	if(prefs.getString("exp_def_viewAs", "list").equals("list")) {
 	        		listPie.setText("Pie");   
 	        	}else {
 	        		listPie.setText("List");   
 	        	}
 	        }  	
 	         else {
-		        	if(prefs.getString("inc_cur_viewAs", "list").equals("list")) {
+		        	if(prefs.getString("inc_def_viewAs", "list").equals("list")) {
 		        		listPie.setText("Pie");   
 		        	}else {
 		        		listPie.setText("List");   
@@ -374,8 +393,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 			FragmentTransaction ft;
 			
 			if(currentTab.equals(EXPENSE_TAG)) {
-				if(prefs.getString("exp_cur_viewAs", "list").equals("list")) {
-					editor.putString("exp_cur_viewAs", "pie");
+				if(prefs.getString("exp_def_viewAs", "list").equals("list")) {
+					editor.putString("exp_def_viewAs", "pie");
 					b.setText("List");	
 					pie = true;
 					editor.commit();
@@ -386,7 +405,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 					ft.commit();
 				}
 				else {
-					editor.putString("exp_cur_viewAs", "list");
+					editor.putString("exp_def_viewAs", "list");
 					b.setText("Pie");	
 					pie = false;
 					editor.commit();
@@ -398,8 +417,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 				}
 				
 			} else {
-				if(prefs.getString("inc_cur_viewAs", "list").equals("list")) {
-					editor.putString("inc_cur_viewAs", "pie");
+				if(prefs.getString("inc_def_viewAs", "list").equals("list")) {
+					editor.putString("inc_def_viewAs", "pie");
 					b.setText("List");
 					pie = true;
 					editor.commit();
@@ -410,7 +429,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 					ft.commit();
 				}
 				else {
-					editor.putString("inc_cur_viewAs", "list");
+					editor.putString("inc_def_viewAs", "list");
 					b.setText("Pie");	
 					pie = false;
 					editor.commit();

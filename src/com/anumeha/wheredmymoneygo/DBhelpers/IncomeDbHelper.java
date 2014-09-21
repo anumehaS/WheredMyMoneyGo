@@ -204,4 +204,9 @@ public class IncomeDbHelper {
   	   	 Cursor c = db.query(table, columns ,selection.toString(),temp.toArray(new String[temp.size()]),KEY_I_SOURCE,null,null);	    	
   	    	return c;
   	}
+       public Cursor getIncomesForBackup(){
+  		 SQLiteDatabase db = dbh.getReadableDatabase();   	 
+  	   	 Cursor c = db.query(TABLE_INCOME, null ,null,null,null,null,null);
+  	   	 return c;
+  	}
 }

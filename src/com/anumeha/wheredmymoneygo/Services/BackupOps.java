@@ -1,0 +1,127 @@
+package com.anumeha.wheredmymoneygo.Services;
+
+import java.io.File;
+import java.io.FileWriter;
+
+import com.anumeha.wheredmymoneygo.DBhelpers.CategoryDbHelper;
+import com.anumeha.wheredmymoneygo.DBhelpers.ExpenseDbHelper;
+import com.anumeha.wheredmymoneygo.DBhelpers.IncomeDbHelper;
+import com.anumeha.wheredmymoneygo.DBhelpers.SourceDbHelper;
+
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.database.Cursor;
+import android.os.AsyncTask;
+import android.os.Environment;
+
+public class BackupOps {
+
+	public static interface BackupCreatedListener<T> {
+		void OnSuccess(T data);
+		void OnFaiure(int errCode);
+	}
+	
+	public void createBackup(BackupCreatedListener<String> lstnr, Context ctx){
+		BackupCreater task = new BackupCreater(lstnr,ctx);
+		task.execute();
+	}
+	
+	private class BackupCreater extends AsyncTask<Void, Void, String>{
+		
+		BackupCreatedListener<String> lstnr;
+		ExpenseDbHelper expDbh;
+		IncomeDbHelper incDbh;
+		CategoryDbHelper catDbh;
+		SourceDbHelper souDbh;
+		File internalDir;
+		ProgressDialog pd;
+		BackupCreater(BackupCreatedListener<String> lstnr, Context ctx){
+			
+			this.lstnr = lstnr;
+			expDbh = new ExpenseDbHelper(ctx);
+			incDbh = new IncomeDbHelper(ctx);
+			catDbh = new CategoryDbHelper(ctx);
+			souDbh = new SourceDbHelper(ctx);
+			internalDir = ctx.getFilesDir();
+			pd = new ProgressDialog(ctx);
+		}
+		
+		@Override
+		protected void onPreExecute() {
+			pd.setMessage("Creating Backup..");
+			pd.show();
+		}
+		@Override
+		protected String doInBackground(Void... arg0) {
+			
+			File dir;
+			if(isExternalStorageWritable()){ //use external storage if available
+				File sdCard = Environment.getExternalStorageDirectory();
+				dir = new File (sdCard.getAbsolutePath() + "/wmmgbackup/");
+				dir.mkdirs();				
+			} else {
+				dir = internalDir;
+			}
+			
+			Cursor c = expDbh.getExpensesForBackup();
+			writeBackupToFile(c, "wmmgExpensebackup.csv",dir);
+			c = incDbh.getIncomesForBackup();
+			writeBackupToFile(c, "wmmgIncomebackup.csv",dir);
+			c = catDbh.getAllCategories();
+			writeBackupToFile(c, "wmmgCategorybackup.csv",dir);
+			c = souDbh.getAllSources();
+			writeBackupToFile(c, "wmmgSourcebackup.csv",dir);
+			return dir.toString();
+		}
+		
+		@Override
+		protected void onPostExecute(String dir) {
+			
+			if(dir == null) {
+				if(pd.isShowing())
+				pd.dismiss();
+				lstnr.OnFaiure(0);
+			} else {
+				pd.dismiss();
+				lstnr.OnSuccess(dir); 
+			}
+			
+		}
+		
+		private void writeBackupToFile(Cursor c, String fileName, File dir) {
+			
+			File file = new File(dir,fileName);
+			FileWriter writer; 
+			c.moveToFirst();
+			
+			do{
+				try {
+					writer = new FileWriter(file);
+					boolean first = true;
+					for(int i =0; i< c.getColumnCount();i++) {
+						if(first) {
+							writer.append(c.getString(i));
+							first = false;
+						} else {
+							writer.append(","+c.getString(i));
+						}
+					}
+					writer.append('\n');
+				}catch(Exception e){
+					
+				}
+			}while(c.moveToNext());
+			
+			c.close();
+		}
+		public boolean isExternalStorageWritable() {
+		    String state = Environment.getExternalStorageState();
+		    if (Environment.MEDIA_MOUNTED.equals(state)) {
+		        return true;
+		    }
+		    return false;
+		}
+
+		
+	}
+}

@@ -221,4 +221,9 @@ public class ExpenseDbHelper {
 	    	return c;
 	}
  
+	public Cursor getExpensesForBackup(){
+		 SQLiteDatabase db = dbh.getReadableDatabase();   	 
+	   	 Cursor c = db.query(TABLE_EXPENSES, null ,null,null,null,null,null);
+	   	 return c;
+	}
 }
