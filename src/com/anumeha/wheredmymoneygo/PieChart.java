@@ -1,63 +1,70 @@
 package com.anumeha.wheredmymoneygo;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.Paint.Join;
 import android.graphics.RectF;
-import android.graphics.drawable.Drawable;
+import android.util.AttributeSet;
 import android.view.View;
+//import android.view.ViewGroup;
 
-public class PieChart extends Drawable {
+public class PieChart extends View {
 	
-
-	View v; 
-	Cursor c;
-	RectF pie_bounds;
+	Cursor cursor = null;
+	RectF pieBounds;
 	Paint paint;
+	View pieView;
+	Paint border;
 	
-	public PieChart(View v, Cursor c) {
-		
-		paint = new Paint();
-		this.v =v;
-		this.c =c; 
-		
-			
+	public PieChart(Context context ) {
+		super(context);
+		init();
+	}
+	
+	public PieChart(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init();
+	}
+	
+	private void init() {
+        paint = new Paint();
+        paint.setAntiAlias(true);
+		paint.setStyle(Paint.Style.FILL);
+		paint.setStrokeWidth(0.5f);
+        border = new Paint();
+        border.setAntiAlias(true);
+        border.setStyle(Paint.Style.STROKE);
+        border.setStrokeJoin(Join.ROUND);
+        border.setStrokeCap(Cap.ROUND);
+        border.setStrokeWidth(0.5f);
+        border.setColor(Color.RED);
 	}
 
 
 	@Override
-	public void draw(Canvas canvas) {
+	public void onDraw(Canvas canvas) {
+		super.onDraw(canvas);
 		
+		if ( cursor == null)
+			return;
 		
-		float xPieCenter = canvas.getWidth()/2 ;
-		float yPieCenter = canvas.getHeight()/8 ;
-		float maxRadius = (xPieCenter > yPieCenter) ? yPieCenter : xPieCenter;
-		float radiusPie = (float) (maxRadius);
-		
-		//System.out.println("Dimensions of canvas :" + canvas.getHeight() +"," + canvas.getWidth());
-		
-		//chart area rectangle 
-		pie_bounds= new RectF( xPieCenter - radiusPie, 
-							   yPieCenter - radiusPie, 
-							   xPieCenter + radiusPie,
-							   yPieCenter + radiusPie );
 		
 		float sum =0;
 		//sum of amounts
-		c.moveToFirst();
+		cursor.moveToFirst();
 		do { 
-			sum += c.getFloat(2);			
-		} while(c.moveToNext());
+			sum += cursor.getFloat(2);			
+		} while(cursor.moveToNext());
 		
 		float startAngle =0; 
-		c.moveToFirst();
+		cursor.moveToFirst();
 		float nextStartAngle;
 		do { 
-			float catAmount = c.getFloat(2);
+			float catAmount = cursor.getFloat(2);
 			
 			if(catAmount ==0) 
 				continue;
@@ -66,50 +73,75 @@ public class PieChart extends Drawable {
 			
 		//	System.out.println("Color size is" + colors.size());
 			
-			paint.setColor((int) c.getFloat(3));
-			paint.setAntiAlias(true);
-			paint.setStyle(Paint.Style.FILL);
-			paint.setStrokeWidth(0.5f);
+			paint.setColor((int) cursor.getFloat(3));
 			
-			canvas.drawArc(pie_bounds, startAngle, endAngle, true, paint);
 			
-			 Paint border = new Paint();
-
-             border.setAntiAlias(true);
-             border.setStyle(Paint.Style.STROKE);
-             border.setStrokeJoin(Join.ROUND);
-             border.setStrokeCap(Cap.ROUND);
-             border.setStrokeWidth(0.5f);
-             border.setColor(Color.RED);
+			canvas.drawArc(pieBounds, startAngle, endAngle, true, paint);
 
              //draw border arc
-             canvas.drawArc(pie_bounds, startAngle, endAngle, true, border);
+             canvas.drawArc(pieBounds, startAngle, endAngle, true, border);
              
              startAngle = nextStartAngle;
 			
 			
-		} while(c.moveToNext());
+		} while(cursor.moveToNext());
 		
 		
 		
 	}
 
-	@Override
-	public int getOpacity() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+	
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        
+        //Get the padding
+        float xpad = (float) (getPaddingLeft() + getPaddingRight());
+        float ypad = (float) (getPaddingTop() + getPaddingBottom());
+        
+        float ww = (float) w - xpad;
+        float hh = (float) h - ypad;
+        
+        float diameter = Math.min(ww, hh);
+        
+        float leftBound = (w - diameter)/2;
+        
+        pieBounds = new RectF(
+                0.0f,
+                0.0f,
+                diameter,
+                diameter);
+        pieBounds.offsetTo( leftBound, getPaddingTop());
+        
+        
+    }
+    
+
 
 	@Override
-	public void setAlpha(int alpha) {
+	protected void onLayout(boolean arg0, int arg1, int arg2, int arg3, int arg4) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
-	public void setColorFilter(ColorFilter cf) {
-		// TODO Auto-generated method stub
-		
+
+	public Cursor getCursor() {
+		return cursor;
+	}
+
+
+	public void setCursor(Cursor c) {
+		this.cursor = c;
+	}
+
+
+	public View getPieView() {
+		return pieView;
+	}
+
+
+	public void setPieView(View pieView) {
+		this.pieView = pieView;
 	}
 
 }

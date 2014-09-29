@@ -39,6 +39,7 @@ public class CurrencyConverter extends Fragment{
 	public static final String TAG = "currency_converter";
 	private SharedPreferences prefs;
 	private Context context;
+	static ProgressDialog pd;
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,7 +50,8 @@ public class CurrencyConverter extends Fragment{
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         this.prefs = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());	
-		this.context = activity;    
+		this.context = activity.getApplicationContext();    
+		pd = new ProgressDialog(activity);
     }
 	
 	public static interface ResultListener<T> {
@@ -62,7 +64,7 @@ public class CurrencyConverter extends Fragment{
 		String to = prefs.getString("def_currency","USD" );
 		ConvertCurrencyTask task = new ConvertCurrencyTask(lstnr,context, e, update);
 		task.execute(e.getCurrency(),to); //to is the default currency
-		context = null;
+		
 	}
 	
 	public void getConvertedRate(ResultListener<Long> lstnr, Income i, boolean update) {
@@ -70,7 +72,7 @@ public class CurrencyConverter extends Fragment{
 		String to = prefs.getString("def_currency","USD" );
 		ConvertCurrencyTask task = new ConvertCurrencyTask(lstnr,context, i,update);
 		task.execute(i.getCurrency(),to); //to is the default currency
-		context = null;
+		
 	}
 
 	static class ConvertCurrencyTask extends AsyncTask<String, Void, Float> {
@@ -82,7 +84,7 @@ public class CurrencyConverter extends Fragment{
 		Expense e;
 		Income i;
 		Boolean isExpense = true;
-		ProgressDialog pd;
+		
 		boolean update = false;
 		ConnectivityManager cm;
 		long id = -1;
@@ -95,7 +97,7 @@ public class CurrencyConverter extends Fragment{
 			expDb = new ExpenseDbHelper(context);
 			this.update = update;
 			cm =(ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-			pd = new ProgressDialog(context);
+			
 			context = null;
 		}
 		
@@ -108,7 +110,7 @@ public class CurrencyConverter extends Fragment{
 			isExpense = false;
 			this.update = update;
 			cm =(ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-			pd = new ProgressDialog(context);
+			
 			context = null;
 		}
 		

@@ -27,6 +27,7 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 
 public class IncomeListFragment extends Fragment implements LoaderCallbacks<Cursor> {
 	
+	public static final String TAG = "Income_list";
 	private static final int INC_DEL = 04;
 	private ListView listview;
 	private TextView t;
@@ -38,6 +39,11 @@ public class IncomeListFragment extends Fragment implements LoaderCallbacks<Curs
 	private boolean incNotify;
 	private static int EDIT_INCOME = 01; //0 FOR INCOME 1 FOR EDIT	
 	
+	@Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true); // handle orientation changes
+    }
 	@Override
 	  public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	      Bundle savedInstanceState) {

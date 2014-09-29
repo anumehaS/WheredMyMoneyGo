@@ -1,12 +1,11 @@
 package com.anumeha.wheredmymoneygo;
 
 
-import java.io.File;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import com.anumeha.wheredmymoneygo.Expense.ExpenseListFragment;
-import com.anumeha.wheredmymoneygo.Expense.ExpensePieFragment;
 import com.anumeha.wheredmymoneygo.Income.IncomeListFragment;
 import com.anumeha.wheredmymoneygo.Services.BackupOps;
 import com.anumeha.wheredmymoneygo.Services.BackupOps.BackupCreatedListener;
@@ -44,15 +43,14 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 
 
 	static String currentTab, defCurrency;	
-	static boolean pie = false;
+	static boolean pie = false, expPie = false, incPie = false;
 	private int INCOME_ADDED = 00;
 	private int EXPENSE_ADDED = 10;
 	private int OPTIONS = 99;
 	private static int EDIT_INCOME = 01; //0 FOR INCOME 1 FOR EDIT	
 	static String EXPENSE_TAG = "expense";
 	private static String INCOME_TAG = "income";
-	
-	private Button options;
+	private int navState = 0;
 	private static Button listPie;
 	private MyTabListener expenseTab,incomeTab,IvETab;
 	DefaultPreferenceAccess prefAccess; 
@@ -61,7 +59,10 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+		if (savedInstanceState!=null &&savedInstanceState.containsKey("Navigation_item_state")) {
+			navState = savedInstanceState.getInt("Navigation_item_state");
+		      //getActionBar().setSelectedNavigationItem(savedInstanceState.getInt("Navigation_item_state"));
+		    }
 		prefAccess = new DefaultPreferenceAccess();
 		defLoader = new DefaultsLoader();
 		prefs= PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -75,7 +76,12 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 
 			@Override
 			public void notFirstTime(List<String> data) {
-				if(!data.get(0).equals("list")){
+				if(data.get(0).equals("pie") ) {
+					expPie = true;
+					pie = true;
+				}	
+				if(data.get(1).equals("pie")){
+					incPie = true;
 					pie = true;
 				}
 				setUpMainActivty();
@@ -124,19 +130,35 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		
 		// add the income, expense and income vs expense tabs
-		expenseTab = new MyTabListener(this,EXPENSE_TAG,ExpenseListFragment.class);
-		incomeTab = new MyTabListener(this,INCOME_TAG,IncomeListFragment.class);
+		if(!pie) {
+			expenseTab = new MyTabListener(this,ExpenseListFragment.TAG,ExpenseListFragment.class);
+			incomeTab = new MyTabListener(this,IncomeListFragment.TAG,IncomeListFragment.class);
+		} else {
+			if(expPie){
+				expenseTab = new MyTabListener(this,PieFragment.EXP_TAG,PieFragment.class);
+			} else {
+				expenseTab = new MyTabListener(this,ExpenseListFragment.TAG,ExpenseListFragment.class);
+			}
+
+			if(incPie) {
+				incomeTab = new MyTabListener(this,PieFragment.INC_TAG,PieFragment.class);
+		 	} else {
+		 		incomeTab = new MyTabListener(this,IncomeListFragment.TAG,IncomeListFragment.class);
+		 	}
+		}
+		
 		actionBar.addTab(actionBar.newTab().setText(R.string.title_expensetab).setTabListener(expenseTab));
 		actionBar.addTab(actionBar.newTab().setText(R.string.title_incometab).setTabListener(incomeTab));
 	//	actionBar.addTab(actionBar.newTab().setText(R.string.title_expvsinctab).setTabListener(new TwoFragTabListener(this, "tag5", "evi", ExpenseOptionsFragment.class, ExpenseListFragment.class )));
+		actionBar.setSelectedNavigationItem(navState);
+	
 	}
 	
 	@Override
 	  public void onRestoreInstanceState(Bundle savedInstanceState) {
 	    // Restore the previously serialized current tab position.
-	    if (savedInstanceState.containsKey("Navigation_item_state")) {
-	      getActionBar().setSelectedNavigationItem(savedInstanceState.getInt("Navigation_item_state"));
-	    }
+		//getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+	    
 	  }
 
 	  @Override
@@ -144,6 +166,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 	    // Serialize the current tab position.
 	    outState.putInt("Navigation_item_state", getActionBar()
 	        .getSelectedNavigationIndex());
+	    
 	  }
 
 	  @Override
@@ -177,11 +200,11 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 		            
 		        case R.id.action_add:
 		        	//define a new Intent for the add expense form Activity
-		        	if(currentTab.equals("income")) {
+		        	if(currentTab.equals(INCOME_TAG)) {
 		        		intent = new Intent(this,com.anumeha.wheredmymoneygo.Income.IncomeAddActivity.class);
 		        		this.startActivityForResult(intent, INCOME_ADDED);
 		        	}
-		        	else if(currentTab.equals("expense")){
+		        	else if(currentTab.equals(EXPENSE_TAG)){
 		        		intent = new Intent(this,com.anumeha.wheredmymoneygo.Expense.ExpenseAddActivity.class);
 		        		this.startActivityForResult(intent, EXPENSE_ADDED);
 		        	}			 
@@ -223,46 +246,66 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 			  switch(requestCode) {
 			  case 00: 
 				  if (data.hasExtra("result") && data.getExtras().getString("result").equals("added")) {	
-					  //add part about list/pie
-				    	IncomeListFragment inc = (IncomeListFragment)  getFragmentManager().findFragmentByTag(INCOME_TAG);
-						inc.restartLoader();	  
+					 if(!pie) {
+					    	IncomeListFragment inc = (IncomeListFragment)  getFragmentManager().findFragmentByTag(IncomeListFragment.TAG);
+							inc.restartLoader();	 
+						} else {
+							PieFragment inc = (PieFragment)  getFragmentManager().findFragmentByTag(PieFragment.INC_TAG);
+							inc.restartLoader();
+						}
 				    }
 				  break;
 			  case 03: 
-				  ExpenseListFragment expdel = (ExpenseListFragment)  getFragmentManager().findFragmentByTag(EXPENSE_TAG);
+				  ExpenseListFragment expdel = (ExpenseListFragment)  getFragmentManager().findFragmentByTag(ExpenseListFragment.TAG);
 				  expdel.restartLoader();  
 				  break;
 				  
 			  case 04: 
-				  IncomeListFragment incdel = (IncomeListFragment)  getFragmentManager().findFragmentByTag(INCOME_TAG);
+				  IncomeListFragment incdel = (IncomeListFragment)  getFragmentManager().findFragmentByTag(IncomeListFragment.TAG);
 					incdel.restartLoader();	  
 				  break;
 			  
 			  case 10:  if (data.hasExtra("result") && data.getExtras().getString("result").equals("added")) { 
-					ExpenseListFragment exp = (ExpenseListFragment)  getFragmentManager().findFragmentByTag(EXPENSE_TAG);
-					exp.restartLoader();
-				  }
+					if(!pie) {
+					  ExpenseListFragment exp = (ExpenseListFragment)  getFragmentManager().findFragmentByTag(ExpenseListFragment.TAG);
+					  exp.restartLoader();
+					} else {
+						PieFragment exp = (PieFragment)  getFragmentManager().findFragmentByTag(PieFragment.EXP_TAG);
+						exp.restartLoader();
+					}
+				  } 
 			  break;
 			  case 01: 
 				  if (data.hasExtra("result") && data.getExtras().getString("result").equals("edited")) {	
-				    	IncomeListFragment inc = (IncomeListFragment)  getFragmentManager().findFragmentByTag(INCOME_TAG);
+				    	IncomeListFragment inc = (IncomeListFragment)  getFragmentManager().findFragmentByTag(IncomeListFragment.TAG);
 						inc.restartLoader();	  
 				    }
 				  break;				  
 			  
 			  case 11:  if (data.hasExtra("result") && data.getExtras().getString("result").equals("edited")) { 
-					ExpenseListFragment exp = (ExpenseListFragment)  getFragmentManager().findFragmentByTag(EXPENSE_TAG);
-					exp.restartLoader();
+					
+						ExpenseListFragment exp = (ExpenseListFragment)  getFragmentManager().findFragmentByTag(ExpenseListFragment.TAG);
+						exp.restartLoader(); 
 				  }
 			  break;
 
 			  case 99: if(data.hasExtra("refresh") && data.getExtras().getString("refresh").equals("yes")){
-				  	if(currentTab == EXPENSE_TAG) {
-				  		ExpenseListFragment exp = (ExpenseListFragment)  getFragmentManager().findFragmentByTag(EXPENSE_TAG);
-						exp.restartLoader();
-				  	} else if (currentTab == INCOME_TAG) {
-				  		IncomeListFragment inc = (IncomeListFragment)  getFragmentManager().findFragmentByTag(INCOME_TAG);
-						inc.restartLoader();
+				  	if(currentTab.equals(EXPENSE_TAG)) {
+				  		if(pie) {
+					  		ExpenseListFragment exp = (ExpenseListFragment)  getFragmentManager().findFragmentByTag(ExpenseListFragment.TAG);
+							exp.restartLoader(); 
+						}else {
+							PieFragment exp = (PieFragment)  getFragmentManager().findFragmentByTag(PieFragment.EXP_TAG);
+							exp.restartLoader();
+						} 
+				  	} else if (currentTab.equals(INCOME_TAG)) {
+				  		if(pie){
+					  		IncomeListFragment inc = (IncomeListFragment)  getFragmentManager().findFragmentByTag(IncomeListFragment.TAG);
+							inc.restartLoader(); 
+						}else {
+							PieFragment inc = (PieFragment)  getFragmentManager().findFragmentByTag(PieFragment.INC_TAG);
+							inc.restartLoader();
+						}
 				  	}
 			  	  }
 			  break;
@@ -284,50 +327,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 		startActivity(Intent.createChooser(i,"Email:"));
 	}
 	
-	 private void setDefaults() {
-		  
-		  SharedPreferences prefs= PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-	      Editor editor = prefs.edit();
-		 
-		  
-	      if(!prefs.contains("base_currency"))
-		  editor.putString("base_currency", "USD");
-	      
-	      if(!prefs.contains("def_currency"))
-		  editor.putString("def_currency", "USD");
-		  
-	      if(!prefs.contains("def_dateformat"))
-		  editor.putString("def_dateformat", "MMMM dd, yyyy");
-		  //----------------------------------------------
-		  
-		  if(!prefs.contains("exp_def_orderBy"))
-		  editor.putString("exp_def_orderBy", "date(e_date)");
-		  if(!prefs.contains("exp_def_sortOrder"))
-		  editor.putString("exp_def_sortOrder", "DESC"); 
-		  if(!prefs.contains("exp_viewBy"))
-		  editor.putString("exp_viewBy", "all");
-		  if(!prefs.contains("exp_def_viewAs"))
-		  editor.putString("exp_def_viewAs", "list");
-		  if(!prefs.contains("exp_filter"))
-		  editor.putString("exp_filter", "");
-		  
-		  //---------------------------------------------
-		  if(!prefs.contains("inc_def_orderBy"))
-		  editor.putString("inc_def_orderBy", "date(i_date)");
-	      if(!prefs.contains("inc_def_sortOrder"))
-		  editor.putString("inc_def_sortOrder", "DESC"); 
-		  if(!prefs.contains("inc_viewBy"))
-		  editor.putString("inc_viewBy", "all");
-		  if(!prefs.contains("inc_def_viewAs"))
-		  editor.putString("inc_def_viewAs", "list");
-		  if(!prefs.contains("inc_filter"))
-		  editor.putString("inc_filter", "");
-		  
-		  editor.commit();
-		  
-	}
-
-	
 	
 
 	public static class MyTabListener implements
@@ -342,7 +341,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 		public MyTabListener(Activity activity, String tag, Class fragClass){
 			this.tag = tag;
 			this.fragClass = fragClass;
-			this.activity = activity;			
+			this.activity = activity;	
+			currentFrag = activity.getFragmentManager().findFragmentByTag(tag);
 		}
 		
 		@Override
@@ -358,20 +358,30 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 	        } else{
 	            // If it exists, simply attach it in order to show it
 	            ft.attach(currentFrag);
-	        }	      
-	        currentTab = tag;	
+	        }	  
+	        
+	        if(tag.equals(ExpenseListFragment.TAG)|| tag.equals(PieFragment.EXP_TAG)) {
+	        	currentTab = EXPENSE_TAG;
+	        } else {
+	        	currentTab = INCOME_TAG;
+	        }
+	      
 	        if(currentTab.equals(EXPENSE_TAG)){
 	        	if(prefs.getString("exp_def_viewAs", "list").equals("list")) {
-	        		listPie.setText("Pie");   
+	        		listPie.setText("Pie");  
+	        		pie=false;
 	        	}else {
-	        		listPie.setText("List");   
+	        		listPie.setText("List");  
+	        		pie=true;
 	        	}
 	        }  	
 	         else {
 		        	if(prefs.getString("inc_def_viewAs", "list").equals("list")) {
 		        		listPie.setText("Pie");   
+		        		pie=false;
 		        	}else {
-		        		listPie.setText("List");   
+		        		listPie.setText("List");  
+		        		pie=true;
 		        	}
 		      }  	
 		}
@@ -415,9 +425,12 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 					b.setText("List");	
 					pie = true;
 					editor.commit();
-					f = Fragment.instantiate(MainActivity.this, PieFragment.class.getName());
+					f = MainActivity.this.getFragmentManager().findFragmentByTag(PieFragment.EXP_TAG);
+					if(f == null) {
+						f = Fragment.instantiate(MainActivity.this, PieFragment.class.getName()); 
+					}
 					ft = fm.beginTransaction();
-					ft.replace(R.id.fragment_cashflow, f, "expense_pie");
+					ft.replace(R.id.fragment_cashflow, f, PieFragment.EXP_TAG);
 					expenseTab.setCurrentFrag(f);
 					ft.commit();
 				}
@@ -428,7 +441,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 					editor.commit();
 					f = Fragment.instantiate(MainActivity.this, ExpenseListFragment.class.getName());
 					ft = fm.beginTransaction();
-					ft.replace(R.id.fragment_cashflow, f, "expense");
+					ft.replace(R.id.fragment_cashflow, f, ExpenseListFragment.TAG);
 					expenseTab.setCurrentFrag(f);
 					ft.commit();
 				}
@@ -439,9 +452,12 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 					b.setText("List");
 					pie = true;
 					editor.commit();
-					f = Fragment.instantiate(MainActivity.this, PieFragment.class.getName());
+					f = fm.findFragmentByTag(PieFragment.INC_TAG);
+					if(f == null) {
+						f = Fragment.instantiate(MainActivity.this, PieFragment.class.getName()); 
+					}
 					ft = fm.beginTransaction();
-					ft.replace(R.id.fragment_cashflow, f, "income_pie");
+					ft.replace(R.id.fragment_cashflow, f, PieFragment.INC_TAG);
 					incomeTab.setCurrentFrag(f);
 					ft.commit();
 				}
@@ -452,7 +468,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 					editor.commit();
 					f = Fragment.instantiate(MainActivity.this, IncomeListFragment.class.getName());
 					ft = fm.beginTransaction();
-					ft.replace(R.id.fragment_cashflow, f, "income");
+					ft.replace(R.id.fragment_cashflow, f, IncomeListFragment.TAG);
 					incomeTab.setCurrentFrag(f);
 					ft.commit();
 				}

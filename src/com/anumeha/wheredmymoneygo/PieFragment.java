@@ -24,6 +24,8 @@ import android.widget.TextView;
 
 public class PieFragment extends Fragment implements LoaderCallbacks<Cursor>{
 	
+	static final String EXP_TAG = "Expense_Pie";
+	static final String INC_TAG = "Income_Pie";
 	View view;
 	List<String> categories;
 	ImageView imgView;
@@ -34,6 +36,13 @@ public class PieFragment extends Fragment implements LoaderCallbacks<Cursor>{
 	PieLegendCursorAdapter legendAdapter;
 	ListView legend;
 	Boolean isExpense = true;
+	
+	@Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true); // handle orientation changes
+    }
+	
 	@Override
 	  public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	      Bundle savedInstanceState) {
@@ -45,7 +54,7 @@ public class PieFragment extends Fragment implements LoaderCallbacks<Cursor>{
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		categories = new ArrayList<String>();		
-		imgView = (ImageView) view.findViewById(R.id.expPieChart);
+		pie = (PieChart) view.findViewById(R.id.expPieChart);
 		noExp = (TextView) view.findViewById(R.id.expNotPresent);
 		legend = (ListView)view.findViewById(R.id.legendListView);
 		
@@ -80,8 +89,8 @@ public class PieFragment extends Fragment implements LoaderCallbacks<Cursor>{
 		
 		if(cursor.getCount()!= 0) {
 			noExp.setVisibility(0);
-			pie = new PieChart(imgView,cursor);
-			imgView.setImageDrawable(pie);
+			pie.setCursor(cursor);
+			pie.setPieView(view);
 			legendAdapter = new PieLegendCursorAdapter(getActivity(),R.layout.pie_legend_row,cursor);
 			legend.setAdapter(legendAdapter);
 		}
@@ -94,6 +103,10 @@ public class PieFragment extends Fragment implements LoaderCallbacks<Cursor>{
 	public void onLoaderReset(Loader<Cursor> arg0) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public void restartLoader()	{
+		getLoaderManager().restartLoader(0, null,this);
 	}
 
 }

@@ -27,6 +27,7 @@ import android.widget.TextView;
 
 public class ExpenseListFragment extends Fragment implements LoaderCallbacks<Cursor> {
 	
+	public static final String TAG = "Expense_list";
 	private static final int EXP_DEL = 03;
 	private ListView listview;
 	private TextView t;
@@ -38,6 +39,11 @@ public class ExpenseListFragment extends Fragment implements LoaderCallbacks<Cur
 	private boolean expNotify;
 	private static int EDIT_EXPENSE= 11; //1 FOR EXPENSE 1 FOR EDIT	
 	
+	@Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true); // handle orientation changes
+    }
 	
 	@Override
 	  public View onCreateView(LayoutInflater inflater, ViewGroup container,
