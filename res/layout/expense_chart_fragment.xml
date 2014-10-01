@@ -7,25 +7,19 @@
    <TextView
         android:id="@+id/expNotPresent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp" 
+        android:layout_weight="0.2"
         android:ems="10" />
-
-	 <ImageView
+	 <com.anumeha.wheredmymoneygo.PieChart
 	     android:id="@+id/expPieChart"
-	     android:layout_width="fill_parent"
+	     android:layout_width="match_parent"
 	     android:layout_height="0dp"
-	     android:layout_gravity="center_horizontal"
-	     android:layout_weight="2"
-	     android:adjustViewBounds="false"
-	     android:background="#FFFFFF"
-	     android:minHeight="200dp"
-	     android:scaleType="center" />
-
+	     android:layout_weight="8" />
 	 <ListView
         android:id="@+id/legendListView"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" >
+        android:layout_height="0dp" 
+        android:layout_weight="0.4">
     </ListView>
 
 </LinearLayout>

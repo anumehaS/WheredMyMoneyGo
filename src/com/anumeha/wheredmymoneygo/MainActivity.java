@@ -217,8 +217,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 
 						@Override
 						public void OnSuccess(String data) {
-							//create alret and ask for email.
-							//Toast.makeText(getApplicationContext(), "backup created in " + data, Toast.LENGTH_LONG).show();
+							
 							sendEmail(data);
 						}
 
