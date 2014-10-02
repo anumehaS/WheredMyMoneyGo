@@ -37,6 +37,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 public class OptionsDialog extends Activity implements LoaderCallbacks<Cursor>{
 	
@@ -54,7 +55,7 @@ public class OptionsDialog extends Activity implements LoaderCallbacks<Cursor>{
 	String filterVal, sortOrderVal, orderByVal,  viewByVal, convVal, onlyRecVal;
 	String filterKey, sortOrderKey, orderByKey,  viewByKey, startDateKey, endDateKey,convKey,onlyRecKey;
 	DefaultPreferenceAccess prefAccess; 
-	
+	boolean isPie;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		
@@ -64,6 +65,7 @@ public class OptionsDialog extends Activity implements LoaderCallbacks<Cursor>{
 		
 
 		currentTab = getIntent().getStringExtra("currentTab");	
+		isPie = getIntent().getBooleanExtra("isPie",false);
 		
 		if(currentTab.equals(MainActivity.EXPENSE_TAG)) {
 			  filterKey = "exp_filter"; 
@@ -113,13 +115,38 @@ public class OptionsDialog extends Activity implements LoaderCallbacks<Cursor>{
 				
 				
 				sortOrder = (Spinner)findViewById(R.id.sortOrder);
-				ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(OptionsDialog.this,
-				        R.array.sort_spinner_items, android.R.layout.simple_spinner_item);
-				adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-				sortOrder.setAdapter(adapter);
-				sortOrder.setSelection(getDefaultSortSelection(defSortOrderVal,defOrderByVal));
-				
 				dateRangeLayout = (LinearLayout)findViewById(R.id.dateRangeLayout);
+				convert = (CheckBox)findViewById(R.id.convertCur);
+				showRec = (CheckBox)findViewById(R.id.onlyRec);
+				if(isPie){
+				 // hide all
+				  ((TextView)findViewById(R.id.sortLabel)).setVisibility(View.GONE);
+				  ((TextView)findViewById(R.id.filterLabel)).setVisibility(View.GONE);
+					filters.setVisibility(View.GONE);
+					sortOrder.setVisibility(View.GONE);
+					convert.setVisibility(View.GONE);
+					showRec.setVisibility(View.GONE);
+				} else {
+					//populate all
+					ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(OptionsDialog.this,
+					        R.array.sort_spinner_items, android.R.layout.simple_spinner_item);
+					adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+					sortOrder.setAdapter(adapter);
+					sortOrder.setSelection(getDefaultSortSelection(defSortOrderVal,defOrderByVal));
+					if(defConvVal.equals("on")) {
+						convert.setChecked(true);
+					}
+									
+					if(defOnlyRecVal.equals("on")) {
+						showRec.setChecked(true);
+					}
+					
+					OptionsDialog.this.getLoaderManager().initLoader(1,null, OptionsDialog.this ); // 1 for category
+					//OptionsDialog.this.getLoaderManager().initLoader(2,null, OptionsDialog.this ); // 2 for sources
+				}
+				
+				
+				
 				viewBy = (RadioGroup) findViewById(R.id.radioViewin);
 				viewBy.setOnCheckedChangeListener(new OnCheckedChangeListener(){
 
@@ -144,17 +171,7 @@ public class OptionsDialog extends Activity implements LoaderCallbacks<Cursor>{
 					((RadioButton) findViewById(R.id.radioRange)).setChecked(true);
 					
 				}
-				convert = (CheckBox)findViewById(R.id.convertCur);
-				if(defConvVal.equals("on")) {
-					convert.setChecked(true);
-				}
-				
-				showRec = (CheckBox)findViewById(R.id.onlyRec);
-				if(defOnlyRecVal.equals("on")) {
-					showRec.setChecked(true);
-				}
-				OptionsDialog.this.getLoaderManager().initLoader(1,null, OptionsDialog.this ); // 1 for category
-				OptionsDialog.this.getLoaderManager().initLoader(2,null, OptionsDialog.this ); // 2 for sources
+
 			}
 
 			@Override

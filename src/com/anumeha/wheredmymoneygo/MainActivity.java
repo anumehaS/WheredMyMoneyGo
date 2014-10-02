@@ -290,7 +290,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 
 			  case 99: if(data.hasExtra("refresh") && data.getExtras().getString("refresh").equals("yes")){
 				  	if(currentTab.equals(EXPENSE_TAG)) {
-				  		if(pie) {
+				  		if(!pie) {
 					  		ExpenseListFragment exp = (ExpenseListFragment)  getFragmentManager().findFragmentByTag(ExpenseListFragment.TAG);
 							exp.restartLoader(); 
 						}else {
@@ -298,7 +298,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 							exp.restartLoader();
 						} 
 				  	} else if (currentTab.equals(INCOME_TAG)) {
-				  		if(pie){
+				  		if(!pie){
 					  		IncomeListFragment inc = (IncomeListFragment)  getFragmentManager().findFragmentByTag(IncomeListFragment.TAG);
 							inc.restartLoader(); 
 						}else {
@@ -483,7 +483,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 		
 		Intent i = new Intent(this,com.anumeha.wheredmymoneygo.OptionsDialog.class);
 		i.putExtra("currentTab",currentTab);
-		
+		i.putExtra("isPie",pie);
 		this.startActivityForResult(i,OPTIONS);
 	}
 	

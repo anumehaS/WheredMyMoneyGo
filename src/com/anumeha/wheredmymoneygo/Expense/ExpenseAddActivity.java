@@ -35,12 +35,13 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 public class ExpenseAddActivity extends Activity implements OnClickListener, LoaderCallbacks<Cursor>{
 	
-	private Button add, cancel;
+	private ImageButton add, cancel;
 	private static TextView expenseDate;
 	private Spinner category1, currency, frequency;
 	private static String e_date;
@@ -75,9 +76,9 @@ public class ExpenseAddActivity extends Activity implements OnClickListener, Loa
 	        
 			ask = (CheckBox)findViewById(R.id.inputExpNotify); 
 	        setCurrentDate();
-	        add = (Button)findViewById(R.id.expAddSubmit);
+	        add = (ImageButton)findViewById(R.id.expAddSubmit);
 			add.setOnClickListener(this);
-			cancel = (Button)findViewById(R.id.expAddCancel);
+			cancel = (ImageButton)findViewById(R.id.expAddCancel);
 			cancel.setOnClickListener(this);
 			dbh = new ExpenseDbHelper(this);
 			FragmentManager fragmentManager = getFragmentManager();
