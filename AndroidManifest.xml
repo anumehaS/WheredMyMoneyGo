@@ -81,6 +81,12 @@
    			 android:name="com.anumeha.wheredmymoneygo.receivers.RecEventReceiver">
    		 </receiver>
    		 
+          <receiver android:name="com.anumeha.wheredmymoneygo.receivers.WmmgBootReceiver">
+		    <intent-filter>
+		        <action android:name="android.intent.action.BOOT_COMPLETED"></action>
+		    </intent-filter>
+		</receiver>
+   		 
           <activity 
               android:name="com.anumeha.wheredmymoneygo.Services.WmmgAlarmManager"
            	  android:label="@string/alarmAct_name" 

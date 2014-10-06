@@ -24,7 +24,7 @@ public class RecEventReceiver extends BroadcastReceiver{
 	@Override
 	public void onReceive(Context ctx, Intent intent) {
 		
-		 if (intent.getAction()!= null && intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
+		/* if (intent.getAction()!= null && intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
 	           //reset alarms for expenses
 			 	ExpenseDbHelper expDb = new ExpenseDbHelper(ctx);
 			 	Cursor c = expDb.getAllRecurences();
@@ -36,7 +36,7 @@ public class RecEventReceiver extends BroadcastReceiver{
 			 	resetAllAlarms(ctx,c,true);
 			 		
 			 	return;
-	      }
+	      }*/
 		
 		Log.d(DEBUG_TAG,"In receiver");
 		
