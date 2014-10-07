@@ -63,7 +63,8 @@ public class WmmgBootReceiver extends BroadcastReceiver{
 			int id = c.getInt(0);
 			String freq = c.getString(8);
 			boolean notify = c.getString(9).equals("yes");
-			alarm.addRecurrence(mgr, ctx,id, freq, isInc, notify);
+			String date = c.getString(3);
+			alarm.addRecurrence(mgr, ctx,id, freq, isInc, notify, date);
 			
 		}while(c.moveToNext());
 		

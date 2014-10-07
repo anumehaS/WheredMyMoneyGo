@@ -14,6 +14,7 @@ import com.anumeha.wheredmymoneygo.Currency.CurrencyCursorLoader;
 import com.anumeha.wheredmymoneygo.DBhelpers.ExpenseDbHelper;
 import com.anumeha.wheredmymoneygo.Income.IncomeListFragment;
 import com.anumeha.wheredmymoneygo.Services.CurrencyConverter;
+import com.anumeha.wheredmymoneygo.Services.WmmgAlarmManager;
 import com.example.wheredmymoneygo.*;
 
 import android.app.Activity;
@@ -161,12 +162,14 @@ public class ExpenseAddActivity extends Activity implements OnClickListener, Loa
 				notify = ask.isChecked();
 			
 					
-		 			i.putExtra("rec_freq",freq );
-		 			i.putExtra("rec_add",true );
-		 			i.putExtra("rec_isIncome",false );
-					i.putExtra("rec_rem", false);
-					i.putExtra("rec_notify", notify);
-					i.putExtra("old_freq","" );
+		 			i.putExtra(WmmgAlarmManager.REC_FREQ,freq );
+		 			i.putExtra(WmmgAlarmManager.REC_ADD,true );
+		 			i.putExtra(WmmgAlarmManager.REC_ISINCOME,false );
+					i.putExtra(WmmgAlarmManager.REC_REMOVE, false);
+					i.putExtra(WmmgAlarmManager.REC_NOTIFY, notify);
+					i.putExtra(WmmgAlarmManager.OLD_FREQ,"" );
+					i.putExtra(WmmgAlarmManager.REC_DATE,e_date );
+					
 					
 				if(valid) {	
 					convFrag.getConvertedRate(new CurrencyConverter.ResultListener<Long>() {	

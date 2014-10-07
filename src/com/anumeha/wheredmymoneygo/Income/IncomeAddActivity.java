@@ -15,6 +15,7 @@ import com.anumeha.wheredmymoneygo.Expense.Expense;
 import com.anumeha.wheredmymoneygo.Expense.ExpenseAddActivity;
 import com.anumeha.wheredmymoneygo.Income.Income;
 import com.anumeha.wheredmymoneygo.Services.CurrencyConverter;
+import com.anumeha.wheredmymoneygo.Services.WmmgAlarmManager;
 import com.anumeha.wheredmymoneygo.Source.SourceCursorLoader;
 import com.example.wheredmymoneygo.R;
 
@@ -158,12 +159,13 @@ public class IncomeAddActivity extends Activity implements OnClickListener, Load
 				}
 				notify = ask.isChecked();
 
-		 			i.putExtra("rec_freq",freq );
-		 			i.putExtra("rec_add",true );
-		 			i.putExtra("rec_isIncome",true );
-					i.putExtra("rec_rem", false);
-					i.putExtra("rec_notify", notify);
-					i.putExtra("old_freq","" );
+					i.putExtra(WmmgAlarmManager.REC_FREQ,freq );
+		 			i.putExtra(WmmgAlarmManager.REC_ADD,true );
+		 			i.putExtra(WmmgAlarmManager.REC_ISINCOME,true );
+					i.putExtra(WmmgAlarmManager.REC_REMOVE, false);
+					i.putExtra(WmmgAlarmManager.REC_NOTIFY, notify);
+					i.putExtra(WmmgAlarmManager.OLD_FREQ,"" );
+					i.putExtra(WmmgAlarmManager.REC_DATE,i_date );
 				if(valid) {	
 					convFrag.getConvertedRate(new CurrencyConverter.ResultListener<Long>() {	
 	 					@Override

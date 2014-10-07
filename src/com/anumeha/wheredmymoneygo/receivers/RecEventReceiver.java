@@ -1,7 +1,7 @@
 package com.anumeha.wheredmymoneygo.receivers;
 
-import com.anumeha.wheredmymoneygo.DBhelpers.ExpenseDbHelper;
-import com.anumeha.wheredmymoneygo.DBhelpers.IncomeDbHelper;
+import com.anumeha.wheredmymoneygo.Expense.ExpenseAlarmManager;
+import com.anumeha.wheredmymoneygo.Income.IncomeAlarmManager;
 import com.anumeha.wheredmymoneygo.Services.AlarmOps;
 import com.anumeha.wheredmymoneygo.Services.AlarmOps.OnAlarmOpsCompleted;
 import com.anumeha.wheredmymoneygo.Services.WmmgAlarmManager;
@@ -17,33 +17,20 @@ import android.util.Log;
 public class RecEventReceiver extends BroadcastReceiver{
 
 	boolean isIncome,notify; 
-	String freq;
+	String freq,date;
 	int id;
 	
 	private static final String DEBUG_TAG = "RecEventReceiver";
 	@Override
 	public void onReceive(Context ctx, Intent intent) {
 		
-		/* if (intent.getAction()!= null && intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
-	           //reset alarms for expenses
-			 	ExpenseDbHelper expDb = new ExpenseDbHelper(ctx);
-			 	Cursor c = expDb.getAllRecurences();
-			 	resetAllAlarms(ctx,c,false);
-			 	
-			 	//reset alarms for Incomes
-			 	IncomeDbHelper incDb = new IncomeDbHelper(ctx);
-			 	c = incDb.getAllRecurences();
-			 	resetAllAlarms(ctx,c,true);
-			 		
-			 	return;
-	      }*/
-		
 		Log.d(DEBUG_TAG,"In receiver");
 		
-		boolean isIncome = intent.getBooleanExtra("isIncome",false);
-		boolean notify = intent.getBooleanExtra("rec_notify", false );
-		String freq = intent.getStringExtra("freq");
-		int id = intent.getIntExtra("id",0);
+		 isIncome = intent.getBooleanExtra(WmmgAlarmManager.REC_ISINCOME,false);
+		 notify = intent.getBooleanExtra(WmmgAlarmManager.REC_NOTIFY, false );
+		 freq = intent.getStringExtra(WmmgAlarmManager.REC_FREQ);
+		 id = intent.getIntExtra(WmmgAlarmManager.REC_ID,0);
+		 date = intent.getStringExtra(WmmgAlarmManager.REC_DATE);
 		String contentTitle, contentText;
 		Class startActivity;
 		
@@ -79,35 +66,25 @@ public class RecEventReceiver extends BroadcastReceiver{
 			}, id);
 		}
 		if(freq.equals("Monthly")) {
-			rescheduleMonthlyRec(ctx);
+			rescheduleMonthlyRec(ctx,isIncome);
 		}
 		
 	}
 	
-	private void resetAllAlarms(Context ctx,Cursor c, boolean isExp) {
-		
-		//Intent i = new Intent (ctx,com.anumeha.wheredmymoneygo.Expense.ExpenseAlarmManager.class);
-		
-		WmmgAlarmManager alarm = new WmmgAlarmManager();
-		
-		
-		AlarmManager mgr = (AlarmManager)ctx.getSystemService(Context.ALARM_SERVICE);
-		c.moveToFirst();
-		do{
-			int id = c.getInt(0);
-			String freq = c.getString(8);
-			boolean notify = c.getString(9).equals("yes");
-			alarm.addRecurrence(mgr, ctx,id, freq, isExp, notify);
-			
-		}while(c.moveToNext());
-		
-	}
 
-	void rescheduleMonthlyRec(Context ctx) {
-		WmmgAlarmManager alarm = new WmmgAlarmManager();
+
+	void rescheduleMonthlyRec(Context ctx, boolean isInc) {
+		WmmgAlarmManager alarm;
+		if(!isInc){
+			alarm = new ExpenseAlarmManager();
+		}else {
+			alarm = new IncomeAlarmManager();
+		}
+		
 		AlarmManager mgr = (AlarmManager)ctx.getSystemService(Context.ALARM_SERVICE);
-		alarm.cancelRecurrence(mgr, ctx, id, freq, isIncome, notify);
-		alarm.addRecurrence(mgr, ctx, id, freq, isIncome, notify);
+		
+		alarm.cancelRecurrence(mgr, ctx, id);
+		alarm.addRecurrence(mgr, ctx, id, freq, isIncome, notify,date);
 		
 	}
 

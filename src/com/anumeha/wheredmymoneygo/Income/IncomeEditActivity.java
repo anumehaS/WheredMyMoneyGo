@@ -17,6 +17,7 @@ import com.anumeha.wheredmymoneygo.Expense.ExpenseEditActivity;
 import com.anumeha.wheredmymoneygo.Income.Income;
 import com.anumeha.wheredmymoneygo.Income.IncomeCursorLoader;
 import com.anumeha.wheredmymoneygo.Services.CurrencyConverter;
+import com.anumeha.wheredmymoneygo.Services.WmmgAlarmManager;
 import com.anumeha.wheredmymoneygo.Source.SourceCursorLoader;
 import com.example.wheredmymoneygo.R;
 
@@ -172,7 +173,7 @@ public class IncomeEditActivity extends Activity implements OnClickListener, Loa
 				
 				if(!i_date.equals(i_date_edit.trim())){
 					noChanges = false;
-					
+					hasRec = true;
 				}
 				
 				//amount
@@ -233,15 +234,18 @@ public class IncomeEditActivity extends Activity implements OnClickListener, Loa
 					hasRec = true;
 				}
 				
-				i.putExtra("rec_freq",i_freq_edit );
-	 			i.putExtra("rec_add",false );
-	 			i.putExtra("rec_isIncome",true );
-				i.putExtra("rec_rem", false);
-				i.putExtra("rec_notify", i_notify_edit);
+				
+				
+				i.putExtra(WmmgAlarmManager.REC_FREQ,i_freq_edit );
+	 			i.putExtra(WmmgAlarmManager.REC_ADD,false );
+	 			i.putExtra(WmmgAlarmManager.REC_ISINCOME,true );
+				i.putExtra(WmmgAlarmManager.REC_REMOVE, false);
+				i.putExtra(WmmgAlarmManager.REC_NOTIFY, i_notify_edit);
 				Resources res = getResources();
 				String[] freqs = res.getStringArray(R.array.frequency_spinner_items);
-				i.putExtra("old_freq",freqs[i_freq] );
-				i.putExtra("old_notify", i_notify);
+				i.putExtra(WmmgAlarmManager.OLD_FREQ,freqs[i_freq] );
+				i.putExtra(WmmgAlarmManager.REC_DATE,i_date_edit);
+				
 				
 				if(valid && !noChanges && (!fromNoti || i_notify!=i_notify_edit)) {	
 					if(!i_currency_edit.equals(i_currency)) {
