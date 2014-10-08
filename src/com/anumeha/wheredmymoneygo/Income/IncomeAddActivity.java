@@ -44,7 +44,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 public class IncomeAddActivity extends Activity implements OnClickListener, LoaderCallbacks<Cursor> {
 	
 	private Button add, cancel;
-	private static TextView incomeDate;
+	private static Button incomeDate;
 	private Spinner source, currency, frequency;
 	private static String i_date;
 	IncomeDbHelper dbh;
@@ -241,7 +241,7 @@ public class IncomeAddActivity extends Activity implements OnClickListener, Load
 		
 	  } 
 	 public void setCurrentDate() {			 
-		incomeDate = (TextView) findViewById(R.id.incomeDate);			
+		incomeDate = (Button) findViewById(R.id.incPickDate);			
 		Date myDate;
 	    Calendar cal = Calendar.getInstance();	    
 	    myDate = cal.getTime();

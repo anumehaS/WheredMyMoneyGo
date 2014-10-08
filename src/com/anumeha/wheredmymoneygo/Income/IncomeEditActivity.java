@@ -51,7 +51,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 public class IncomeEditActivity extends Activity implements OnClickListener, LoaderCallbacks<Cursor> {
 	
 	private static Button add, cancel;
-	private static TextView incomeDate;
+	private static Button incomeDate;
 	private static Spinner source,currency,frequency;
 	private String i_name;
 	private static String i_date, i_date_edit;
@@ -121,7 +121,7 @@ public class IncomeEditActivity extends Activity implements OnClickListener, Loa
 				}
 				
 			});
-	        incomeDate = (TextView)findViewById(R.id.incomeDateEdit);
+	        incomeDate = (Button)findViewById(R.id.incPickDateEdit);
 
 	        add = (Button)findViewById(R.id.incSaveEdit);
 			add.setOnClickListener(this);
@@ -505,7 +505,7 @@ public class IncomeEditActivity extends Activity implements OnClickListener, Loa
 				((EditText)findViewById(R.id.inputIncomeAmountEdit)).setText(Float.toString(i_amount));
 				((EditText)findViewById(R.id.inputIncomeDescEdit)).setText(i_desc);
 				//((EditText)findViewById(R.id.inputIncomeCurrencyEdit)).setText(i_currency);
-				((TextView)findViewById(R.id.incomeDateEdit)).setText(tempdate);			
+				((Button)findViewById(R.id.incPickDateEdit)).setText(tempdate);			
 				
 				loadFinished1= true;
 			}

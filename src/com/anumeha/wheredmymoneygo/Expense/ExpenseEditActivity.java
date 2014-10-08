@@ -48,7 +48,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 public class ExpenseEditActivity extends Activity implements OnClickListener, LoaderCallbacks<Cursor> {
 	
 	private static Button add, cancel;
-	private static TextView expenseDate;
+	private static Button expenseDate;
 	private static Spinner category1, currency, frequency;
 	private String e_name;
 	private static String e_date, e_date_edit;
@@ -122,7 +122,7 @@ public class ExpenseEditActivity extends Activity implements OnClickListener, Lo
 				}
 				
 			});
-	        expenseDate = (TextView)findViewById(R.id.expenseDateEdit);
+	        expenseDate = (Button)findViewById(R.id.expPickDateEdit);
 	        add = (Button)findViewById(R.id.expSaveEdit);
 			add.setOnClickListener(this);
 			cancel = (Button)findViewById(R.id.expCancelEdit);
@@ -505,7 +505,7 @@ public class ExpenseEditActivity extends Activity implements OnClickListener, Lo
 					EditText des = ((EditText)findViewById(R.id.inputExpenseDescEdit));
 					des.setText(e_desc);
 					//((EditText)findViewById(R.id.inputExpenseCurrencyEdit)).setText(e_currency);
-					((TextView)findViewById(R.id.expenseDateEdit)).setText(tempdate);
+					((Button)findViewById(R.id.expPickDateEdit)).setText(tempdate);
 					
 					if(fromNoti) {
 						name.setEnabled(false);

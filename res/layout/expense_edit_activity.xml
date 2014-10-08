@@ -100,21 +100,18 @@
         android:text="Date :"
         android:textAppearance="?android:attr/textAppearanceMedium" />
         
-       <TextView
-        android:id="@+id/expenseDateEdit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-        
-    </LinearLayout>
-     
-     <Button
+       <Button
         android:id="@+id/expPickDateEdit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Change Date"
+        android:background="@android:color/transparent"
+        android:drawableLeft="@drawable/ic_action_calendar"
+        android:textAppearance="?android:attr/textAppearanceMedium" 
         android:onClick="showDatePickerDialog" /> 
+        
+    </LinearLayout>
+     
+    
 
      
        <LinearLayout
