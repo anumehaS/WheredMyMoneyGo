@@ -369,19 +369,23 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 	      
 	        if(currentTab.equals(EXPENSE_TAG)){
 	        	if(prefs.getString(Globals.EXP_DEF_VIEWAS, "list").equals("list")) {
-	        		listPie.setText("Pie");  
+	        		//listPie.setText("Pie"); 
+	        		listPie.setBackgroundResource(R.drawable.ic_action_pie);
 	        		pie=false;
 	        	}else {
-	        		listPie.setText("List");  
+	        		//listPie.setText("List");
+	        		listPie.setBackgroundResource(R.drawable.ic_action_list);
 	        		pie=true;
 	        	}
 	        }  	
 	         else {
 		        	if(prefs.getString(Globals.INC_DEF_VIEWAS, "list").equals("list")) {
-		        		listPie.setText("Pie");   
+		        		//listPie.setText("Pie");   
+		        		listPie.setBackgroundResource(R.drawable.ic_action_pie);
 		        		pie=false;
 		        	}else {
-		        		listPie.setText("List");  
+		        		//listPie.setText("List");  
+		        		listPie.setBackgroundResource(R.drawable.ic_action_list);
 		        		pie=true;
 		        	}
 		      }  	
@@ -423,7 +427,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 			if(currentTab.equals(EXPENSE_TAG)) {
 				if(prefs.getString(Globals.EXP_DEF_VIEWAS, "list").equals("list")) {
 					editor.putString(Globals.EXP_DEF_VIEWAS, "pie");
-					b.setText("List");	
+					//b.setText("List");	
+					b.setBackgroundResource(R.drawable.ic_action_list);
 					pie = true;
 					editor.commit();
 					f = MainActivity.this.getFragmentManager().findFragmentByTag(PieFragment.EXP_TAG);
@@ -437,7 +442,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 				}
 				else {
 					editor.putString(Globals.EXP_DEF_VIEWAS, "list");
-					b.setText("Pie");	
+					//b.setText("Pie");	
+					b.setBackgroundResource(R.drawable.ic_action_pie);
 					pie = false;
 					editor.commit();
 					f = Fragment.instantiate(MainActivity.this, ExpenseListFragment.class.getName());
@@ -450,7 +456,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 			} else {
 				if(prefs.getString(Globals.INC_DEF_VIEWAS, "list").equals("list")) {
 					editor.putString(Globals.INC_DEF_VIEWAS, "pie");
-					b.setText("List");
+					//b.setText("List");
+					listPie.setBackgroundResource(R.drawable.ic_action_list);
 					pie = true;
 					editor.commit();
 					f = fm.findFragmentByTag(PieFragment.INC_TAG);
@@ -464,7 +471,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 				}
 				else {
 					editor.putString(Globals.INC_DEF_VIEWAS, "list");
-					b.setText("Pie");	
+					//b.setText("Pie");	
+					listPie.setBackgroundResource(R.drawable.ic_action_pie);
 					pie = false;
 					editor.commit();
 					f = Fragment.instantiate(MainActivity.this, IncomeListFragment.class.getName());

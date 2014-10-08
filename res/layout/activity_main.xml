@@ -19,12 +19,9 @@
          <Button
              android:id="@+id/listPie"
              android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:paddingBottom="10dp"
-             android:paddingLeft="10dp"
-             android:paddingRight="10dp"
-             android:paddingTop="10dp"
-             android:text="Pie" />
+             android:layout_height="wrap_parent"
+             android:background="@android:color/transparent"
+             />
       	  
       	  <Button
       	      android:id="@+id/filterOptions"
@@ -34,7 +31,8 @@
       	      android:paddingLeft="10dp"
       	      android:paddingRight="10dp"
       	      android:paddingTop="10dp"
-      	      android:text="Filter Options"
+      	      android:background="@android:color/transparent"
+      	      android:drawableLeft="@drawable/ic_action_filter"
       	      android:onClick="showOptionsDialog" /> 
      
      </LinearLayout>
