@@ -25,6 +25,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
@@ -36,6 +37,7 @@ import android.widget.TextView;
 
 public class OptionsDialog extends Activity implements LoaderCallbacks<Cursor>{
 	
+	private static Button startDateBtn, endDateBtn;
 	private String currentTab;
 	private static Spinner sortOrder,filters;
 	private CheckBox convert, showRec;
@@ -108,6 +110,8 @@ public class OptionsDialog extends Activity implements LoaderCallbacks<Cursor>{
 				defConvVal = data.get(6);
 				defOnlyRecVal = data.get(7);
 				
+				startDateBtn = ((Button)findViewById(R.id.startDate));
+				endDateBtn = ((Button)findViewById(R.id.endDate));
 				
 				sortOrder = (Spinner)findViewById(R.id.sortOrder);
 				dateRangeLayout = (LinearLayout)findViewById(R.id.dateRangeLayout);
@@ -386,10 +390,16 @@ public class OptionsDialog extends Activity implements LoaderCallbacks<Cursor>{
 	        //set Date into SQLIte date format
 	        SimpleDateFormat dateFormat = new SimpleDateFormat(Globals.INTERNAL_DATE_FORMAT); 
 	        
+	        
 	        if(startDateClicked) {
 	        	startDateVal = dateFormat.format(myDate);
+	        	dateFormat = new SimpleDateFormat(Globals.USER_DATE_FORMAT); 	        	
+	        	startDateBtn.setText(dateFormat.format(myDate));
 	        } else {
+	        	
 	        	endDateVal = dateFormat.format(myDate);
+	        	dateFormat = new SimpleDateFormat(Globals.USER_DATE_FORMAT); 	        	
+	        	endDateBtn.setText(dateFormat.format(myDate));
 	        }
 		}
   }
