@@ -14,7 +14,7 @@ import android.view.View;
 
 public class PieChart extends View {
 	
-	Cursor cursor = null;
+	static Cursor cursor = null;
 	RectF pieBounds;
 	Paint paint;
 	View pieView;
@@ -47,14 +47,16 @@ public class PieChart extends View {
 
 	@Override
 	public void onDraw(Canvas canvas) {
-		super.onDraw(canvas);
 		
-		if ( cursor == null)
+		
+		if ( cursor == null || cursor.isClosed())
 			return;
+		super.onDraw(canvas);
 		
 		
 		float sum =0;
 		//sum of amounts
+	
 		cursor.moveToFirst();
 		do { 
 			sum += cursor.getFloat(2);			
@@ -131,6 +133,7 @@ public class PieChart extends View {
 
 
 	public void setCursor(Cursor c) {
+		this.cursor = null;
 		this.cursor = c;
 	}
 

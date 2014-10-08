@@ -79,9 +79,9 @@ public class PieFragment extends Fragment implements LoaderCallbacks<Cursor>{
 	@Override
 	public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
 		if(isExpense)
-			return expLoad; //to get expenses and categories
+			return new ExpenseCursorLoader(getActivity(),3); //to get expenses and categories
 		else
-			return incLoad;
+			return new IncomeCursorLoader(getActivity(),3);
 	}
 	 
 	@Override
