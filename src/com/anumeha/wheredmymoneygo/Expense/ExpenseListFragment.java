@@ -20,7 +20,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -128,7 +127,7 @@ public class ExpenseListFragment extends Fragment implements LoaderCallbacks<Cur
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {	
 		
-	  AdapterContextMenuInfo info = (AdapterContextMenuInfo)item.getMenuInfo();
+	
 	  int menuItemIndex = item.getItemId();
 	  String[] menuItems = getResources().getStringArray(R.array.listview_menu);
 	  String menuItemName = menuItems[menuItemIndex];

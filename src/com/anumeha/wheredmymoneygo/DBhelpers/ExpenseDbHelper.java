@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import com.anumeha.wheredmymoneygo.Expense.Expense;
 import com.anumeha.wheredmymoneygo.DBHandler;
+import com.anumeha.wheredmymoneygo.Globals;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -74,18 +75,18 @@ public class ExpenseDbHelper {
        //  Cursor cursor = db.rawQuery("SELECT * FROM "+ TABLE_EXPENSES, null);
     	 
     	 //if view as pie, no ordering required
-    	 if(prefs.getString("exp_cur_viewAs","").equals("pie") || (prefs.getString("exp_cur_viewAs","").equals("")&&prefs.getString("exp_def_viewAs","").equals("pie"))){
+    	 if(prefs.getString(Globals.EXP_DEF_VIEWAS,"").equals("pie")){
     	 
     		 orderBy = null;
     	 }
     	 else {    		 
-    		 temp2.append(prefs.getString("exp_cur_orderBy", "").equals("")? prefs.getString("exp_def_orderBy", ""):prefs.getString("exp_cur_orderBy", ""));   
+    		 temp2.append(prefs.getString(Globals.EXP_DEF_ORDERBY, ""));   
     		 temp2.append(" ");
-    		 temp2.append(prefs.getString("exp_cur_sortOrder", "").equals("")? prefs.getString("exp_def_sortOrder", ""):prefs.getString("exp_cur_sortOrder", ""));
+    		 temp2.append(prefs.getString(Globals.EXP_DEF_SORTORDER, ""));
     	 }
     	 
     	 // add selection args if "inrange" is selected
-    	 if(prefs.getString("exp_viewBy","").equals("inRange")){
+    	 if(prefs.getString(Globals.EXP_VIEWBY,"").equals("inRange")){
         	 
     		selectionTemp.append("date(");
     		selectionTemp.append(KEY_E_DATE);
@@ -93,13 +94,13 @@ public class ExpenseDbHelper {
     	//	temp.append(KEY_E_DATE);
     	//	temp.append(") <= ?");
     		
-    		temp1.add(prefs.getString("exp_startDate",""));
-    		temp1.add(prefs.getString("exp_endDate",""));
+    		temp1.add(prefs.getString(Globals.EXP_START_DATE,""));
+    		temp1.add(prefs.getString(Globals.EXP_END_DATE,""));
     		
     		 
     	 }
     	 
-    	 if(!prefs.getString("exp_filter","").equals(""))
+    	 if(!prefs.getString(Globals.EXP_FILTER,"").equals(""))
     	 {
     		 if(selectionTemp.length() > 0)
     		 {
@@ -108,10 +109,10 @@ public class ExpenseDbHelper {
     		 
     		 selectionTemp.append(KEY_E_CATEGORY1);
     		 selectionTemp.append(" = ?");
-    		 temp1.add(prefs.getString("exp_filter","")); // add selection args
+    		 temp1.add(prefs.getString(Globals.EXP_FILTER,"")); // add selection args
     	 }
     	 
-    	 if(prefs.getString("exp_view_rec","").equals("on"))
+    	 if(prefs.getString(Globals.EXP_VIEW_REC,"").equals("on"))
     	 {
     		 if(selectionTemp.length() > 0)
     		 {
@@ -203,14 +204,14 @@ public class ExpenseDbHelper {
 		StringBuilder selection = new StringBuilder();
 		ArrayList<String> temp = new ArrayList<String>();
 		// add selection args if "inrange" is selected
-	   	 if(prefs.getString("exp_viewBy","").equals("inRange")){
+	   	 if(prefs.getString(Globals.EXP_VIEWBY,"").equals("inRange")){
 	       	 
 	   		selection.append("date(");
 	   		selection.append(KEY_E_DATE);
 	   		selection.append(") BETWEEN ? AND ?");
 	
-	   		temp.add(prefs.getString("exp_startDate",""));
-	   		temp.add(prefs.getString("exp_endDate",""));
+	   		temp.add(prefs.getString(Globals.EXP_START_DATE,""));
+	   		temp.add(prefs.getString(Globals.EXP_END_DATE,""));
 	 
 	   	 }
 		

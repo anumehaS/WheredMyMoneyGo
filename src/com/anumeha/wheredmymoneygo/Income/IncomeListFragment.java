@@ -1,7 +1,6 @@
 package com.anumeha.wheredmymoneygo.Income;
 
 import com.anumeha.wheredmymoneygo.DBhelpers.IncomeDbHelper;
-import com.anumeha.wheredmymoneygo.Expense.ExpenseListFragment;
 import com.anumeha.wheredmymoneygo.Income.IncomeEditActivity;
 import com.example.wheredmymoneygo.R;
 
@@ -127,7 +126,7 @@ public class IncomeListFragment extends Fragment implements LoaderCallbacks<Curs
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {	
 		
-	  AdapterContextMenuInfo info = (AdapterContextMenuInfo)item.getMenuInfo();
+	
 	  int menuItemIndex = item.getItemId();
 	  String[] menuItems = getResources().getStringArray(R.array.listview_menu);
 	  String menuItemName = menuItems[menuItemIndex];

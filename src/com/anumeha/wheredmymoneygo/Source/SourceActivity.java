@@ -1,9 +1,7 @@
 package com.anumeha.wheredmymoneygo.Source;
 
 import com.anumeha.wheredmymoneygo.MainActivity;
-import com.anumeha.wheredmymoneygo.Category.Category;
 import com.anumeha.wheredmymoneygo.Category.CategoryActivity;
-import com.anumeha.wheredmymoneygo.DBhelpers.CategoryDbHelper;
 import com.anumeha.wheredmymoneygo.DBhelpers.SourceDbHelper;
 import com.example.wheredmymoneygo.R;
 
@@ -19,7 +17,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioButton;
 
 public class SourceActivity extends FragmentActivity implements OnClickListener {
 	

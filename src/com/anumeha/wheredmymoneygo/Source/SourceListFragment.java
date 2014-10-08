@@ -1,6 +1,5 @@
 package com.anumeha.wheredmymoneygo.Source;
 
-import com.anumeha.wheredmymoneygo.Category.CategoryEditActivity;
 import com.anumeha.wheredmymoneygo.DBhelpers.SourceDbHelper;
 import com.example.wheredmymoneygo.R;
 import android.app.Activity;

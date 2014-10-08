@@ -3,8 +3,9 @@ package com.anumeha.wheredmymoneygo.Expense;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import com.anumeha.wheredmymoneygo.Globals;
 import com.anumeha.wheredmymoneygo.DBhelpers.CurrencyDbHelper;
-import com.anumeha.wheredmymoneygo.Services.CurrencyConverter;
 import com.example.wheredmymoneygo.R;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -24,7 +25,7 @@ public class ExpenseCursorAdapter extends ResourceCursorAdapter{
 	public ExpenseCursorAdapter(Context context, int layout, Cursor c, int flags) {
 		super(context, layout, c, flags);
 		prefs = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
-		defaultCurrency = prefs.getString("def_currency", "USD");
+		defaultCurrency = prefs.getString(Globals.DEF_CURRENCY, "USD");
 		db = new CurrencyDbHelper(context);
 	}
 
@@ -72,7 +73,7 @@ public class ExpenseCursorAdapter extends ResourceCursorAdapter{
 	    final float convRate = Float.parseFloat(cursor.getString(7));
 	    
 	   
-		if(prefs.getString("exp_conv", "off").equals("off") || currency.equals(defaultCurrency)) { //conversion not required
+		if(prefs.getString(Globals.EXP_CONV, "off").equals("off") || currency.equals(defaultCurrency)) { //conversion not required
 			
 			e_Amount.setText(currency + " "+cursor.getString(5));
 		} else { //conversion to default

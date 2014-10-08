@@ -3,8 +3,8 @@ package com.anumeha.wheredmymoneygo.Income;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
+import com.anumeha.wheredmymoneygo.Globals;
 import com.example.wheredmymoneygo.R;
 
 import android.content.Context;
@@ -53,8 +53,8 @@ String defaultCurrency;
 		//set income date--after adapting it to the user's prefered format
 		TextView e_date = (TextView)view.findViewById(R.id.incomeDate);		
 		//adapt date to user's preference 
-		dateFormat = prefs.getString("def_dateformat", "MMMM dd, yyyy");
-		sdf = new SimpleDateFormat("yyyy-MM-dd"); // the standard format for storage
+		dateFormat = prefs.getString(Globals.DEF_DATEFORMAT, "MMMM dd, yyyy");
+		sdf = new SimpleDateFormat(Globals.INTERNAL_DATE_FORMAT); // the standard format for storage
 		try {
 			tempDate = sdf.parse(cursor.getString(3));
 		} catch (ParseException e) {
@@ -69,7 +69,7 @@ String defaultCurrency;
 		currency = cursor.getString(4);
 		
 		final float convRate = Float.parseFloat(cursor.getString(7));		   
-			if(prefs.getString("inc_conv", "off").equals("off") || currency.equals(defaultCurrency)) { //conversion not required
+			if(prefs.getString(Globals.INC_CONV, "off").equals("off") || currency.equals(defaultCurrency)) { //conversion not required
 				
 				i_Amount.setText(currency + " "+cursor.getString(5));
 			} else { //conversion to default

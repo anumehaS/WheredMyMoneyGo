@@ -4,7 +4,6 @@ import com.example.wheredmymoneygo.R;
 import android.content.Context;
 import android.database.Cursor;
 import android.view.View;
-import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.ResourceCursorAdapter;
 import android.widget.TextView;

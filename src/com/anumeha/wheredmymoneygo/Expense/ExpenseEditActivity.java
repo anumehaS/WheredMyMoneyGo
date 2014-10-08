@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import com.anumeha.wheredmymoneygo.Globals;
 import com.anumeha.wheredmymoneygo.Category.CategoryCursorLoader;
 import com.anumeha.wheredmymoneygo.Currency.CurrencyCursorLoader;
 import com.anumeha.wheredmymoneygo.DBhelpers.ExpenseDbHelper;
@@ -34,6 +35,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -41,6 +43,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemSelectedListener;
 
 public class ExpenseEditActivity extends Activity implements OnClickListener, LoaderCallbacks<Cursor> {
 	
@@ -95,8 +98,30 @@ public class ExpenseEditActivity extends Activity implements OnClickListener, Lo
 			        R.array.frequency_spinner_items, android.R.layout.simple_spinner_item);
 			freqadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 			frequency.setAdapter(freqadapter);
+			
 
 	        ask = (CheckBox)findViewById(R.id.inputExpNotifyEdit); 
+	        
+	        frequency.setOnItemSelectedListener(new OnItemSelectedListener (){
+
+				@Override
+				public void onItemSelected(AdapterView<?> arg0, View arg1,
+						int selection, long arg3) {
+					
+					if(selection == 0) {
+						ask.setVisibility(View.GONE);
+					} else {
+						ask.setVisibility(View.VISIBLE);
+					}
+				}
+
+				@Override
+				public void onNothingSelected(AdapterView<?> arg0) {
+					
+					
+				}
+				
+			});
 	        expenseDate = (TextView)findViewById(R.id.expenseDateEdit);
 	        add = (Button)findViewById(R.id.expSaveEdit);
 			add.setOnClickListener(this);
@@ -310,7 +335,6 @@ public class ExpenseEditActivity extends Activity implements OnClickListener, Lo
 				  String value = rate.getText().toString();
 				  try {
 					  float convRate = Float.parseFloat(value);
-					  ExpenseDbHelper expDb= new ExpenseDbHelper(ExpenseEditActivity.this);
 						dbh.updateExpense(new Expense(e_name_edit,e_desc_edit,e_date_edit,e_currency_edit,amount,e_category1_edit,convRate,e_freq_edit,e_notify_edit),expId);
 						//endActivity("edited");
 						startRecActivity(expId);
@@ -388,9 +412,9 @@ public class ExpenseEditActivity extends Activity implements OnClickListener, Lo
 	        cal.set(Calendar.YEAR, yy);
 	        myDate = cal.getTime();
 	        //set Date into SQLIte date format
-	        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); 
+	        SimpleDateFormat dateFormat = new SimpleDateFormat(Globals.INTERNAL_DATE_FORMAT); 
 	        e_date_edit = dateFormat.format(myDate);
-	        dateFormat = new SimpleDateFormat("MMMM dd, yyyy",Locale.ENGLISH);     
+	        dateFormat = new SimpleDateFormat(Globals.USER_DATE_FORMAT,Locale.ENGLISH);     
 			expenseDate.setText(dateFormat.format(myDate));
 				}
 			}
@@ -446,12 +470,11 @@ public class ExpenseEditActivity extends Activity implements OnClickListener, Lo
 					e_date_edit = e_date; //dates are in the format yyyy-MM-dd for storage
 				
 					String tempdate="";
-					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+					SimpleDateFormat sdf = new SimpleDateFormat(Globals.INTERNAL_DATE_FORMAT);
 					SimpleDateFormat sdf1 = new SimpleDateFormat(dateFormat);
 					try {
 						tempdate = sdf1.format((sdf.parse(e_date))); //show the date in user specified format
 					} catch (ParseException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} 
 					e_currency =  c.getString(4);
@@ -515,8 +538,7 @@ public class ExpenseEditActivity extends Activity implements OnClickListener, Lo
 
 	@Override
 	public void onLoaderReset(Loader<Cursor> arg0) {
-		// TODO Auto-generated method stub
-		
+	
 	}
 	
 	private void loadSpinners(Cursor c)

@@ -7,12 +7,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import com.anumeha.wheredmymoneygo.Globals;
 import com.anumeha.wheredmymoneygo.Category.CategoryCursorLoader;
 import com.anumeha.wheredmymoneygo.Currency.CurrencyCursorLoader;
-import com.anumeha.wheredmymoneygo.DBhelpers.ExpenseDbHelper;
 import com.anumeha.wheredmymoneygo.DBhelpers.IncomeDbHelper;
-import com.anumeha.wheredmymoneygo.Expense.Expense;
-import com.anumeha.wheredmymoneygo.Expense.ExpenseAddActivity;
 import com.anumeha.wheredmymoneygo.Income.Income;
 import com.anumeha.wheredmymoneygo.Services.CurrencyConverter;
 import com.anumeha.wheredmymoneygo.Services.WmmgAlarmManager;
@@ -33,6 +31,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -40,6 +39,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemSelectedListener;
 
 public class IncomeAddActivity extends Activity implements OnClickListener, LoaderCallbacks<Cursor> {
 	
@@ -73,9 +73,30 @@ public class IncomeAddActivity extends Activity implements OnClickListener, Load
 			        R.array.frequency_spinner_items, android.R.layout.simple_spinner_item);
 			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 			frequency.setAdapter(adapter);
+			ask = (CheckBox)findViewById(R.id.inputIncNotify); 
+			frequency.setOnItemSelectedListener(new OnItemSelectedListener (){
+
+				@Override
+				public void onItemSelected(AdapterView<?> arg0, View arg1,
+						int selection, long arg3) {
+					
+					if(selection == 0) {
+						ask.setVisibility(View.GONE);
+					} else {
+						ask.setVisibility(View.VISIBLE);
+					}
+				}
+
+				@Override
+				public void onNothingSelected(AdapterView<?> arg0) {
+					
+					
+				}
+				
+			});
 			frequency.setSelection(0);
 	        
-			ask = (CheckBox)findViewById(R.id.inputIncNotify); 
+			
 
 	        setCurrentDate();
 	        add = (Button)findViewById(R.id.incAddSubmit);
@@ -227,10 +248,10 @@ public class IncomeAddActivity extends Activity implements OnClickListener, Load
 	    //set Date into SQLIte date format
 	    SimpleDateFormat sdf;
 	    // set current date into textview
-	    sdf = new SimpleDateFormat("MMMM dd, yyyy");
+	    sdf = new SimpleDateFormat(Globals.USER_DATE_FORMAT);
 		incomeDate.setText(sdf.format(myDate));
 		
-		sdf = new SimpleDateFormat("yyyy-MM-dd"); 
+		sdf = new SimpleDateFormat(Globals.INTERNAL_DATE_FORMAT); 
 	    i_date = sdf.format(myDate);
 	 }
 
@@ -298,10 +319,10 @@ public class IncomeAddActivity extends Activity implements OnClickListener, Load
 	        cal.set(Calendar.YEAR, yy);
 	        myDate = cal.getTime();
 	        //set Date into SQLIte date format
-	        SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy",Locale.ENGLISH); 
+	        SimpleDateFormat dateFormat = new SimpleDateFormat(Globals.USER_DATE_FORMAT,Locale.ENGLISH); 
 	        i_date = dateFormat.format(myDate);			      
 			incomeDate.setText(i_date);
-			dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			dateFormat = new SimpleDateFormat(Globals.INTERNAL_DATE_FORMAT);
 			i_date = dateFormat.format(myDate);
 			
 		}

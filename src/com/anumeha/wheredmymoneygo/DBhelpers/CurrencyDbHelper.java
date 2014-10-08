@@ -18,8 +18,8 @@ public class CurrencyDbHelper {
     
     private static final String KEY_Cu_ID = "_id";
     private static final String KEY_Cu_CONVRATE = "conversion_rate"; //  rate of conversion to base currency
-    private static final String KEY_Cu_COUNTRY = "Country"; //
-    private static final String KEY_Cu_SYMBOL = "symbol";
+   /* private static final String KEY_Cu_COUNTRY = "Country"; //
+    private static final String KEY_Cu_SYMBOL = "symbol";*/
     private static final String KEY_Cu_TS = "timestamp";
     
     

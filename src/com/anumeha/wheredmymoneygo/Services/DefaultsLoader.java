@@ -3,6 +3,7 @@ package com.anumeha.wheredmymoneygo.Services;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.anumeha.wheredmymoneygo.Globals;
 import com.anumeha.wheredmymoneygo.DBhelpers.CurrencyDbHelper;
 
 import android.content.Context;
@@ -42,10 +43,10 @@ public class DefaultsLoader {
 		protected List<String> doInBackground(Void... arg0) {
 			List<String> data = new ArrayList<String>();
 			SharedPreferences prefs= PreferenceManager.getDefaultSharedPreferences(ctx);
-			if(prefs.contains("firstLoad")) {
+			if(prefs.contains(Globals.FIRST_LOAD)) {
 				//not the first time, just return value of list/pie for income and expense
-				data.add(prefs.getString("exp_def_viewAs", "list"));
-				data.add(prefs.getString("inc_def_viewAs", "list"));
+				data.add(prefs.getString(Globals.EXP_DEF_VIEWAS, "list"));
+				data.add(prefs.getString(Globals.INC_DEF_VIEWAS, "list"));
 				firstLoad = false;
 			} else {
 				//add defaults
@@ -81,23 +82,24 @@ public class DefaultsLoader {
 		      
 		      if(!prefs.contains("def_currency"))
 			  editor.putString("def_currency", "USD");*/
-
-		      editor.putString("firstLoad", "done");
-			  editor.putString("def_dateformat", "MMMM dd, yyyy");
+		      
+		      editor.putString(Globals.FIRST_LOAD, "done");
+			  editor.putString(Globals.DEF_DATEFORMAT, "MMMM dd, yyyy");
+			  editor.putInt(Globals.NUM_ALARMS, 0);
 			  //----------------------------------------------
 
-			  editor.putString("exp_def_orderBy", "date(e_date)");
-			  editor.putString("exp_def_sortOrder", "DESC"); 
-			  editor.putString("exp_viewBy", "all");
-			  editor.putString("exp_def_viewAs", "list");
-			  editor.putString("exp_filter", "");
+			  editor.putString(Globals.EXP_DEF_ORDERBY, "date(e_date)");
+			  editor.putString(Globals.EXP_DEF_SORTORDER, "DESC"); 
+			  editor.putString(Globals.EXP_VIEWBY, "all");
+			  editor.putString(Globals.EXP_DEF_VIEWAS, "list");
+			  editor.putString(Globals.EXP_FILTER, "");
 			  
 			  //---------------------------------------------
-			  editor.putString("inc_def_orderBy", "date(i_date)");
-			  editor.putString("inc_def_sortOrder", "DESC"); 
-			  editor.putString("inc_viewBy", "all");
-			  editor.putString("inc_def_viewAs", "list");
-			  editor.putString("inc_filter", "");
+			  editor.putString(Globals.INC_DEF_ORDERBY, "date(i_date)");
+			  editor.putString(Globals.INC_DEF_SORTORDER, "DESC"); 
+			  editor.putString(Globals.INC_VIEWBY, "all");
+			  editor.putString(Globals.INC_DEF_VIEWAS, "list");
+			  editor.putString(Globals.INC_FILTER, "");
 			  
 			  editor.commit();
 			  

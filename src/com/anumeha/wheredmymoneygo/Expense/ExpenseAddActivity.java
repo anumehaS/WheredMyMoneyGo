@@ -8,11 +8,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import com.anumeha.wheredmymoneygo.OptionsDialog;
+
+import com.anumeha.wheredmymoneygo.Globals;
 import com.anumeha.wheredmymoneygo.Category.CategoryCursorLoader;
 import com.anumeha.wheredmymoneygo.Currency.CurrencyCursorLoader;
 import com.anumeha.wheredmymoneygo.DBhelpers.ExpenseDbHelper;
-import com.anumeha.wheredmymoneygo.Income.IncomeListFragment;
 import com.anumeha.wheredmymoneygo.Services.CurrencyConverter;
 import com.anumeha.wheredmymoneygo.Services.WmmgAlarmManager;
 import com.example.wheredmymoneygo.*;
@@ -31,6 +31,8 @@ import android.os.Bundle;
 import android.app.DialogFragment;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -43,7 +45,7 @@ import android.widget.TextView;
 public class ExpenseAddActivity extends Activity implements OnClickListener, LoaderCallbacks<Cursor>{
 	
 	private ImageButton add, cancel;
-	private static TextView expenseDate;
+	private static Button expenseDate;
 	private Spinner category1, currency, frequency;
 	private static String e_date;
 	ExpenseDbHelper dbh;
@@ -73,9 +75,30 @@ public class ExpenseAddActivity extends Activity implements OnClickListener, Loa
 			        R.array.frequency_spinner_items, android.R.layout.simple_spinner_item);
 			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 			frequency.setAdapter(adapter);
-			frequency.setSelection(0);
-	        
+			
 			ask = (CheckBox)findViewById(R.id.inputExpNotify); 
+			frequency.setOnItemSelectedListener(new OnItemSelectedListener (){
+
+				@Override
+				public void onItemSelected(AdapterView<?> arg0, View arg1,
+						int selection, long arg3) {
+					
+					if(selection == 0) {
+						ask.setVisibility(View.GONE);
+					} else {
+						ask.setVisibility(View.VISIBLE);
+					}
+				}
+
+				@Override
+				public void onNothingSelected(AdapterView<?> arg0) {
+					
+					
+				}
+				
+			});
+			frequency.setSelection(0);
+			
 	        setCurrentDate();
 	        add = (ImageButton)findViewById(R.id.expAddSubmit);
 			add.setOnClickListener(this);
@@ -209,7 +232,7 @@ public class ExpenseAddActivity extends Activity implements OnClickListener, Loa
 	 
 	 protected void startRecActivity(long id) {
 		 if(hasRec) {
-		 i.putExtra("rec_id", id);
+		 i.putExtra(WmmgAlarmManager.REC_ID, id);
 		 this.startActivityForResult(i,REC_ADDED);
 		 } else {
 			 endActivity("added");
@@ -271,16 +294,16 @@ public class ExpenseAddActivity extends Activity implements OnClickListener, Loa
 	  }
 
 	public void setCurrentDate() {			 
-		expenseDate = (TextView) findViewById(R.id.expenseDate);			
+		expenseDate = (Button) findViewById(R.id.expPickDate);			
 		Date myDate;
 	    Calendar cal = Calendar.getInstance();	    
 	    myDate = cal.getTime();
 	    SimpleDateFormat sdf;
 	    // set current date into textview
-	    sdf = new SimpleDateFormat("MMMM dd, yyyy");
+	    sdf = new SimpleDateFormat(Globals.USER_DATE_FORMAT);
 		expenseDate.setText(sdf.format(myDate));
 		
-		sdf = new SimpleDateFormat("yyyy-MM-dd"); 
+		sdf = new SimpleDateFormat(Globals.INTERNAL_DATE_FORMAT); 
 	    e_date = sdf.format(myDate);
 	 }
 	 
@@ -308,10 +331,10 @@ public class ExpenseAddActivity extends Activity implements OnClickListener, Loa
 	        cal.set(Calendar.YEAR, yy);
 	        myDate = cal.getTime();
 	        //set Date into SQLIte date format
-	        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); 
+	        SimpleDateFormat dateFormat = new SimpleDateFormat(Globals.INTERNAL_DATE_FORMAT); 
 	        e_date = dateFormat.format(myDate);
 			      
-	        dateFormat = new SimpleDateFormat("MMMM dd, yyyy");
+	        dateFormat = new SimpleDateFormat(Globals.USER_DATE_FORMAT);
 			expenseDate.setText(dateFormat.format(myDate));
 				}
 			}
@@ -377,8 +400,5 @@ public class ExpenseAddActivity extends Activity implements OnClickListener, Loa
         
 	}
 
-	private void createConvRateDialog(int errCode, boolean validRate){
-		
-	}
 
 }

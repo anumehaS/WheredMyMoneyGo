@@ -1,25 +1,18 @@
 package com.anumeha.wheredmymoneygo.Source;
 
 
-import com.anumeha.wheredmymoneygo.Category.CategoryCursorLoader;
-import com.anumeha.wheredmymoneygo.DBhelpers.CategoryDbHelper;
 import com.anumeha.wheredmymoneygo.DBhelpers.SourceDbHelper;
 import com.example.wheredmymoneygo.R;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.LoaderManager.LoaderCallbacks;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.Loader;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.TextView;
 
 public class SourceEditActivity extends Activity implements OnClickListener {
 	

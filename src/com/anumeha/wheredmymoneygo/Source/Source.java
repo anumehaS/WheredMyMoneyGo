@@ -13,7 +13,7 @@ public class Source {
 	
 	public Source(int id, String name)
 	{
-		this._id = id;
+		this.set_id(id);
 		this._name = name;
 	}
 	
@@ -28,6 +28,14 @@ public class Source {
 	public String getName() {
 		
 		return this._name;
+	}
+
+	public int get_id() {
+		return _id;
+	}
+
+	public void set_id(int _id) {
+		this._id = _id;
 	}
 
 }

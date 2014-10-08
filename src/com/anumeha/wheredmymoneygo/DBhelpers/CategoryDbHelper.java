@@ -1,25 +1,20 @@
 package com.anumeha.wheredmymoneygo.DBhelpers;
 
-import java.util.ArrayList;
-import java.util.List;
+
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.preference.PreferenceManager;
 
 import com.anumeha.wheredmymoneygo.DBHandler;
 import com.anumeha.wheredmymoneygo.Category.Category;
-import com.anumeha.wheredmymoneygo.Expense.Expense;
 
 public class CategoryDbHelper {
 	
 	/** Category Table Variables **/
 	 private static final String TABLE_CATEGORY	 = "Category";
-	 
-	 private static final String KEY_C_ID = "_id";
+
 	 private static final String KEY_C_NAME = "c_name";
 	 private static final String KEY_C_BUDGET = "c_budget";
 	 private static final String KEY_C_FREQUENCY = "c_frequency";

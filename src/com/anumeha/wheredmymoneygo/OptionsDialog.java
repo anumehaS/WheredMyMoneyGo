@@ -21,15 +21,10 @@ import android.app.DialogFragment;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Intent;
 import android.content.Loader;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
@@ -68,23 +63,23 @@ public class OptionsDialog extends Activity implements LoaderCallbacks<Cursor>{
 		isPie = getIntent().getBooleanExtra("isPie",false);
 		
 		if(currentTab.equals(MainActivity.EXPENSE_TAG)) {
-			  filterKey = "exp_filter"; 
-			  sortOrderKey = "exp_cur_sortOrder";
-			  orderByKey = "exp_cur_orderBy";
-	   		  viewByKey = "exp_viewBy";
-	   		  startDateKey = "exp_startDate";
-	   		  endDateKey = "exp_endDate";
-	   		  convKey = "exp_conv";
-	   		  onlyRecKey = "exp_view_rec";
+			  filterKey = Globals.EXP_FILTER; 
+			  sortOrderKey = Globals.EXP_DEF_SORTORDER;
+			  orderByKey = Globals.EXP_DEF_ORDERBY;
+	   		  viewByKey = Globals.EXP_VIEWBY;
+	   		  startDateKey = Globals.EXP_START_DATE;
+	   		  endDateKey = Globals.EXP_END_DATE;
+	   		  convKey = Globals.EXP_CONV;
+	   		  onlyRecKey = Globals.EXP_VIEW_REC;
 		} else {
-			  filterKey = "inc_filter";
-			  sortOrderKey = "inc_cur_sortOrder";
-			  orderByKey = "inc_cur_orderBy";
-			  viewByKey = "inc_viewBy";
-			  startDateKey = "inc_startDate";
-	   		  endDateKey = "inc_endDate";
-	   		  convKey = "inc_conv";
-	   		  onlyRecKey = "inc_view_rec";
+			filterKey = Globals.INC_FILTER; 
+			  sortOrderKey = Globals.INC_DEF_SORTORDER;
+			  orderByKey = Globals.INC_DEF_ORDERBY;
+	   		  viewByKey = Globals.INC_VIEWBY;
+	   		  startDateKey = Globals.INC_START_DATE;
+	   		  endDateKey = Globals.INC_END_DATE;
+	   		  convKey = Globals.INC_CONV;
+	   		  onlyRecKey = Globals.INC_VIEW_REC;
 		}
 		
 		List<String> keys = new ArrayList<String>();
@@ -367,7 +362,7 @@ public class OptionsDialog extends Activity implements LoaderCallbacks<Cursor>{
 						date = defDateVal;
 					}
 						try {
-							Date myDate = (new SimpleDateFormat("yyyy-MM-dd")).parse(date);
+							Date myDate = (new SimpleDateFormat(Globals.INTERNAL_DATE_FORMAT)).parse(date);
 							c.setTime(myDate);
 						} catch (ParseException e) {
 							e.printStackTrace();
@@ -389,7 +384,7 @@ public class OptionsDialog extends Activity implements LoaderCallbacks<Cursor>{
 	        cal.set(Calendar.YEAR, yy);
 	        myDate = cal.getTime();
 	        //set Date into SQLIte date format
-	        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); 
+	        SimpleDateFormat dateFormat = new SimpleDateFormat(Globals.INTERNAL_DATE_FORMAT); 
 	        
 	        if(startDateClicked) {
 	        	startDateVal = dateFormat.format(myDate);

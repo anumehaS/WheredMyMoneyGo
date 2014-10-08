@@ -4,16 +4,15 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import com.anumeha.wheredmymoneygo.Globals;
 import com.anumeha.wheredmymoneygo.DBhelpers.ExpenseDbHelper;
 import com.anumeha.wheredmymoneygo.DBhelpers.IncomeDbHelper;
 import com.anumeha.wheredmymoneygo.Expense.Expense;
 import com.anumeha.wheredmymoneygo.Income.Income;
-import com.example.wheredmymoneygo.R;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
-import android.widget.TextView;
 
 public class AlarmOps {
 
@@ -102,7 +101,7 @@ public class AlarmOps {
 		public String getCurrentDate() {			 
 		    Calendar cal = Calendar.getInstance();	    
 		    Date  myDate = cal.getTime();
-		    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); 
+		    SimpleDateFormat sdf = new SimpleDateFormat(Globals.INTERNAL_DATE_FORMAT); 
 		    String date = sdf.format(myDate);
 		    return date;
 		 }

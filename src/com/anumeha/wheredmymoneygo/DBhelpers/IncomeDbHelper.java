@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
 
 import com.anumeha.wheredmymoneygo.DBHandler;
+import com.anumeha.wheredmymoneygo.Globals;
 import com.anumeha.wheredmymoneygo.Income.Income;
 
 public class IncomeDbHelper {
@@ -70,18 +71,18 @@ public class IncomeDbHelper {
     	 SQLiteDatabase db = dbh.getWritableDatabase();
     	 
     	 //if view as pie, no ordering required
-    	 if(prefs.getString("inc_cur_viewAs","").equals("pie") || (prefs.getString("inc_cur_viewAs","").equals("")&&prefs.getString("inc_def_viewAs","").equals("pie"))){
+    	 if(prefs.getString(Globals.INC_DEF_VIEWAS,"").equals("pie")){
     	 
     		 orderBy = null;
     	 }
     	 else {    		 
-    		 temp2.append(prefs.getString("inc_cur_orderBy", "").equals("")? prefs.getString("inc_def_orderBy", ""):prefs.getString("inc_cur_orderBy", ""));   
+    		 temp2.append(prefs.getString(Globals.INC_DEF_ORDERBY, ""));   
     		 temp2.append(" ");
-    		 temp2.append(prefs.getString("inc_cur_sortOrder", "").equals("")? prefs.getString("inc_def_sortOrder", ""):prefs.getString("inc_cur_sortOrder", ""));
+    		 temp2.append(prefs.getString(Globals.INC_DEF_SORTORDER, ""));
     	 }
     	 
     	 // add selection args if "inrange" is selected
-    	 if(prefs.getString("inc_viewBy","").equals("inRange")){
+    	 if(prefs.getString(Globals.INC_VIEWBY,"").equals("inRange")){
         	 
     		selectionTemp.append("date(");
     		selectionTemp.append(KEY_I_DATE);
@@ -89,13 +90,13 @@ public class IncomeDbHelper {
     		selectionTemp.append(KEY_I_DATE);
     		selectionTemp.append(") <= ?");
     		
-    		temp1.add(prefs.getString("inc_startDate",""));
-    		temp1.add(prefs.getString("inc_endDate",""));
+    		temp1.add(prefs.getString(Globals.INC_START_DATE,""));
+    		temp1.add(prefs.getString(Globals.INC_END_DATE,""));
     		
     		 
     	 }
     	 
-    	 if(!prefs.getString("inc_filter","").equals(""))
+    	 if(!prefs.getString(Globals.INC_FILTER,"").equals(""))
     	 {
     		 if(selectionTemp.length() > 0)
     		 {
@@ -104,9 +105,9 @@ public class IncomeDbHelper {
     		 
     		 selectionTemp.append(KEY_I_SOURCE);
     		 selectionTemp.append(" = ?");
-    		 temp1.add(prefs.getString("inc_filter","")); // add selection args
+    		 temp1.add(prefs.getString(Globals.INC_FILTER,"")); // add selection args
     	 }
-    	 if(prefs.getString("inc_view_rec","").equals("on")) {
+    	 if(prefs.getString(Globals.INC_VIEW_REC,"").equals("on")) {
     		 if(selectionTemp.length() > 0)
     		 {
     			 selectionTemp.append(" AND ");
@@ -188,14 +189,14 @@ public class IncomeDbHelper {
     	   StringBuilder selection = new StringBuilder();
    			ArrayList<String> temp = new ArrayList<String>();
    		// add selection args if "inrange" is selected
-   	   	 if(prefs.getString("inc_viewBy","").equals("inRange")){
+   	   	 if(prefs.getString(Globals.INC_VIEWBY,"").equals("inRange")){
    	       	 
    	   		selection.append("date(");
    	   		selection.append(KEY_I_DATE);
    	   		selection.append(") BETWEEN ? AND ?");
    	
-   	   		temp.add(prefs.getString("inc_startDate",""));
-   	   		temp.add(prefs.getString("inc_endDate",""));
+   	   		temp.add(prefs.getString(Globals.INC_START_DATE,""));
+   	   		temp.add(prefs.getString(Globals.INC_END_DATE,""));
    	 
    	   	 }
   		 SQLiteDatabase db = dbh.getWritableDatabase();   	

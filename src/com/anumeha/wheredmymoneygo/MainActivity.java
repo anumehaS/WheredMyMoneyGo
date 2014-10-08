@@ -31,6 +31,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -66,8 +67,9 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 		prefAccess = new DefaultPreferenceAccess();
 		defLoader = new DefaultsLoader();
 		prefs= PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+		
 		defLoader.setDefaults(new DefaultsLoadedListener<List<String>>(){
-
+			
 			@Override
 			public void defaultsLoaded(List<String> data) {
 				SelectCurrencyDialog dialog = new SelectCurrencyDialog(data.toArray(new String[data.size()]));
@@ -366,7 +368,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 	        }
 	      
 	        if(currentTab.equals(EXPENSE_TAG)){
-	        	if(prefs.getString("exp_def_viewAs", "list").equals("list")) {
+	        	if(prefs.getString(Globals.EXP_DEF_VIEWAS, "list").equals("list")) {
 	        		listPie.setText("Pie");  
 	        		pie=false;
 	        	}else {
@@ -375,7 +377,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 	        	}
 	        }  	
 	         else {
-		        	if(prefs.getString("inc_def_viewAs", "list").equals("list")) {
+		        	if(prefs.getString(Globals.INC_DEF_VIEWAS, "list").equals("list")) {
 		        		listPie.setText("Pie");   
 		        		pie=false;
 		        	}else {
@@ -419,8 +421,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 			FragmentTransaction ft;
 			
 			if(currentTab.equals(EXPENSE_TAG)) {
-				if(prefs.getString("exp_def_viewAs", "list").equals("list")) {
-					editor.putString("exp_def_viewAs", "pie");
+				if(prefs.getString(Globals.EXP_DEF_VIEWAS, "list").equals("list")) {
+					editor.putString(Globals.EXP_DEF_VIEWAS, "pie");
 					b.setText("List");	
 					pie = true;
 					editor.commit();
@@ -434,7 +436,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 					ft.commit();
 				}
 				else {
-					editor.putString("exp_def_viewAs", "list");
+					editor.putString(Globals.EXP_DEF_VIEWAS, "list");
 					b.setText("Pie");	
 					pie = false;
 					editor.commit();
@@ -446,8 +448,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 				}
 				
 			} else {
-				if(prefs.getString("inc_def_viewAs", "list").equals("list")) {
-					editor.putString("inc_def_viewAs", "pie");
+				if(prefs.getString(Globals.INC_DEF_VIEWAS, "list").equals("list")) {
+					editor.putString(Globals.INC_DEF_VIEWAS, "pie");
 					b.setText("List");
 					pie = true;
 					editor.commit();
@@ -461,7 +463,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 					ft.commit();
 				}
 				else {
-					editor.putString("inc_def_viewAs", "list");
+					editor.putString(Globals.INC_DEF_VIEWAS, "list");
 					b.setText("Pie");	
 					pie = false;
 					editor.commit();

@@ -4,19 +4,13 @@ import com.anumeha.wheredmymoneygo.DBhelpers.ExpenseDbHelper;
 import com.anumeha.wheredmymoneygo.DBhelpers.IncomeDbHelper;
 import com.anumeha.wheredmymoneygo.Expense.ExpenseAlarmManager;
 import com.anumeha.wheredmymoneygo.Income.IncomeAlarmManager;
-import com.anumeha.wheredmymoneygo.Services.AlarmOps;
-import com.anumeha.wheredmymoneygo.Services.AlarmOps.OnAlarmOpsCompleted;
 import com.anumeha.wheredmymoneygo.Services.WmmgAlarmManager;
-import com.anumeha.wheredmymoneygo.Services.WmmgNotificationCreator;
 
 import android.app.AlarmManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 public class WmmgBootReceiver extends BroadcastReceiver{
@@ -33,12 +27,17 @@ public class WmmgBootReceiver extends BroadcastReceiver{
 	           //reset alarms for expenses
 			 	ExpenseDbHelper expDb = new ExpenseDbHelper(ctx);
 			 	Cursor c = expDb.getAllRecurences();
-			 	resetAllAlarms(ctx,c,false);
+			 	if(c != null && c.getCount()>0){
+			 		resetAllAlarms(ctx,c,false);
+			 	}
 			 	
 			 	//reset alarms for Incomes
 			 	IncomeDbHelper incDb = new IncomeDbHelper(ctx);
 			 	c = incDb.getAllRecurences();
-			 	resetAllAlarms(ctx,c,true);
+			 	if(c != null && c.getCount()>0){
+			 		resetAllAlarms(ctx,c,true);
+			 	}
+			 	
 			 	
 		 }
 		

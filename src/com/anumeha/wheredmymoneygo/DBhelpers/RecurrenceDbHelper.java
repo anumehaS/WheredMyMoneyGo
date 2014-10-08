@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.anumeha.wheredmymoneygo.DBHandler;
-import com.anumeha.wheredmymoneygo.Category.Category;
 import com.anumeha.wheredmymoneygo.Recurrence.Recurrence;
 
 public class RecurrenceDbHelper {

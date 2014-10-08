@@ -8,12 +8,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import com.anumeha.wheredmymoneygo.Globals;
 import com.anumeha.wheredmymoneygo.Category.CategoryCursorLoader;
 import com.anumeha.wheredmymoneygo.Currency.CurrencyCursorLoader;
-import com.anumeha.wheredmymoneygo.DBhelpers.ExpenseDbHelper;
 import com.anumeha.wheredmymoneygo.DBhelpers.IncomeDbHelper;
-import com.anumeha.wheredmymoneygo.Expense.Expense;
-import com.anumeha.wheredmymoneygo.Expense.ExpenseEditActivity;
 import com.anumeha.wheredmymoneygo.Income.Income;
 import com.anumeha.wheredmymoneygo.Income.IncomeCursorLoader;
 import com.anumeha.wheredmymoneygo.Services.CurrencyConverter;
@@ -40,6 +38,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -47,6 +46,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemSelectedListener;
 
 public class IncomeEditActivity extends Activity implements OnClickListener, LoaderCallbacks<Cursor> {
 	
@@ -100,6 +100,27 @@ public class IncomeEditActivity extends Activity implements OnClickListener, Loa
 			frequency.setAdapter(freqadapter);
 
 	        ask = (CheckBox)findViewById(R.id.inputIncNotifyEdit); 
+	        
+	        frequency.setOnItemSelectedListener(new OnItemSelectedListener (){
+
+				@Override
+				public void onItemSelected(AdapterView<?> arg0, View arg1,
+						int selection, long arg3) {
+					
+					if(selection == 0) {
+						ask.setVisibility(View.GONE);
+					} else {
+						ask.setVisibility(View.VISIBLE);
+					}
+				}
+
+				@Override
+				public void onNothingSelected(AdapterView<?> arg0) {
+					
+					
+				}
+				
+			});
 	        incomeDate = (TextView)findViewById(R.id.incomeDateEdit);
 
 	        add = (Button)findViewById(R.id.incSaveEdit);
@@ -319,7 +340,7 @@ public class IncomeEditActivity extends Activity implements OnClickListener, Loa
 				  String value = rate.getText().toString();
 				  try {
 					  float convRate = Float.parseFloat(value);
-					  ExpenseDbHelper expDb= new ExpenseDbHelper(IncomeEditActivity.this);
+					  
 						dbh.updateIncome(new Income(i_name_edit,i_desc_edit,i_date_edit,i_currency_edit,amount,i_source_edit,convRate,i_freq_edit,i_notify_edit),incId);
 						//endActivity("edited");
 						startRecActivity(incId);
@@ -397,9 +418,9 @@ public class IncomeEditActivity extends Activity implements OnClickListener, Loa
 	        cal.set(Calendar.YEAR, yy);
 	        myDate = cal.getTime();
 	        //set Date into SQLIte date format
-	        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); 
+	        SimpleDateFormat dateFormat = new SimpleDateFormat(Globals.INTERNAL_DATE_FORMAT); 
 	        i_date_edit = dateFormat.format(myDate);
-	        dateFormat = new SimpleDateFormat("MMMM dd, yyyy",Locale.ENGLISH);     
+	        dateFormat = new SimpleDateFormat(Globals.USER_DATE_FORMAT,Locale.ENGLISH);     
 			incomeDate.setText(dateFormat.format(myDate));
 				}
 			}
@@ -454,7 +475,7 @@ public class IncomeEditActivity extends Activity implements OnClickListener, Loa
 				i_date_edit = i_date;
 			
 				String tempdate="";
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				SimpleDateFormat sdf = new SimpleDateFormat(Globals.INTERNAL_DATE_FORMAT);
 				SimpleDateFormat sdf1 = new SimpleDateFormat(dateFormat);
 				try {
 					tempdate = sdf1.format((sdf.parse(i_date))); //show the date in user specified format

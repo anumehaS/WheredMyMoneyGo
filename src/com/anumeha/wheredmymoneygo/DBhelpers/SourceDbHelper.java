@@ -13,7 +13,7 @@ public class SourceDbHelper {
 	 /** Sources Table **/
     private static final String TABLE_SOURCE	 = "Source";
  
-    private static final String KEY_S_ID = "_id";
+
     private static final String KEY_S_NAME = "s_name";
     public static final String KEY_S_COLOR = "s_color";
     
