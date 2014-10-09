@@ -18,19 +18,19 @@
          
          <Button
              android:id="@+id/listPie"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_parent"
+             android:layout_width="50dp"
+             android:layout_height="50dp"
+             android:paddingLeft="15dp"
+        	android:paddingRight="15dp"
              android:background="@android:color/transparent"
              />
       	  
       	  <Button
       	      android:id="@+id/filterOptions"
-      	      android:layout_width="wrap_content"
-      	      android:layout_height="wrap_content"
-      	      android:paddingBottom="10dp"
-      	      android:paddingLeft="10dp"
-      	      android:paddingRight="10dp"
-      	      android:paddingTop="10dp"
+      	      android:layout_width="65dp"
+      	      android:layout_height="65dp"
+      	       android:paddingLeft="15dp"
+        	android:paddingRight="15dp"
       	      android:background="@android:color/transparent"
       	      android:drawableLeft="@drawable/ic_action_filter"
       	      android:onClick="showOptionsDialog" /> 
