@@ -8,18 +8,20 @@
         android:id="@+id/expNotPresent"
         android:layout_width="match_parent"
         android:layout_height="0dp" 
-        android:layout_weight="0.2"
+        android:layout_weight="0.1"
         android:ems="10" />
 	 <com.anumeha.wheredmymoneygo.PieChart
 	     android:id="@+id/expPieChart"
 	     android:layout_width="match_parent"
 	     android:layout_height="0dp"
-	     android:layout_weight="8" />
+	     android:layout_weight="0.2" 
+	     android:padding="5dp" />
+	 
 	 <ListView
         android:id="@+id/legendListView"
         android:layout_width="match_parent"
         android:layout_height="0dp" 
-        android:layout_weight="0.4">
+        android:layout_weight="0.7">
     </ListView>
 
 </LinearLayout>
