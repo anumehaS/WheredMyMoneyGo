@@ -21,6 +21,13 @@
     <string name="alarmAct_name">Alarm</string>
     <string name="expAlarmAct_name">Expense Alarm</string>
     <string name="incAlarmAct_name">Income Alarm</string>
+    <string name="cashflow_name">Name :</string>
+    <string name="cashflow_currency">Currency :</string>
+    <string name="cashflow_amount">Amount :</string>
+    <string name="cashflow_category">Category :</string>
+    <string name="cashflow_date">Date :</string>
+    <string name="cashflow_freq">Frequency :</string>
+     <string name="cashflow_notify">Ask before adding the recurrence?</string>
     
     <string-array  name="listview_menu">
         <item>Edit</item>
@@ -40,5 +47,6 @@
         <item>Weekly</item>
         <item>Monthly</item>
     </string-array>
+  
 
 </resources>
