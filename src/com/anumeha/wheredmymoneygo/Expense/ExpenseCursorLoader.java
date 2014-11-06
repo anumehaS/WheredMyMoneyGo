@@ -1,6 +1,6 @@
-package com.anumeha.wheredmymoneygo.Expense;
+package com.anumeha.wheredmymoneygo.expense;
 
-import com.anumeha.wheredmymoneygo.DBhelpers.ExpenseDbHelper;
+import com.anumeha.wheredmymoneygo.dbhelpers.ExpenseDbHelper;
 
 import android.content.Context;
 import android.content.CursorLoader;

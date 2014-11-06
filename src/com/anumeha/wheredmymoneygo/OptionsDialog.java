@@ -7,11 +7,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import com.anumeha.wheredmymoneygo.Category.CategoryCursorLoader;
-import com.anumeha.wheredmymoneygo.Services.DefaultPreferenceAccess;
-import com.anumeha.wheredmymoneygo.Services.DefaultPreferenceAccess.PrefAddedListener;
-import com.anumeha.wheredmymoneygo.Services.DefaultPreferenceAccess.PrefLoadedListener;
-import com.anumeha.wheredmymoneygo.Source.SourceCursorLoader;
+import com.anumeha.wheredmymoneygo.category.CategoryCursorLoader;
+import com.anumeha.wheredmymoneygo.services.DefaultPreferenceAccess;
+import com.anumeha.wheredmymoneygo.services.DefaultPreferenceAccess.PrefAddedListener;
+import com.anumeha.wheredmymoneygo.services.DefaultPreferenceAccess.PrefLoadedListener;
+import com.anumeha.wheredmymoneygo.source.SourceCursorLoader;
 import com.example.wheredmymoneygo.R;
 
 import android.app.Activity;

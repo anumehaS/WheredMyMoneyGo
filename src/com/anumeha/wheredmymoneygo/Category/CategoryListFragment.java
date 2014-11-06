@@ -1,4 +1,4 @@
-package com.anumeha.wheredmymoneygo.Category;
+package com.anumeha.wheredmymoneygo.category;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -21,7 +21,7 @@ import android.widget.TextView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
 
-import com.anumeha.wheredmymoneygo.DBhelpers.CategoryDbHelper;
+import com.anumeha.wheredmymoneygo.dbhelpers.CategoryDbHelper;
 import com.example.wheredmymoneygo.R;
 
 public class CategoryListFragment extends Fragment implements LoaderCallbacks<Cursor>{

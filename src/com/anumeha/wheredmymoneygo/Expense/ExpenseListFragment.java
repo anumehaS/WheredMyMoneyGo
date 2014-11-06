@@ -1,7 +1,7 @@
-package com.anumeha.wheredmymoneygo.Expense;
+package com.anumeha.wheredmymoneygo.expense;
 
 
-import com.anumeha.wheredmymoneygo.DBhelpers.ExpenseDbHelper;
+import com.anumeha.wheredmymoneygo.dbhelpers.ExpenseDbHelper;
 import com.example.wheredmymoneygo.*;
 
 import android.app.Activity;
@@ -173,7 +173,7 @@ public class ExpenseListFragment extends Fragment implements LoaderCallbacks<Cur
 	  return true;
 	} 
 	 protected void startRecActivity() {
-		 Intent i =  new Intent (activity,com.anumeha.wheredmymoneygo.Expense.ExpenseAlarmManager.class);	 
+		 Intent i =  new Intent (activity,com.anumeha.wheredmymoneygo.expense.ExpenseAlarmManager.class);	 
 		 long id = expId;
 		 i.putExtra("rec_id", id);
 		 i.putExtra("rec_freq",expFreq );

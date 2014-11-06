@@ -1,10 +1,10 @@
 package com.anumeha.wheredmymoneygo.receivers;
 
-import com.anumeha.wheredmymoneygo.DBhelpers.ExpenseDbHelper;
-import com.anumeha.wheredmymoneygo.DBhelpers.IncomeDbHelper;
-import com.anumeha.wheredmymoneygo.Expense.ExpenseAlarmManager;
-import com.anumeha.wheredmymoneygo.Income.IncomeAlarmManager;
-import com.anumeha.wheredmymoneygo.Services.WmmgAlarmManager;
+import com.anumeha.wheredmymoneygo.dbhelpers.ExpenseDbHelper;
+import com.anumeha.wheredmymoneygo.dbhelpers.IncomeDbHelper;
+import com.anumeha.wheredmymoneygo.expense.ExpenseAlarmManager;
+import com.anumeha.wheredmymoneygo.income.IncomeAlarmManager;
+import com.anumeha.wheredmymoneygo.services.WmmgAlarmManager;
 
 import android.app.AlarmManager;
 import android.content.BroadcastReceiver;

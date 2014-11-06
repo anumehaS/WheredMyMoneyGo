@@ -1,11 +1,11 @@
-package com.anumeha.wheredmymoneygo.Expense;
+package com.anumeha.wheredmymoneygo.expense;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.anumeha.wheredmymoneygo.Globals;
-import com.anumeha.wheredmymoneygo.DBhelpers.CurrencyDbHelper;
+import com.anumeha.wheredmymoneygo.dbhelpers.CurrencyDbHelper;
 import com.example.wheredmymoneygo.R;
 import android.content.Context;
 import android.content.SharedPreferences;

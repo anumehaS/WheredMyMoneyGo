@@ -5,8 +5,8 @@ import java.util.List;
 
 import com.anumeha.wheredmymoneygo.PieChart;
 import com.anumeha.wheredmymoneygo.PieLegendCursorAdapter;
-import com.anumeha.wheredmymoneygo.Expense.ExpenseCursorLoader;
-import com.anumeha.wheredmymoneygo.Income.IncomeCursorLoader;
+import com.anumeha.wheredmymoneygo.expense.ExpenseCursorLoader;
+import com.anumeha.wheredmymoneygo.income.IncomeCursorLoader;
 import com.example.wheredmymoneygo.R;
 
 import android.app.Activity;
@@ -31,8 +31,6 @@ public class PieFragment extends Fragment implements LoaderCallbacks<Cursor>{
 	ImageView imgView;
 	PieChart pie;
 	TextView noExp;
-	ExpenseCursorLoader expLoad;
-	IncomeCursorLoader incLoad;
 	PieLegendCursorAdapter legendAdapter;
 	ListView legend;
 	Boolean isExpense = true;
@@ -46,7 +44,11 @@ public class PieFragment extends Fragment implements LoaderCallbacks<Cursor>{
 	@Override
 	  public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	      Bundle savedInstanceState) {
-	    view = inflater.inflate(R.layout.expense_chart_fragment, container, false);   
+		 String myTag = getTag();
+	        if(myTag.equals(INC_TAG)) {
+	        	isExpense = false;
+	        }
+	    view = inflater.inflate(R.layout.pie_fragment, container, false);   
 	    return view;
 	  }
 	
@@ -58,21 +60,24 @@ public class PieFragment extends Fragment implements LoaderCallbacks<Cursor>{
 		noExp = (TextView) view.findViewById(R.id.expNotPresent);
 		legend = (ListView)view.findViewById(R.id.legendListView);
 		
+		 String myTag = getTag();
+	        if(myTag.equals(INC_TAG)) {
+	        	isExpense = false;
+	        }
+		if(isExpense)
+			getLoaderManager().initLoader(0, null,this); // cursor loader
+		else
+			getLoaderManager().initLoader(1, null,this);
 
 	}
 
 	@Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);   
-        
-        String tab = ((MainActivity)activity).currentTab;
-        if(tab.equals("income")) {
-        	incLoad = new IncomeCursorLoader(activity,3);
+        String myTag = getTag();
+        if(myTag.equals(INC_TAG)) {
         	isExpense = false;
-        } else {
-        	expLoad = new ExpenseCursorLoader(activity,3);
         }
-        getLoaderManager().initLoader(0, null,this); // cursor loader
     }
 	
 	
@@ -91,6 +96,7 @@ public class PieFragment extends Fragment implements LoaderCallbacks<Cursor>{
 			noExp.setVisibility(0);
 			pie.setCursor(cursor);
 			pie.setPieView(view);
+			pie.invalidate();
 			legendAdapter = new PieLegendCursorAdapter(getActivity(),R.layout.pie_legend_row,cursor);
 			legend.setAdapter(legendAdapter);
 		}
@@ -102,11 +108,14 @@ public class PieFragment extends Fragment implements LoaderCallbacks<Cursor>{
 	@Override
 	public void onLoaderReset(Loader<Cursor> arg0) {
 		// TODO Auto-generated method stub
-		
+		pie.setCursor(null);
 	}
 	
 	public void restartLoader()	{
-		getLoaderManager().restartLoader(0, null,this);
+		if(isExpense) 
+			getLoaderManager().restartLoader(0, null,this);
+		else
+			getLoaderManager().restartLoader(1, null,this);
 	}
 
 }

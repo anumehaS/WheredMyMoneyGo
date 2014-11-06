@@ -1,4 +1,4 @@
-package com.anumeha.wheredmymoneygo.Recurrence;
+package com.anumeha.wheredmymoneygo.recurrence;
 
 
 public class Recurrence {

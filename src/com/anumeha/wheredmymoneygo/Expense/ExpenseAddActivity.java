@@ -1,4 +1,4 @@
-package com.anumeha.wheredmymoneygo.Expense;
+package com.anumeha.wheredmymoneygo.expense;
 
 
 
@@ -10,11 +10,11 @@ import java.util.List;
 
 
 import com.anumeha.wheredmymoneygo.Globals;
-import com.anumeha.wheredmymoneygo.Category.CategoryCursorLoader;
-import com.anumeha.wheredmymoneygo.Currency.CurrencyCursorLoader;
-import com.anumeha.wheredmymoneygo.DBhelpers.ExpenseDbHelper;
-import com.anumeha.wheredmymoneygo.Services.CurrencyConverter;
-import com.anumeha.wheredmymoneygo.Services.WmmgAlarmManager;
+import com.anumeha.wheredmymoneygo.category.CategoryCursorLoader;
+import com.anumeha.wheredmymoneygo.currency.CurrencyCursorLoader;
+import com.anumeha.wheredmymoneygo.dbhelpers.ExpenseDbHelper;
+import com.anumeha.wheredmymoneygo.services.CurrencyConverter;
+import com.anumeha.wheredmymoneygo.services.WmmgAlarmManager;
 import com.example.wheredmymoneygo.*;
 
 import android.app.Activity;
@@ -65,18 +65,18 @@ public class ExpenseAddActivity extends Activity implements OnClickListener, Loa
 	    public void onCreate(Bundle savedInstanceState) {
 	        super.onCreate(savedInstanceState);
 	        
-	        this.setContentView(R.layout.expense_add_activity);
+	        this.setContentView(R.layout.cashflow_add_edit_activity);
 	        
 	        
-	        category1 = (Spinner)findViewById(R.id.expCategory1);
-	        currency = (Spinner)findViewById(R.id.inputExpenseCurrency);
-	        frequency = (Spinner)findViewById(R.id.inputExpenseFreq);
+	        category1 = (Spinner)findViewById(R.id.category1);
+	        currency = (Spinner)findViewById(R.id.inputCurrency);
+	        frequency = (Spinner)findViewById(R.id.inputFreq);
 	        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
 			        R.array.frequency_spinner_items, android.R.layout.simple_spinner_item);
 			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 			frequency.setAdapter(adapter);
 			
-			ask = (CheckBox)findViewById(R.id.inputExpNotify); 
+			ask = (CheckBox)findViewById(R.id.inputNotify); 
 			frequency.setOnItemSelectedListener(new OnItemSelectedListener (){
 
 				@Override
@@ -100,9 +100,9 @@ public class ExpenseAddActivity extends Activity implements OnClickListener, Loa
 			frequency.setSelection(0);
 			
 	        setCurrentDate();
-	        add = (ImageButton)findViewById(R.id.expAddSubmit);
+	        add = (ImageButton)findViewById(R.id.save);
 			add.setOnClickListener(this);
-			cancel = (ImageButton)findViewById(R.id.expAddCancel);
+			cancel = (ImageButton)findViewById(R.id.cancel);
 			cancel.setOnClickListener(this);
 			dbh = new ExpenseDbHelper(this);
 			FragmentManager fragmentManager = getFragmentManager();
@@ -118,7 +118,7 @@ public class ExpenseAddActivity extends Activity implements OnClickListener, Loa
 			getLoaderManager().initLoader(1,null, this ); // 1 for category
 			getLoaderManager().initLoader(5,null, this ); //5 for currency
 		
-			i = new Intent (this,com.anumeha.wheredmymoneygo.Expense.ExpenseAlarmManager.class);
+			i = new Intent (this,com.anumeha.wheredmymoneygo.expense.ExpenseAlarmManager.class);
 	    }
 	 
 	 public void endActivity(String res) {	
@@ -137,13 +137,13 @@ public class ExpenseAddActivity extends Activity implements OnClickListener, Loa
 		 StringBuffer sb = new StringBuffer("Please check the following :\n");
 			
 			
-			if(arg0.getId() == R.id.expAddCancel) {
+			if(arg0.getId() == R.id.cancel) {
 				endActivity("cancelled");
 			}
-			else if(arg0.getId() == R.id.expAddSubmit) {
+			else if(arg0.getId() == R.id.save) {
 				
 				//name
-				e_name = ((EditText)findViewById(R.id.inputExpenseName)).getText().toString();
+				e_name = ((EditText)findViewById(R.id.inputName)).getText().toString();
 				if(e_name.trim().equals("")){
 					sb.append("- Expense Name cannot be blank. \n");
 					valid = false;
@@ -151,7 +151,7 @@ public class ExpenseAddActivity extends Activity implements OnClickListener, Loa
 				
 				//amount
 				//float amount = 0;
-				String e_amount = ((EditText)findViewById(R.id.inputExpenseAmount)).getText().toString();
+				String e_amount = ((EditText)findViewById(R.id.inputAmount)).getText().toString();
 				if(e_amount.trim().equals("")){
 					sb.append("- Expense Amount cannot be blank. \n");
 					valid =false;
@@ -167,16 +167,16 @@ public class ExpenseAddActivity extends Activity implements OnClickListener, Loa
 				}
 				
 				//currency
-				e_currency = ((Spinner) findViewById(R.id.inputExpenseCurrency)).getSelectedItem().toString(); 
+				e_currency = currency.getSelectedItem().toString(); 
 				
 				
 				//category 1
-				e_category1 = ((Spinner) findViewById(R.id.expCategory1)).getSelectedItem().toString(); 
+				e_category1 = category1.getSelectedItem().toString(); 
 				
-			    e_desc = ((EditText)findViewById(R.id.inputExpenseDesc)).getText().toString();
-				if(e_desc.trim().equals("")) {
+			    e_desc = ""; //((EditText)findViewById(R.id.inputExpenseDesc)).getText().toString();
+				/*if(e_desc.trim().equals("")) {
 					e_desc =" ";
-				}
+				}*/
 				
 				freq = frequency.getSelectedItem().toString(); 
 				if(frequency.getSelectedItemPosition() > 0) {
@@ -294,7 +294,7 @@ public class ExpenseAddActivity extends Activity implements OnClickListener, Loa
 	  }
 
 	public void setCurrentDate() {			 
-		expenseDate = (Button) findViewById(R.id.expPickDate);			
+		expenseDate = (Button) findViewById(R.id.pickDate);			
 		Date myDate;
 	    Calendar cal = Calendar.getInstance();	    
 	    myDate = cal.getTime();

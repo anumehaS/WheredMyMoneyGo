@@ -1,7 +1,7 @@
-package com.anumeha.wheredmymoneygo.Income;
+package com.anumeha.wheredmymoneygo.income;
 
 
-import com.anumeha.wheredmymoneygo.DBhelpers.IncomeDbHelper;
+import com.anumeha.wheredmymoneygo.dbhelpers.IncomeDbHelper;
 
 import android.content.Context;
 import android.content.CursorLoader;

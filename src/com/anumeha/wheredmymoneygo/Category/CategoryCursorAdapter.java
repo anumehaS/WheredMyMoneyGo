@@ -1,4 +1,4 @@
-package com.anumeha.wheredmymoneygo.Category;
+package com.anumeha.wheredmymoneygo.category;
 
 import com.example.wheredmymoneygo.R;
 

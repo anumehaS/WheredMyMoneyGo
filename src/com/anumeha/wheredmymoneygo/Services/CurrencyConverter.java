@@ -1,4 +1,4 @@
-package com.anumeha.wheredmymoneygo.Services;
+package com.anumeha.wheredmymoneygo.services;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -16,11 +16,11 @@ import java.util.Date;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.anumeha.wheredmymoneygo.DBhelpers.CurrencyDbHelper;
-import com.anumeha.wheredmymoneygo.DBhelpers.ExpenseDbHelper;
-import com.anumeha.wheredmymoneygo.DBhelpers.IncomeDbHelper;
-import com.anumeha.wheredmymoneygo.Expense.Expense;
-import com.anumeha.wheredmymoneygo.Income.Income;
+import com.anumeha.wheredmymoneygo.dbhelpers.CurrencyDbHelper;
+import com.anumeha.wheredmymoneygo.dbhelpers.ExpenseDbHelper;
+import com.anumeha.wheredmymoneygo.dbhelpers.IncomeDbHelper;
+import com.anumeha.wheredmymoneygo.expense.Expense;
+import com.anumeha.wheredmymoneygo.income.Income;
 
 import android.app.Activity;
 import android.app.Fragment;

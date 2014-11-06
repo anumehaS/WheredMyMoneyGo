@@ -1,14 +1,14 @@
-package com.anumeha.wheredmymoneygo.Services;
+package com.anumeha.wheredmymoneygo.services;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
 import com.anumeha.wheredmymoneygo.Globals;
-import com.anumeha.wheredmymoneygo.DBhelpers.ExpenseDbHelper;
-import com.anumeha.wheredmymoneygo.DBhelpers.IncomeDbHelper;
-import com.anumeha.wheredmymoneygo.Expense.Expense;
-import com.anumeha.wheredmymoneygo.Income.Income;
+import com.anumeha.wheredmymoneygo.dbhelpers.ExpenseDbHelper;
+import com.anumeha.wheredmymoneygo.dbhelpers.IncomeDbHelper;
+import com.anumeha.wheredmymoneygo.expense.Expense;
+import com.anumeha.wheredmymoneygo.income.Income;
 
 import android.content.Context;
 import android.database.Cursor;

@@ -1,9 +1,9 @@
 
-package com.anumeha.wheredmymoneygo.DBhelpers;
+package com.anumeha.wheredmymoneygo.dbhelpers;
 
 import java.util.ArrayList;
 
-import com.anumeha.wheredmymoneygo.Expense.Expense;
+import com.anumeha.wheredmymoneygo.expense.Expense;
 import com.anumeha.wheredmymoneygo.DBHandler;
 import com.anumeha.wheredmymoneygo.Globals;
 

@@ -1,6 +1,6 @@
-package com.anumeha.wheredmymoneygo.Currency;
+package com.anumeha.wheredmymoneygo.currency;
 
-import com.anumeha.wheredmymoneygo.DBhelpers.CurrencyDbHelper;
+import com.anumeha.wheredmymoneygo.dbhelpers.CurrencyDbHelper;
 
 import android.content.Context;
 import android.content.CursorLoader;

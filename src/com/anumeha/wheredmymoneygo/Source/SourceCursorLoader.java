@@ -1,7 +1,8 @@
-package com.anumeha.wheredmymoneygo.Source;
+package com.anumeha.wheredmymoneygo.source;
 
 
-import com.anumeha.wheredmymoneygo.DBhelpers.SourceDbHelper;
+import com.anumeha.wheredmymoneygo.dbhelpers.SourceDbHelper;
+
 import android.content.Context;
 import android.content.CursorLoader;
 import android.database.Cursor;

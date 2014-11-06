@@ -1,4 +1,4 @@
-package com.anumeha.wheredmymoneygo.Category;
+package com.anumeha.wheredmymoneygo.category;
 
 public class Category {
      

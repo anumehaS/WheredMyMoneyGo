@@ -1,10 +1,10 @@
-package com.anumeha.wheredmymoneygo.Services;
+package com.anumeha.wheredmymoneygo.services;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.anumeha.wheredmymoneygo.Globals;
-import com.anumeha.wheredmymoneygo.DBhelpers.CurrencyDbHelper;
+import com.anumeha.wheredmymoneygo.dbhelpers.CurrencyDbHelper;
 
 import android.content.Context;
 import android.content.SharedPreferences;

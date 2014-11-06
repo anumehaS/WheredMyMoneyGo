@@ -1,4 +1,4 @@
-package com.anumeha.wheredmymoneygo.Income;
+package com.anumeha.wheredmymoneygo.income;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -9,14 +9,14 @@ import java.util.List;
 import java.util.Locale;
 
 import com.anumeha.wheredmymoneygo.Globals;
-import com.anumeha.wheredmymoneygo.Category.CategoryCursorLoader;
-import com.anumeha.wheredmymoneygo.Currency.CurrencyCursorLoader;
-import com.anumeha.wheredmymoneygo.DBhelpers.IncomeDbHelper;
-import com.anumeha.wheredmymoneygo.Income.Income;
-import com.anumeha.wheredmymoneygo.Income.IncomeCursorLoader;
-import com.anumeha.wheredmymoneygo.Services.CurrencyConverter;
-import com.anumeha.wheredmymoneygo.Services.WmmgAlarmManager;
-import com.anumeha.wheredmymoneygo.Source.SourceCursorLoader;
+import com.anumeha.wheredmymoneygo.category.CategoryCursorLoader;
+import com.anumeha.wheredmymoneygo.currency.CurrencyCursorLoader;
+import com.anumeha.wheredmymoneygo.dbhelpers.IncomeDbHelper;
+import com.anumeha.wheredmymoneygo.income.Income;
+import com.anumeha.wheredmymoneygo.income.IncomeCursorLoader;
+import com.anumeha.wheredmymoneygo.services.CurrencyConverter;
+import com.anumeha.wheredmymoneygo.services.WmmgAlarmManager;
+import com.anumeha.wheredmymoneygo.source.SourceCursorLoader;
 import com.example.wheredmymoneygo.R;
 
 import android.app.Activity;
@@ -44,13 +44,14 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemSelectedListener;
 
 public class IncomeEditActivity extends Activity implements OnClickListener, LoaderCallbacks<Cursor> {
 	
-	private static Button add, cancel;
+	private static ImageButton add, cancel;
 	private static Button incomeDate;
 	private static Spinner source,currency,frequency;
 	private String i_name;
@@ -87,19 +88,19 @@ public class IncomeEditActivity extends Activity implements OnClickListener, Loa
 	    public void onCreate(Bundle savedInstanceState) {
 	        super.onCreate(savedInstanceState);
 	        
-	        this.setContentView(R.layout.income_edit_activity);
-        
-	        source = (Spinner)findViewById(R.id.incSourceEdit);
-	        currency = (Spinner)findViewById(R.id.inputIncomeCurrencyEdit);
+	        this.setContentView(R.layout.cashflow_add_edit_activity);
+	        ((TextView) findViewById(R.id.catLabel)).setText("Source :");
+	        source = (Spinner)findViewById(R.id.category1);
+	        currency = (Spinner)findViewById(R.id.inputCurrency);
 	        
-	        frequency = (Spinner)findViewById(R.id.inputIncomeFreqEdit);
+	        frequency = (Spinner)findViewById(R.id.inputFreq);
 	        
 	        freqadapter = ArrayAdapter.createFromResource(this,
 			        R.array.frequency_spinner_items, android.R.layout.simple_spinner_item);
 			freqadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 			frequency.setAdapter(freqadapter);
 
-	        ask = (CheckBox)findViewById(R.id.inputIncNotifyEdit); 
+	        ask = (CheckBox)findViewById(R.id.inputNotify); 
 	        
 	        frequency.setOnItemSelectedListener(new OnItemSelectedListener (){
 
@@ -121,11 +122,11 @@ public class IncomeEditActivity extends Activity implements OnClickListener, Loa
 				}
 				
 			});
-	        incomeDate = (Button)findViewById(R.id.incPickDateEdit);
+	        incomeDate = (Button)findViewById(R.id.pickDate);
 
-	        add = (Button)findViewById(R.id.incSaveEdit);
+	        add = (ImageButton)findViewById(R.id.save);
 			add.setOnClickListener(this);
-			cancel = (Button)findViewById(R.id.incCancelEdit);
+			cancel = (ImageButton)findViewById(R.id.cancel);
 			cancel.setOnClickListener(this);
 			dbh = new IncomeDbHelper(this);
 			FragmentManager fragmentManager = getFragmentManager();
@@ -154,7 +155,7 @@ public class IncomeEditActivity extends Activity implements OnClickListener, Loa
 			getLoaderManager().initLoader(3,null, this ); //get income with that id.
 			getLoaderManager().initLoader(5,null, this ); //get currencies
 			
-			i = new Intent (this,com.anumeha.wheredmymoneygo.Income.IncomeAlarmManager.class);
+			i = new Intent (this,com.anumeha.wheredmymoneygo.income.IncomeAlarmManager.class);
 
 			 
 	 
@@ -176,13 +177,13 @@ public class IncomeEditActivity extends Activity implements OnClickListener, Loa
 			valid = true;
 			noChanges = true;
 			
-			if(arg0.getId() == R.id.incCancelEdit) {
+			if(arg0.getId() == R.id.cancel) {
 				endActivity("cancelled");
 			}
-			else if(arg0.getId() == R.id.incSaveEdit) {
+			else if(arg0.getId() == R.id.save) {
 				
 				//name
-				String i_name_edit = ((EditText)findViewById(R.id.inputIncomeNameEdit)).getText().toString();
+				String i_name_edit = ((EditText)findViewById(R.id.inputName)).getText().toString();
 				if(i_name_edit.trim().equals("")){
 					sb.append("- Income Name cannot be blank. \n");
 					valid = false;
@@ -199,7 +200,7 @@ public class IncomeEditActivity extends Activity implements OnClickListener, Loa
 				
 				//amount
 				float amount = 0;
-				String i_amount_edit = ((EditText)findViewById(R.id.inputIncomeAmountEdit)).getText().toString();
+				String i_amount_edit = ((EditText)findViewById(R.id.inputAmount)).getText().toString();
 				if(i_amount_edit.trim().equals("")){
 					sb.append("- Income Amount cannot be blank. \n");
 					valid =false;
@@ -220,27 +221,27 @@ public class IncomeEditActivity extends Activity implements OnClickListener, Loa
 				}
 				
 				//currency
-				String i_currency_edit =((Spinner) findViewById(R.id.inputIncomeCurrencyEdit)).getSelectedItem().toString(); 
+				String i_currency_edit =currency.getSelectedItem().toString(); 
 				if(noChanges && !i_currency_edit.trim().equals(i_currency)){
 					noChanges = false;
 				
 				}
 				
 				//source
-				String i_source_edit = ((Spinner) findViewById(R.id.incSourceEdit)).getSelectedItem().toString(); 
+				String i_source_edit = source.getSelectedItem().toString(); 
 				if(noChanges && !i_source_edit.trim().equals(i_source)){
 					noChanges = false;
 				
 				}
 				
-				String i_desc_edit = ((EditText)findViewById(R.id.inputIncomeDescEdit)).getText().toString();
-				if(i_desc.trim().equals("")) {
+				String i_desc_edit = "";//((EditText)findViewById(R.id.inputIncomeDescEdit)).getText().toString();
+				/*if(i_desc.trim().equals("")) {
 					i_desc =" ";
 				}
 				if(noChanges && !i_desc_edit.trim().equals(i_desc.trim())){
 					noChanges = false;
 					
-				}
+				}*/
 				
 				String i_freq_edit = frequency.getSelectedItem().toString();
 				int newFreqPos = frequency.getSelectedItemPosition();
@@ -501,11 +502,11 @@ public class IncomeEditActivity extends Activity implements OnClickListener, Loa
 					i_notify = true;
 				}
 				
-				((EditText)findViewById(R.id.inputIncomeNameEdit)).setText(i_name);
-				((EditText)findViewById(R.id.inputIncomeAmountEdit)).setText(Float.toString(i_amount));
-				((EditText)findViewById(R.id.inputIncomeDescEdit)).setText(i_desc);
+				((EditText)findViewById(R.id.inputName)).setText(i_name);
+				((EditText)findViewById(R.id.inputAmount)).setText(Float.toString(i_amount));
+				//((EditText)findViewById(R.id.inputIncomeDescEdit)).setText(i_desc);
 				//((EditText)findViewById(R.id.inputIncomeCurrencyEdit)).setText(i_currency);
-				((Button)findViewById(R.id.incPickDateEdit)).setText(tempdate);			
+				((Button)findViewById(R.id.pickDate)).setText(tempdate);			
 				
 				loadFinished1= true;
 			}
@@ -514,9 +515,9 @@ public class IncomeEditActivity extends Activity implements OnClickListener, Loa
 		if(loadFinished1 && loadFinished2&& loadFinished3){
 			
 			int spinnerPosition = dataAdapter1.getPosition(i_source);
-			((Spinner) findViewById(R.id.incSourceEdit)).setSelection(spinnerPosition);	
+			source.setSelection(spinnerPosition);	
 			spinnerPosition = dataAdapter2.getPosition(i_currency);
-			((Spinner) findViewById(R.id.inputIncomeCurrencyEdit)).setSelection(spinnerPosition);	
+			currency.setSelection(spinnerPosition);	
 			loadFinished1 =false;
 			loadFinished2 = false;	
 			loadFinished3 = false;

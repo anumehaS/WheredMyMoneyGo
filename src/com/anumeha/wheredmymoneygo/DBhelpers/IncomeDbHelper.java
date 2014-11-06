@@ -1,4 +1,4 @@
-package com.anumeha.wheredmymoneygo.DBhelpers;
+package com.anumeha.wheredmymoneygo.dbhelpers;
 
 import java.util.ArrayList;
 
@@ -11,7 +11,7 @@ import android.preference.PreferenceManager;
 
 import com.anumeha.wheredmymoneygo.DBHandler;
 import com.anumeha.wheredmymoneygo.Globals;
-import com.anumeha.wheredmymoneygo.Income.Income;
+import com.anumeha.wheredmymoneygo.income.Income;
 
 public class IncomeDbHelper {
 

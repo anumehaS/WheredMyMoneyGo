@@ -1,4 +1,4 @@
-package com.anumeha.wheredmymoneygo.Income;
+package com.anumeha.wheredmymoneygo.income;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

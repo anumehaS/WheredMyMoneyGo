@@ -1,4 +1,4 @@
-package com.anumeha.wheredmymoneygo.Currency;
+package com.anumeha.wheredmymoneygo.currency;
 
 public class Currency {
 	

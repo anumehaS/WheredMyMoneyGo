@@ -5,14 +5,14 @@ package com.anumeha.wheredmymoneygo;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.anumeha.wheredmymoneygo.Expense.ExpenseListFragment;
-import com.anumeha.wheredmymoneygo.Income.IncomeListFragment;
-import com.anumeha.wheredmymoneygo.Services.BackupOps;
-import com.anumeha.wheredmymoneygo.Services.BackupOps.BackupCreatedListener;
-import com.anumeha.wheredmymoneygo.Services.DefaultPreferenceAccess;
-import com.anumeha.wheredmymoneygo.Services.DefaultPreferenceAccess.PrefAddedListener;
-import com.anumeha.wheredmymoneygo.Services.DefaultsLoader;
-import com.anumeha.wheredmymoneygo.Services.DefaultsLoader.DefaultsLoadedListener;
+import com.anumeha.wheredmymoneygo.expense.ExpenseListFragment;
+import com.anumeha.wheredmymoneygo.income.IncomeListFragment;
+import com.anumeha.wheredmymoneygo.services.BackupOps;
+import com.anumeha.wheredmymoneygo.services.DefaultPreferenceAccess;
+import com.anumeha.wheredmymoneygo.services.DefaultsLoader;
+import com.anumeha.wheredmymoneygo.services.BackupOps.BackupCreatedListener;
+import com.anumeha.wheredmymoneygo.services.DefaultPreferenceAccess.PrefAddedListener;
+import com.anumeha.wheredmymoneygo.services.DefaultsLoader.DefaultsLoadedListener;
 import com.example.wheredmymoneygo.R;
 
 import android.app.ActionBar;
@@ -186,7 +186,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 		    switch (item.getItemId()) {
 		        case R.id.action_categories:
 		        	//define a new Intent for the add expense form Activity
-					 intent = new Intent(this,com.anumeha.wheredmymoneygo.Category.CategoryActivity.class);
+					 intent = new Intent(this,com.anumeha.wheredmymoneygo.category.CategoryActivity.class);
 			 
 					//start the add expense form Activity
 					this.startActivity(intent);
@@ -194,7 +194,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 		            
 		        case R.id.action_sources:
 		        	//define a new Intent for the add expense form Activity
-					 intent = new Intent(this,com.anumeha.wheredmymoneygo.Source.SourceActivity.class);
+					 intent = new Intent(this,com.anumeha.wheredmymoneygo.source.SourceActivity.class);
 			 
 					//start the add expense form Activity
 					this.startActivity(intent);
@@ -203,11 +203,11 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 		        case R.id.action_add:
 		        	//define a new Intent for the add expense form Activity
 		        	if(currentTab.equals(INCOME_TAG)) {
-		        		intent = new Intent(this,com.anumeha.wheredmymoneygo.Income.IncomeAddActivity.class);
+		        		intent = new Intent(this,com.anumeha.wheredmymoneygo.income.IncomeAddActivity.class);
 		        		this.startActivityForResult(intent, INCOME_ADDED);
 		        	}
 		        	else if(currentTab.equals(EXPENSE_TAG)){
-		        		intent = new Intent(this,com.anumeha.wheredmymoneygo.Expense.ExpenseAddActivity.class);
+		        		intent = new Intent(this,com.anumeha.wheredmymoneygo.expense.ExpenseAddActivity.class);
 		        		this.startActivityForResult(intent, EXPENSE_ADDED);
 		        	}			 
 					
@@ -230,9 +230,9 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 						}},this);
 		            return true;
 		        case android.R.id.home:
-		        	  Intent intent1 = new Intent(this, MainActivity.class);
+		        	 /* Intent intent1 = new Intent(this, MainActivity.class);
 		        	  intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		        	  startActivity(intent1);
+		        	  startActivity(intent1);*/
 		        	  return true;
 		        	  
 		        default:
@@ -342,14 +342,20 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 		public MyTabListener(Activity activity, String tag, Class fragClass){
 			this.tag = tag;
 			this.fragClass = fragClass;
-			this.activity = activity;	
+				
 			currentFrag = activity.getFragmentManager().findFragmentByTag(tag);
+			this.activity = activity;
 		}
 		
 		@Override
 		public void onTabSelected(ActionBar.Tab tab,
 				FragmentTransaction ft) {
 
+			  if(tag.equals(ExpenseListFragment.TAG)|| tag.equals(PieFragment.EXP_TAG)) {
+		        	currentTab = EXPENSE_TAG;
+		        } else {
+		        	currentTab = INCOME_TAG;
+		        }
 	        // Check if the fragment is already initialized
 	        if (currentFrag == null) {
 	            // If not, instantiate and add it to the activity
@@ -361,11 +367,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 	            ft.attach(currentFrag);
 	        }	  
 	        
-	        if(tag.equals(ExpenseListFragment.TAG)|| tag.equals(PieFragment.EXP_TAG)) {
-	        	currentTab = EXPENSE_TAG;
-	        } else {
-	        	currentTab = INCOME_TAG;
-	        }
+	      
 	      
 	        if(currentTab.equals(EXPENSE_TAG)){
 	        	if(prefs.getString(Globals.EXP_DEF_VIEWAS, "list").equals("list")) {

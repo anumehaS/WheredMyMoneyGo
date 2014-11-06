@@ -1,8 +1,9 @@
-package com.anumeha.wheredmymoneygo.Category;
+package com.anumeha.wheredmymoneygo.category;
 
 
 import com.example.wheredmymoneygo.*;
-import com.anumeha.wheredmymoneygo.DBhelpers.CategoryDbHelper;
+import com.anumeha.wheredmymoneygo.dbhelpers.CategoryDbHelper;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.LoaderManager.LoaderCallbacks;

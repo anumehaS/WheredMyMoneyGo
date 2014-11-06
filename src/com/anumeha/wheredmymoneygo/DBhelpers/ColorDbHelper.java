@@ -1,4 +1,4 @@
-package com.anumeha.wheredmymoneygo.DBhelpers;
+package com.anumeha.wheredmymoneygo.dbhelpers;
 
 import android.content.ContentValues;
 import android.content.Context;

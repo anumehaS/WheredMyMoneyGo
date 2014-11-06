@@ -1,4 +1,4 @@
-package com.anumeha.wheredmymoneygo.Expense;
+package com.anumeha.wheredmymoneygo.expense;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -9,12 +9,13 @@ import java.util.List;
 import java.util.Locale;
 
 import com.anumeha.wheredmymoneygo.Globals;
-import com.anumeha.wheredmymoneygo.Category.CategoryCursorLoader;
-import com.anumeha.wheredmymoneygo.Currency.CurrencyCursorLoader;
-import com.anumeha.wheredmymoneygo.DBhelpers.ExpenseDbHelper;
-import com.anumeha.wheredmymoneygo.Services.CurrencyConverter;
-import com.anumeha.wheredmymoneygo.Services.WmmgAlarmManager;
+import com.anumeha.wheredmymoneygo.category.CategoryCursorLoader;
+import com.anumeha.wheredmymoneygo.currency.CurrencyCursorLoader;
+import com.anumeha.wheredmymoneygo.dbhelpers.ExpenseDbHelper;
+import com.anumeha.wheredmymoneygo.services.CurrencyConverter;
+import com.anumeha.wheredmymoneygo.services.WmmgAlarmManager;
 import com.example.wheredmymoneygo.R;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -41,13 +42,14 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemSelectedListener;
 
 public class ExpenseEditActivity extends Activity implements OnClickListener, LoaderCallbacks<Cursor> {
 	
-	private static Button add, cancel;
+	private static ImageButton add, cancel;
 	private static Button expenseDate;
 	private static Spinner category1, currency, frequency;
 	private String e_name;
@@ -88,11 +90,11 @@ public class ExpenseEditActivity extends Activity implements OnClickListener, Lo
 	    public void onCreate(Bundle savedInstanceState) {
 	        super.onCreate(savedInstanceState);
 	        
-	        this.setContentView(R.layout.expense_edit_activity);
+	        this.setContentView(R.layout.cashflow_add_edit_activity);
 	        
-	        category1 = (Spinner)findViewById(R.id.expCategory1Edit);
-	        currency = (Spinner)findViewById(R.id.inputExpenseCurrencyEdit);
-	        frequency = (Spinner)findViewById(R.id.inputExpenseFreqEdit);
+	        category1 = (Spinner)findViewById(R.id.category1);
+	        currency = (Spinner)findViewById(R.id.inputCurrency);
+	        frequency = (Spinner)findViewById(R.id.inputFreq);
 	        
 	        freqadapter = ArrayAdapter.createFromResource(this,
 			        R.array.frequency_spinner_items, android.R.layout.simple_spinner_item);
@@ -100,7 +102,7 @@ public class ExpenseEditActivity extends Activity implements OnClickListener, Lo
 			frequency.setAdapter(freqadapter);
 			
 
-	        ask = (CheckBox)findViewById(R.id.inputExpNotifyEdit); 
+	        ask = (CheckBox)findViewById(R.id.inputNotify); 
 	        
 	        frequency.setOnItemSelectedListener(new OnItemSelectedListener (){
 
@@ -122,10 +124,10 @@ public class ExpenseEditActivity extends Activity implements OnClickListener, Lo
 				}
 				
 			});
-	        expenseDate = (Button)findViewById(R.id.expPickDateEdit);
-	        add = (Button)findViewById(R.id.expSaveEdit);
+	        expenseDate = (Button)findViewById(R.id.pickDate);
+	        add = (ImageButton)findViewById(R.id.save);
 			add.setOnClickListener(this);
-			cancel = (Button)findViewById(R.id.expCancelEdit);
+			cancel = (ImageButton)findViewById(R.id.cancel);
 			cancel.setOnClickListener(this);
 			dbh = new ExpenseDbHelper(this);
 			FragmentManager fragmentManager = getFragmentManager();
@@ -153,7 +155,7 @@ public class ExpenseEditActivity extends Activity implements OnClickListener, Lo
 			getLoaderManager().initLoader(1,null, this ); //load categories
 			getLoaderManager().initLoader(0,null, this ); //get expense with that id.
 			getLoaderManager().initLoader(5,null, this ); //get currencies
-			i = new Intent (this,com.anumeha.wheredmymoneygo.Expense.ExpenseAlarmManager.class);
+			i = new Intent (this,com.anumeha.wheredmymoneygo.expense.ExpenseAlarmManager.class);
 	    }
 	 
 	 public void endActivity(String res) {	
@@ -172,13 +174,13 @@ public class ExpenseEditActivity extends Activity implements OnClickListener, Lo
 			valid = true;
 			noChanges = true;
 			
-			if(arg0.getId() == R.id.expCancelEdit) {
+			if(arg0.getId() == R.id.cancel) {
 				endActivity("cancelled");
 			}
-			else if(arg0.getId() == R.id.expSaveEdit) {
+			else if(arg0.getId() == R.id.save) {
 				
 				//name
-				 e_name_edit = ((EditText)findViewById(R.id.inputExpenseNameEdit)).getText().toString();
+				 e_name_edit = ((EditText)findViewById(R.id.inputName)).getText().toString();
 				if(e_name_edit.trim().equals("")){
 					sb.append("- Expense Name cannot be blank. \n");
 					valid = false;
@@ -195,7 +197,7 @@ public class ExpenseEditActivity extends Activity implements OnClickListener, Lo
 				
 				//amount
 				
-				String e_amount_edit = ((EditText)findViewById(R.id.inputExpenseAmountEdit)).getText().toString();
+				String e_amount_edit = ((EditText)findViewById(R.id.inputAmount)).getText().toString();
 				if(e_amount_edit.trim().equals("")){
 					sb.append("- Expense Amount cannot be blank. \n");
 					valid =false;
@@ -216,27 +218,27 @@ public class ExpenseEditActivity extends Activity implements OnClickListener, Lo
 				}
 				
 				//currency
-				e_currency_edit = ((Spinner) findViewById(R.id.inputExpenseCurrencyEdit)).getSelectedItem().toString(); 
+				e_currency_edit = ((Spinner) findViewById(R.id.inputCurrency)).getSelectedItem().toString(); 
 				if(noChanges && !e_currency_edit.trim().equals(e_currency)){
 					noChanges = false;
 				
 				}
 				
 				//category 1
-				e_category1_edit = ((Spinner) findViewById(R.id.expCategory1Edit)).getSelectedItem().toString(); 
+				e_category1_edit = category1.getSelectedItem().toString(); 
 				if(noChanges && !e_category1_edit.trim().equals(e_category1)){
 					noChanges = false;
 				
 				}
 				
-				String e_desc_edit = ((EditText)findViewById(R.id.inputExpenseDescEdit)).getText().toString();
-				if(e_desc.trim().equals("")) {
+				String e_desc_edit = ""; // ((EditText)findViewById(R.id.inputExpenseDescEdit)).getText().toString();
+				/*if(e_desc.trim().equals("")) {
 					e_desc =" ";
 				}
 				if(noChanges && !e_desc_edit.trim().equals(e_desc.trim())){
 					noChanges = false;
 					
-				}
+				}*/
 				String e_freq_edit = frequency.getSelectedItem().toString();
 				
 				int newFreqPos = frequency.getSelectedItemPosition();
@@ -498,18 +500,18 @@ public class ExpenseEditActivity extends Activity implements OnClickListener, Lo
 					}
 		
 					
-					EditText name = ((EditText)findViewById(R.id.inputExpenseNameEdit));
+					EditText name = ((EditText)findViewById(R.id.inputName));
 					name.setText(e_name);
 					
-					((EditText)findViewById(R.id.inputExpenseAmountEdit)).setText(Float.toString(e_amount));
-					EditText des = ((EditText)findViewById(R.id.inputExpenseDescEdit));
-					des.setText(e_desc);
+					((EditText)findViewById(R.id.inputAmount)).setText(Float.toString(e_amount));
+					//EditText des = ((EditText)findViewById(R.id.inputExpenseDescEdit));
+					//des.setText(e_desc);
 					//((EditText)findViewById(R.id.inputExpenseCurrencyEdit)).setText(e_currency);
-					((Button)findViewById(R.id.expPickDateEdit)).setText(tempdate);
+					((Button)findViewById(R.id.pickDate)).setText(tempdate);
 					
 					if(fromNoti) {
 						name.setEnabled(false);
-						des.setEnabled(false);
+						//des.setEnabled(false);
 						category1.setClickable(false);
 						frequency.setClickable(false);
 						currency.setClickable(false);
@@ -522,13 +524,13 @@ public class ExpenseEditActivity extends Activity implements OnClickListener, Lo
 		if(loadFinished1 && loadFinished2 && loadFinished3){ 
 			
 			int spinnerPosition = dataAdapter1.getPosition(e_category1);
-			((Spinner) findViewById(R.id.expCategory1Edit)).setSelection(spinnerPosition);	
+			((Spinner) findViewById(R.id.category1)).setSelection(spinnerPosition);	
 			loadFinished1 =false;
 			loadFinished2 = false;	
 			
 			
 			spinnerPosition = dataAdapter2.getPosition(e_currency);
-			((Spinner) findViewById(R.id.inputExpenseCurrencyEdit)).setSelection(spinnerPosition);	
+			((Spinner) findViewById(R.id.inputCurrency)).setSelection(spinnerPosition);	
 			loadFinished3 = false;	
 		}
 		

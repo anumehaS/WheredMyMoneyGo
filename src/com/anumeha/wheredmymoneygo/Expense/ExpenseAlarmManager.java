@@ -1,8 +1,8 @@
-package com.anumeha.wheredmymoneygo.Expense;
+package com.anumeha.wheredmymoneygo.expense;
 
 import android.os.Bundle;
 
-import com.anumeha.wheredmymoneygo.Services.WmmgAlarmManager;
+import com.anumeha.wheredmymoneygo.services.WmmgAlarmManager;
 
 public class ExpenseAlarmManager extends WmmgAlarmManager {
 	

@@ -1,4 +1,4 @@
-package com.anumeha.wheredmymoneygo.Source;
+package com.anumeha.wheredmymoneygo.source;
 
 public class Source {
 	

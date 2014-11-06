@@ -1,7 +1,7 @@
-package com.anumeha.wheredmymoneygo.Source;
+package com.anumeha.wheredmymoneygo.source;
 
 
-import com.anumeha.wheredmymoneygo.DBhelpers.SourceDbHelper;
+import com.anumeha.wheredmymoneygo.dbhelpers.SourceDbHelper;
 import com.example.wheredmymoneygo.R;
 
 import android.app.Activity;

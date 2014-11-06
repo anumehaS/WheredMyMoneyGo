@@ -1,6 +1,6 @@
-package com.anumeha.wheredmymoneygo.Category;
+package com.anumeha.wheredmymoneygo.category;
 
-import com.anumeha.wheredmymoneygo.DBhelpers.CategoryDbHelper;
+import com.anumeha.wheredmymoneygo.dbhelpers.CategoryDbHelper;
 
 import android.content.Context;
 import android.content.CursorLoader;

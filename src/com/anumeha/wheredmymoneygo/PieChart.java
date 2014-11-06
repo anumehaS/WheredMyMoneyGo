@@ -9,8 +9,10 @@ import android.graphics.Paint.Cap;
 import android.graphics.Paint.Join;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.view.View;
-//import android.view.ViewGroup;
+import android.view.WindowManager;
+
 
 public class PieChart extends View {
 	
@@ -19,14 +21,18 @@ public class PieChart extends View {
 	Paint paint;
 	View pieView;
 	Paint border;
+	Context context;
 	
 	public PieChart(Context context ) {
 		super(context);
+		this.context=context;
 		init();
+		
 	}
 	
 	public PieChart(Context context, AttributeSet attrs) {
         super(context, attrs);
+        this.context=context;
         init();
 	}
 	
@@ -101,8 +107,11 @@ public class PieChart extends View {
         float xpad = (float) (getPaddingLeft() + getPaddingRight());
         float ypad = (float) (getPaddingTop() + getPaddingBottom());
         
+        float maxHeight = (float) calculateMaximumPieHeight();
+        
         float ww = (float) w - xpad;
-        float hh = (float) h - ypad;
+        float hh = (float) Math.min(h, maxHeight) - ypad;
+              
         
         float diameter = Math.min(ww, hh);
         
@@ -117,9 +126,23 @@ public class PieChart extends View {
         
         
     }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        
+    	// Try for a width based on our minimum
+        //int minw = getPaddingLeft() + getPaddingRight() + getSuggestedMinimumWidth();
+
+        //int w = Math.max(minw, MeasureSpec.getSize(widthMeasureSpec));
+
+        // Whatever the width ends up being, ask for a height that would let the pie
+        // get as big as it can
+        int minh = calculateMaximumPieHeight() + getPaddingBottom() + getPaddingTop();
+        int h = Math.min(MeasureSpec.getSize(heightMeasureSpec), minh);
+
+        setMeasuredDimension(widthMeasureSpec, h);
+    }   
     
-
-
 	@Override
 	protected void onLayout(boolean arg0, int arg1, int arg2, int arg3, int arg4) {
 		// TODO Auto-generated method stub
@@ -133,8 +156,8 @@ public class PieChart extends View {
 
 
 	public void setCursor(Cursor c) {
-		this.cursor = null;
-		this.cursor = c;
+		PieChart.cursor = null;
+		PieChart.cursor = c;
 	}
 
 
@@ -145,6 +168,16 @@ public class PieChart extends View {
 
 	public void setPieView(View pieView) {
 		this.pieView = pieView;
+	}
+	
+	public int calculateMaximumPieHeight() {
+		if( context == null)
+			return Integer.MAX_VALUE;
+		WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics metrics = new DisplayMetrics();
+        windowManager.getDefaultDisplay().getMetrics(metrics);
+        
+        return (int) Math.ceil(metrics.heightPixels * 0.4);
 	}
 
 }

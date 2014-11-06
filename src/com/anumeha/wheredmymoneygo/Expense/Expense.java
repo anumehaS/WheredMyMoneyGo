@@ -1,4 +1,4 @@
-package com.anumeha.wheredmymoneygo.Expense;
+package com.anumeha.wheredmymoneygo.expense;
 
 import com.anumeha.wheredmymoneygo.CashFlow;
 

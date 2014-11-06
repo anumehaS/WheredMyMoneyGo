@@ -1,4 +1,4 @@
-package com.anumeha.wheredmymoneygo.DBhelpers;
+package com.anumeha.wheredmymoneygo.dbhelpers;
 
 
 
@@ -8,7 +8,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.anumeha.wheredmymoneygo.DBHandler;
-import com.anumeha.wheredmymoneygo.Category.Category;
+import com.anumeha.wheredmymoneygo.category.Category;
 
 public class CategoryDbHelper {
 	

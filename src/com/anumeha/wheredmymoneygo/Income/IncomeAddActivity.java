@@ -1,4 +1,4 @@
-package com.anumeha.wheredmymoneygo.Income;
+package com.anumeha.wheredmymoneygo.income;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -8,13 +8,13 @@ import java.util.List;
 import java.util.Locale;
 
 import com.anumeha.wheredmymoneygo.Globals;
-import com.anumeha.wheredmymoneygo.Category.CategoryCursorLoader;
-import com.anumeha.wheredmymoneygo.Currency.CurrencyCursorLoader;
-import com.anumeha.wheredmymoneygo.DBhelpers.IncomeDbHelper;
-import com.anumeha.wheredmymoneygo.Income.Income;
-import com.anumeha.wheredmymoneygo.Services.CurrencyConverter;
-import com.anumeha.wheredmymoneygo.Services.WmmgAlarmManager;
-import com.anumeha.wheredmymoneygo.Source.SourceCursorLoader;
+import com.anumeha.wheredmymoneygo.category.CategoryCursorLoader;
+import com.anumeha.wheredmymoneygo.currency.CurrencyCursorLoader;
+import com.anumeha.wheredmymoneygo.dbhelpers.IncomeDbHelper;
+import com.anumeha.wheredmymoneygo.income.Income;
+import com.anumeha.wheredmymoneygo.services.CurrencyConverter;
+import com.anumeha.wheredmymoneygo.services.WmmgAlarmManager;
+import com.anumeha.wheredmymoneygo.source.SourceCursorLoader;
 import com.example.wheredmymoneygo.R;
 
 import android.app.Activity;
@@ -37,13 +37,14 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemSelectedListener;
 
 public class IncomeAddActivity extends Activity implements OnClickListener, LoaderCallbacks<Cursor> {
 	
-	private Button add, cancel;
+	private ImageButton add, cancel;
 	private static Button incomeDate;
 	private Spinner source, currency, frequency;
 	private static String i_date;
@@ -63,17 +64,17 @@ public class IncomeAddActivity extends Activity implements OnClickListener, Load
 	    public void onCreate(Bundle savedInstanceState) {
 	        super.onCreate(savedInstanceState);
 	        
-	        this.setContentView(R.layout.income_add_activity);
+	        this.setContentView(R.layout.cashflow_add_edit_activity);
 	        
-	        
-	        source = (Spinner)findViewById(R.id.incSource);
-	        currency = (Spinner)findViewById(R.id.inputIncomeCurrency);
-	        frequency = (Spinner)findViewById(R.id.inputIncomeFreq);
+	        ((TextView) findViewById(R.id.catLabel)).setText("Source :");
+	        source = (Spinner)findViewById(R.id.category1);
+	        currency = (Spinner)findViewById(R.id.inputCurrency);
+	        frequency = (Spinner)findViewById(R.id.inputFreq);
 	        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
 			        R.array.frequency_spinner_items, android.R.layout.simple_spinner_item);
 			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 			frequency.setAdapter(adapter);
-			ask = (CheckBox)findViewById(R.id.inputIncNotify); 
+			ask = (CheckBox)findViewById(R.id.inputNotify); 
 			frequency.setOnItemSelectedListener(new OnItemSelectedListener (){
 
 				@Override
@@ -99,9 +100,9 @@ public class IncomeAddActivity extends Activity implements OnClickListener, Load
 			
 
 	        setCurrentDate();
-	        add = (Button)findViewById(R.id.incAddSubmit);
+	        add = (ImageButton)findViewById(R.id.save);
 			add.setOnClickListener(this);
-			cancel = (Button)findViewById(R.id.incAddCancel);
+			cancel = (ImageButton)findViewById(R.id.cancel);
 			cancel.setOnClickListener(this);
 			dbh = new IncomeDbHelper(this);
 			FragmentManager fragmentManager = getFragmentManager();
@@ -116,7 +117,7 @@ public class IncomeAddActivity extends Activity implements OnClickListener, Load
 			
 			getLoaderManager().initLoader(1,null, this );
 			getLoaderManager().initLoader(4,null, this );
-			i = new Intent (this,com.anumeha.wheredmymoneygo.Income.IncomeAlarmManager.class);
+			i = new Intent (this,com.anumeha.wheredmymoneygo.income.IncomeAlarmManager.class);
 	    }
 	 
 	 public void endActivity(String res) {	
@@ -135,13 +136,13 @@ public class IncomeAddActivity extends Activity implements OnClickListener, Load
 		 StringBuffer sb = new StringBuffer("Please check the following :\n");
 			
 			
-			if(arg0.getId() == R.id.incAddCancel) {
+			if(arg0.getId() == R.id.cancel) {
 				endActivity("cancelled");
 			}
-			else if(arg0.getId() == R.id.incAddSubmit) {
+			else if(arg0.getId() == R.id.save) {
 				
 				//name
-				i_name = ((EditText)findViewById(R.id.inputIncomeName)).getText().toString();
+				i_name = ((EditText)findViewById(R.id.inputName)).getText().toString();
 				if(i_name.trim().equals("")){
 					sb.append("- Income Name cannot be blank. \n");
 					valid = false;
@@ -149,7 +150,7 @@ public class IncomeAddActivity extends Activity implements OnClickListener, Load
 				
 				//amount
 				amount = 0;
-				String i_amount = ((EditText)findViewById(R.id.inputIncomeAmount)).getText().toString();
+				String i_amount = ((EditText)findViewById(R.id.inputAmount)).getText().toString();
 				if(i_amount.trim().equals("")){
 					sb.append("- Income Amount cannot be blank. \n");
 					valid =false;
@@ -165,15 +166,15 @@ public class IncomeAddActivity extends Activity implements OnClickListener, Load
 				}
 				
 				//currency
-				i_currency = ((Spinner) findViewById(R.id.inputIncomeCurrency)).getSelectedItem().toString(); 
+				i_currency = ((Spinner) findViewById(R.id.inputCurrency)).getSelectedItem().toString(); 
 				
 				//source
-				i_source = ((Spinner) findViewById(R.id.incSource)).getSelectedItem().toString(); 
+				i_source = source.getSelectedItem().toString(); 
 				
-				i_desc = ((EditText)findViewById(R.id.inputIncomeDesc)).getText().toString();
+				/*i_desc = ((EditText)findViewById(R.id.inputIncomeDesc)).getText().toString();
 				if(i_desc.trim().equals("")) {
 					i_desc =" ";
-				}
+				}*/
 				freq = frequency.getSelectedItem().toString(); 
 				if(frequency.getSelectedItemPosition() > 0) {
 					hasRec = true;
@@ -241,7 +242,7 @@ public class IncomeAddActivity extends Activity implements OnClickListener, Load
 		
 	  } 
 	 public void setCurrentDate() {			 
-		incomeDate = (Button) findViewById(R.id.incPickDate);			
+		incomeDate = (Button) findViewById(R.id.pickDate);			
 		Date myDate;
 	    Calendar cal = Calendar.getInstance();	    
 	    myDate = cal.getTime();

@@ -1,4 +1,4 @@
-package com.anumeha.wheredmymoneygo.Services;
+package com.anumeha.wheredmymoneygo.services;
 
 import java.util.ArrayList;
 import java.util.Iterator;

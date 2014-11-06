@@ -1,7 +1,7 @@
-package com.anumeha.wheredmymoneygo.Income;
+package com.anumeha.wheredmymoneygo.income;
 
-import com.anumeha.wheredmymoneygo.DBhelpers.IncomeDbHelper;
-import com.anumeha.wheredmymoneygo.Income.IncomeEditActivity;
+import com.anumeha.wheredmymoneygo.dbhelpers.IncomeDbHelper;
+import com.anumeha.wheredmymoneygo.income.IncomeEditActivity;
 import com.example.wheredmymoneygo.R;
 
 import android.app.Activity;
@@ -172,7 +172,7 @@ public class IncomeListFragment extends Fragment implements LoaderCallbacks<Curs
 	  return true;
 	} 
 	 protected void startRecActivity() {
-		 Intent i =  new Intent (activity,com.anumeha.wheredmymoneygo.Expense.ExpenseAlarmManager.class);	 
+		 Intent i =  new Intent (activity,com.anumeha.wheredmymoneygo.expense.ExpenseAlarmManager.class);	 
 		 long id = incId;
 		 i.putExtra("rec_id", id);
 		 i.putExtra("rec_freq",incFreq );

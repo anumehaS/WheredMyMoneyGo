@@ -1,4 +1,4 @@
-package com.anumeha.wheredmymoneygo.DBhelpers;
+package com.anumeha.wheredmymoneygo.dbhelpers;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.anumeha.wheredmymoneygo.DBHandler;
-import com.anumeha.wheredmymoneygo.Recurrence.Recurrence;
+import com.anumeha.wheredmymoneygo.recurrence.Recurrence;
 
 public class RecurrenceDbHelper {
 	

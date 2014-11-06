@@ -4,10 +4,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import com.anumeha.wheredmymoneygo.Category.Category;
-import com.anumeha.wheredmymoneygo.Currency.Currency;
-import com.anumeha.wheredmymoneygo.DBhelpers.ColorDbHelper;
-import com.anumeha.wheredmymoneygo.Source.Source;
+import com.anumeha.wheredmymoneygo.category.Category;
+import com.anumeha.wheredmymoneygo.currency.Currency;
+import com.anumeha.wheredmymoneygo.dbhelpers.ColorDbHelper;
+import com.anumeha.wheredmymoneygo.source.Source;
 
 import android.content.ContentValues;
 import android.content.Context;

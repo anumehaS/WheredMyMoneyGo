@@ -1,11 +1,11 @@
 package com.anumeha.wheredmymoneygo.receivers;
 
-import com.anumeha.wheredmymoneygo.Expense.ExpenseAlarmManager;
-import com.anumeha.wheredmymoneygo.Income.IncomeAlarmManager;
-import com.anumeha.wheredmymoneygo.Services.AlarmOps;
-import com.anumeha.wheredmymoneygo.Services.AlarmOps.OnAlarmOpsCompleted;
-import com.anumeha.wheredmymoneygo.Services.WmmgAlarmManager;
-import com.anumeha.wheredmymoneygo.Services.WmmgNotificationCreator;
+import com.anumeha.wheredmymoneygo.expense.ExpenseAlarmManager;
+import com.anumeha.wheredmymoneygo.income.IncomeAlarmManager;
+import com.anumeha.wheredmymoneygo.services.AlarmOps;
+import com.anumeha.wheredmymoneygo.services.WmmgAlarmManager;
+import com.anumeha.wheredmymoneygo.services.WmmgNotificationCreator;
+import com.anumeha.wheredmymoneygo.services.AlarmOps.OnAlarmOpsCompleted;
 
 import android.app.AlarmManager;
 import android.content.BroadcastReceiver;
@@ -36,12 +36,12 @@ public class RecEventReceiver extends BroadcastReceiver{
 		if(notify) {
 			Log.d(DEBUG_TAG,"is notify");
 			if(isIncome) {
-				startActivity = com.anumeha.wheredmymoneygo.Income.IncomeEditActivity.class;
+				startActivity = com.anumeha.wheredmymoneygo.income.IncomeEditActivity.class;
 				contentTitle = "Income Reminder";
 				contentText = "Tap to add the recurring income";
 				
 			} else {
-				startActivity = com.anumeha.wheredmymoneygo.Expense.ExpenseEditActivity.class;
+				startActivity = com.anumeha.wheredmymoneygo.expense.ExpenseEditActivity.class;
 				contentTitle = "Expense Reminder";
 				contentText = "Tap to add the recurring expense";
 			}

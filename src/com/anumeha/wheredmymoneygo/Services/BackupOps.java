@@ -1,12 +1,12 @@
-package com.anumeha.wheredmymoneygo.Services;
+package com.anumeha.wheredmymoneygo.services;
 
 import java.io.File;
 import java.io.FileWriter;
 
-import com.anumeha.wheredmymoneygo.DBhelpers.CategoryDbHelper;
-import com.anumeha.wheredmymoneygo.DBhelpers.ExpenseDbHelper;
-import com.anumeha.wheredmymoneygo.DBhelpers.IncomeDbHelper;
-import com.anumeha.wheredmymoneygo.DBhelpers.SourceDbHelper;
+import com.anumeha.wheredmymoneygo.dbhelpers.CategoryDbHelper;
+import com.anumeha.wheredmymoneygo.dbhelpers.ExpenseDbHelper;
+import com.anumeha.wheredmymoneygo.dbhelpers.IncomeDbHelper;
+import com.anumeha.wheredmymoneygo.dbhelpers.SourceDbHelper;
 
 import android.app.ProgressDialog;
 import android.content.Context;
