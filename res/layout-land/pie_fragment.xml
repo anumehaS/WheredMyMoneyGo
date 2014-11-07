@@ -1,27 +1,28 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="horizontal" >
 
    <TextView
         android:id="@+id/expNotPresent"
-        android:layout_width="match_parent"
-        android:layout_height="0dp" 
-        android:layout_weight="0.1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
         android:ems="10" />
+   
 	 <com.anumeha.wheredmymoneygo.PieChart
 	     android:id="@+id/expPieChart"
-	     android:layout_width="match_parent"
-	     android:layout_height="0dp"
-	     android:layout_weight="0.2" 
-	     android:padding="5dp" />
+	     android:layout_width="0dp"
+	     android:layout_height="match_parent"
+	     android:layout_weight="0.4" 
+	     android:padding="15dp"
+	      />
 	 
 	 <ListView
         android:id="@+id/legendListView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp" 
-        android:layout_weight="0.7">
+        android:layout_width="0dp"
+        android:layout_height="wrap_content" 
+        android:layout_weight="0.6">
     </ListView>
 
-</LinearLayout>
+</RelativeLayout>

@@ -31,43 +31,43 @@
         </activity>
         
          <activity
-            android:name="com.anumeha.wheredmymoneygo.Category.CategoryActivity"
+            android:name="com.anumeha.wheredmymoneygo.category.CategoryActivity"
             android:label="@string/catAct_name" />
         
         
           <activity
-            android:name="com.anumeha.wheredmymoneygo.Category.CategoryEditActivity"
+            android:name="com.anumeha.wheredmymoneygo.category.CategoryEditActivity"
             android:label="@string/catEditAct_name" />
         
         
            <activity
-            android:name="com.anumeha.wheredmymoneygo.Source.SourceActivity"
+            android:name="com.anumeha.wheredmymoneygo.source.SourceActivity"
             android:label="@string/souAct_name" />
       
         
           <activity
-            android:name="com.anumeha.wheredmymoneygo.Source.SourceEditActivity"
+            android:name="com.anumeha.wheredmymoneygo.source.SourceEditActivity"
             android:label="@string/souEditAct_name" />
  
         
         <activity
-            android:name="com.anumeha.wheredmymoneygo.Expense.ExpenseAddActivity"
+            android:name="com.anumeha.wheredmymoneygo.expense.ExpenseAddActivity"
             android:label="@string/expAddAct_name" />
    
         
          <activity
-            android:name="com.anumeha.wheredmymoneygo.Expense.ExpenseEditActivity"
+            android:name="com.anumeha.wheredmymoneygo.expense.ExpenseEditActivity"
             android:label="@string/expEditAct_name" >
          </activity>
       
         
           <activity
-            android:name="com.anumeha.wheredmymoneygo.Income.IncomeAddActivity"
+            android:name="com.anumeha.wheredmymoneygo.income.IncomeAddActivity"
             android:label="@string/incAddAct_name" />
      
         
          <activity
-            android:name="com.anumeha.wheredmymoneygo.Income.IncomeEditActivity"
+            android:name="com.anumeha.wheredmymoneygo.income.IncomeEditActivity"
             android:label="@string/incEditAct_name"  >
          </activity>
        
@@ -88,15 +88,15 @@
 		</receiver>
    		 
           <activity 
-              android:name="com.anumeha.wheredmymoneygo.Services.WmmgAlarmManager"
+              android:name="com.anumeha.wheredmymoneygo.services.WmmgAlarmManager"
            	  android:label="@string/alarmAct_name" 
               android:theme="@android:style/Theme.NoDisplay" />
           <activity 
-              android:name="com.anumeha.wheredmymoneygo.Expense.ExpenseAlarmManager"
+              android:name="com.anumeha.wheredmymoneygo.expense.ExpenseAlarmManager"
            	  android:label="@string/expAlarmAct_name" 
               android:theme="@android:style/Theme.NoDisplay" />
           <activity 
-              android:name="com.anumeha.wheredmymoneygo.Income.IncomeAlarmManager"
+              android:name="com.anumeha.wheredmymoneygo.income.IncomeAlarmManager"
            	  android:label="@string/incAlarmAct_name" 
               android:theme="@android:style/Theme.NoDisplay" />
          

@@ -183,5 +183,12 @@
 	        android:onClick="cancelOptions" />
 	        
       </LinearLayout>
-
+ 	  <Button
+             android:id="@+id/yahooLogo"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:paddingLeft="15dp"
+             android:paddingRight="15dp"
+             android:drawableRight="@drawable/ic_yahoo_logo"
+             />
 </LinearLayout>

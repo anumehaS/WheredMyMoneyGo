@@ -23,6 +23,8 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -37,7 +39,7 @@ import android.widget.TextView;
 
 public class OptionsDialog extends Activity implements LoaderCallbacks<Cursor>{
 	
-	private static Button startDateBtn, endDateBtn;
+	private static Button startDateBtn, endDateBtn, yahooLogo;
 	private String currentTab;
 	private static Spinner sortOrder,filters;
 	private CheckBox convert, showRec;
@@ -113,6 +115,7 @@ public class OptionsDialog extends Activity implements LoaderCallbacks<Cursor>{
 				startDateBtn = ((Button)findViewById(R.id.startDate));
 				endDateBtn = ((Button)findViewById(R.id.endDate));
 				
+				yahooLogo = (Button)findViewById(R.id.yahooLogo);
 				sortOrder = (Spinner)findViewById(R.id.sortOrder);
 				dateRangeLayout = (LinearLayout)findViewById(R.id.dateRangeLayout);
 				convert = (CheckBox)findViewById(R.id.convertCur);
@@ -127,6 +130,8 @@ public class OptionsDialog extends Activity implements LoaderCallbacks<Cursor>{
 					showRec.setVisibility(View.GONE);
 				} else {
 					//populate all
+					yahooLogo.setText(Html.fromHtml("<a href=\"https://www.yahoo.com/?ilc=401\">Currency conversion  </a>"));
+				    yahooLogo.setMovementMethod(LinkMovementMethod.getInstance());
 					ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(OptionsDialog.this,
 					        R.array.sort_spinner_items, android.R.layout.simple_spinner_item);
 					adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
