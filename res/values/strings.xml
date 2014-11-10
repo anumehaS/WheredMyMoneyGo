@@ -27,7 +27,18 @@
     <string name="cashflow_category">Category :</string>
     <string name="cashflow_date">Date :</string>
     <string name="cashflow_freq">Frequency :</string>
-     <string name="cashflow_notify">Ask before adding the recurrence?</string>
+    <string name="cashflow_notify">Ask before adding the recurrence?</string>
+    <string name="options_sort">Sort :</string> 
+    <string name="options_filter">Filter by Category :</string> 
+    <string name="options_home_cur">View in home currency :</string> 
+    <string name="options_rec">View only Recurrences :</string> 
+    <string name="options_date">Filter by Date :</string> 
+    <string name="options_all">All :</string> 
+    <string name="options_date_range">Date Range:</string> 
+    <string name="options_from">From :</string> 
+    <string name="options_to">To :</string> 
+    <string name="options_save">Save</string> 
+     <string name="options_cancel">Cancel</string> 
     
     <string-array  name="listview_menu">
         <item>Edit</item>

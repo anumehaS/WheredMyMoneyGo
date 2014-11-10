@@ -128,6 +128,7 @@ public class OptionsDialog extends Activity implements LoaderCallbacks<Cursor>{
 					sortOrder.setVisibility(View.GONE);
 					convert.setVisibility(View.GONE);
 					showRec.setVisibility(View.GONE);
+					yahooLogo.setVisibility(View.GONE);
 				} else {
 					//populate all
 					yahooLogo.setText(Html.fromHtml("<a href=\"https://www.yahoo.com/?ilc=401\">Currency conversion  </a>"));
