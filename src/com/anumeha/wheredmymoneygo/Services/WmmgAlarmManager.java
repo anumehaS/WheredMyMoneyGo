@@ -128,8 +128,7 @@ public class WmmgAlarmManager extends Activity{
 		
 		switch(pos) {
 		case 1: //daily
-			duration = 1000*60;
-			//duration = AlarmManager.INTERVAL_DAY;
+			duration = AlarmManager.INTERVAL_DAY;
 			break;
 		case 2: //weekly
 			duration = AlarmManager.INTERVAL_DAY*7;		
