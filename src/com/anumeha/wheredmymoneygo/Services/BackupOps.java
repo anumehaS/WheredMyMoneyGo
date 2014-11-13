@@ -64,24 +64,38 @@ public class BackupOps {
 			}
 			boolean success;
 			Cursor c = expDbh.getExpensesForBackup();
-			success = writeBackupToFile(c, "wmmgExpensebackup.csv",dir);
-			if(!success) {
-				return null;
+			if(c.getCount() > 0) {
+				success = writeBackupToFile(c, "wmmgExpensebackup.csv",dir);
+				if(!success) {
+					return null;
+				} 
 			}
+			
+			
 			c = incDbh.getIncomesForBackup();
-			success = writeBackupToFile(c, "wmmgIncomebackup.csv",dir);
-			if(!success) {
-				return null;
+			if(c.getCount() > 0) {	
+				success = writeBackupToFile(c, "wmmgIncomebackup.csv",dir);
+				if(!success) {
+					return null;
+				}
 			}
+			
+		
 			c = catDbh.getAllCategories();
-			success = writeBackupToFile(c, "wmmgCategorybackup.csv",dir);
-			if(!success) {
-				return null;
+			if(c.getCount() > 0) {
+				success = writeBackupToFile(c, "wmmgCategorybackup.csv",dir);
+				if(!success) {
+					return null;
+				}
 			}
+			
+		
 			c = souDbh.getAllSources();
-			success = writeBackupToFile(c, "wmmgSourcebackup.csv",dir);
-			if(!success) {
-				return null;
+			if(c.getCount() > 0) {
+				success = writeBackupToFile(c, "wmmgSourcebackup.csv",dir);
+				if(!success) {
+					return null;
+				}
 			}
 			return dir.toString();
 		}
@@ -126,6 +140,7 @@ public class BackupOps {
 				writer.flush();
 				writer.close();
 			}catch(Exception e){
+				e.printStackTrace();
 				return false;
 			}
 			c.close();
