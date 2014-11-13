@@ -37,7 +37,8 @@
         
           <activity
             android:name="com.anumeha.wheredmymoneygo.category.CategoryEditActivity"
-            android:label="@string/catEditAct_name" />
+            android:label="@string/catEditAct_name"
+            android:theme="@android:style/Theme.Holo.Dialog" />
         
         
            <activity
@@ -47,7 +48,8 @@
         
           <activity
             android:name="com.anumeha.wheredmymoneygo.source.SourceEditActivity"
-            android:label="@string/souEditAct_name" />
+            android:label="@string/souEditAct_name"
+            android:theme="@android:style/Theme.Holo.Dialog" />
  
         
         <activity
