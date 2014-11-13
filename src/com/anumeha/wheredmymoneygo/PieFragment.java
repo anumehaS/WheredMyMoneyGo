@@ -97,7 +97,7 @@ public class PieFragment extends Fragment implements LoaderCallbacks<Cursor>{
 			pie.setCursor(cursor);
 			pie.setPieView(view);
 			pie.invalidate();
-			legendAdapter = new PieLegendCursorAdapter(getActivity(),R.layout.pie_legend_row,cursor);
+			legendAdapter = new PieLegendCursorAdapter(getActivity(),R.layout.pie_legend_row,cursor,MainActivity.defaultCurrency);
 			legend.setAdapter(legendAdapter);
 		}
 		else {

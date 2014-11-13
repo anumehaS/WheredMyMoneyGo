@@ -22,10 +22,10 @@ public class ExpenseCursorAdapter extends ResourceCursorAdapter{
 	CurrencyDbHelper db;
 	String defaultCurrency;
 	
-	public ExpenseCursorAdapter(Context context, int layout, Cursor c, int flags) {
+	public ExpenseCursorAdapter(Context context, int layout, Cursor c, int flags,String currency) {
 		super(context, layout, c, flags);
+		defaultCurrency = currency;
 		prefs = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
-		defaultCurrency = prefs.getString(Globals.DEF_CURRENCY, "USD");
 		db = new CurrencyDbHelper(context);
 	}
 
@@ -39,7 +39,6 @@ public class ExpenseCursorAdapter extends ResourceCursorAdapter{
 		//set expense id -- invisible but will be used for editing
 		TextView e_Id = (TextView)view.findViewById(R.id.expenseId);
 		String id = cursor.getString(0);
-		System.out.println("id in cursor" + id);
 		e_Id.setText(id);
 		
 		//set expense frequency-- invisible but will be used for editing
@@ -49,15 +48,15 @@ public class ExpenseCursorAdapter extends ResourceCursorAdapter{
 		TextView e_Notify = (TextView)view.findViewById(R.id.expenseNotify);
 		e_Notify.setText(cursor.getString(9));
 		
-		//set expense name
+	
 		TextView e_Name = (TextView)view.findViewById(R.id.expenseName);
 		e_Name.setText(cursor.getString(1));
 		
 		//set expense date--after adapting it to the user's prefered format
 		TextView e_date = (TextView)view.findViewById(R.id.expenseDate);		
 		//adapt date to user's preference 
-		dateFormat = prefs.getString("def_dateformat", "MMMM dd, yyyy");
-		sdf = new SimpleDateFormat("yyyy-MM-dd");
+		dateFormat = Globals.USER_DATE_FORMAT;// prefs.getString("def_dateformat", "MMMM dd, yyyy");
+		sdf = new SimpleDateFormat(Globals.INTERNAL_DATE_FORMAT);
 		try {
 			tempDate = sdf.parse(cursor.getString(3));
 		} catch (ParseException e) {
@@ -86,7 +85,7 @@ public class ExpenseCursorAdapter extends ResourceCursorAdapter{
 				  e_Amount.setText(defaultCurrency + " " + amount*convRate);
 			  }
 		}
-		//set the category
+	
 		TextView e_Category = (TextView)view.findViewById(R.id.expenseCategory);
 		e_Category.setText(cursor.getString(6));
 		

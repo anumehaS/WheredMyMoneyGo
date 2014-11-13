@@ -1,6 +1,7 @@
 package com.anumeha.wheredmymoneygo.expense;
 
 
+import com.anumeha.wheredmymoneygo.MainActivity;
 import com.anumeha.wheredmymoneygo.dbhelpers.ExpenseDbHelper;
 import com.example.wheredmymoneygo.*;
 
@@ -83,7 +84,7 @@ public class ExpenseListFragment extends Fragment implements LoaderCallbacks<Cur
 		
 		if(cursor.getCount()==0)
 		{
-			t.setText("No expenses added yet!");
+			t.setText("No expenses found!");
 			listview.setVisibility(View.GONE); //invisible
 			
 		}
@@ -92,7 +93,7 @@ public class ExpenseListFragment extends Fragment implements LoaderCallbacks<Cur
 			t.setText("");
 			listview.setVisibility(View.VISIBLE); //visible
 		    // expAdapter is a CursorAdapter 
-		    expAdapter = new ExpenseCursorAdapter(activity, R.layout.expense_row, cursor, 0);
+		    expAdapter = new ExpenseCursorAdapter(activity, R.layout.expense_row, cursor, 0,MainActivity.defaultCurrency);
 		    listview.setAdapter(expAdapter);
 		}
 	}
@@ -117,7 +118,6 @@ public class ExpenseListFragment extends Fragment implements LoaderCallbacks<Cur
 	    
 	      String id = ((TextView)info.targetView.findViewById(R.id.expenseId)).getText().toString();
 		  expId = Integer.parseInt(id);
-		  System.out.println("expense id is  "+expId);
 		  expFreq= ((TextView)info.targetView.findViewById(R.id.expenseFreq)).getText().toString();
 		  String notify = ((TextView)info.targetView.findViewById(R.id.expenseNotify)).getText().toString();
 		  expNotify = notify.equals("yes")?true:false;

@@ -56,7 +56,9 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 	private MyTabListener expenseTab,incomeTab,IvETab;
 	DefaultPreferenceAccess prefAccess; 
 	DefaultsLoader defLoader;
-	 static SharedPreferences prefs;
+	static SharedPreferences prefs;
+	public static String defaultCurrency;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -78,6 +80,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 
 			@Override
 			public void notFirstTime(List<String> data) {
+				
 				if(data.get(0).equals("pie") ) {
 					expPie = true;
 					pie = true;
@@ -86,6 +89,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 					incPie = true;
 					pie = true;
 				}
+				defaultCurrency = data.get(2);
 				setUpMainActivty();
 			}
 			
@@ -96,8 +100,9 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 	protected void populateDefaultCurrency(String defCurrency) {
 		List<String> keys = new ArrayList<String>();
 		keys.add("base_currency");
-		keys.add("def_currency");
+		keys.add(Globals.DEF_CURRENCY);
 		
+		defaultCurrency = defCurrency;
 		List<String> values = new ArrayList<String>();
 		values.add(defCurrency);
 		values.add(defCurrency);
@@ -122,7 +127,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 	
 	void setUpMainActivty() {
 		setContentView(R.layout.activity_main);
-
+		
+		
 		listPie = (Button)findViewById(R.id.listPie);
 		listPie.setOnClickListener(this);	
 		
@@ -522,6 +528,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 			               @Override
 			               public void onClick(DialogInterface dialog, int id) {
 			                  String  defCurrency = currencyList[currentSelection];
+			                  defaultCurrency = defCurrency;
 			                  populateDefaultCurrency(defCurrency);	
 			               }
 			           });
