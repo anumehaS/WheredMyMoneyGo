@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Locale;
 
 import com.anumeha.wheredmymoneygo.Globals;
+import com.anumeha.wheredmymoneygo.MainActivity;
 import com.anumeha.wheredmymoneygo.category.CategoryCursorLoader;
 import com.anumeha.wheredmymoneygo.currency.CurrencyCursorLoader;
 import com.anumeha.wheredmymoneygo.dbhelpers.ExpenseDbHelper;
@@ -273,8 +274,8 @@ public class ExpenseEditActivity extends Activity implements OnClickListener, Lo
 		 						startRecActivity(expId);
 		 					}	
 		 					@Override
-		 					public void OnFaiure(int errCode) {
-		 						showConvRateAlert(errCode);	 	
+		 					public void OnFaiure(float oldRate) {
+		 						showConvRateAlert(oldRate);	 	
 		 					}  },new Expense(expId,e_name_edit,e_desc_edit,e_date_edit,e_currency_edit,amount,e_category1_edit,e_freq_edit,e_notify_edit),true); 
 					} else {
 						dbh.updateExpense(new Expense(e_name_edit,e_desc_edit,e_date_edit,e_currency_edit,amount,e_category1_edit,e_convAmt,e_freq_edit,e_notify_edit),expId);
@@ -318,11 +319,11 @@ public class ExpenseEditActivity extends Activity implements OnClickListener, Lo
 			}	 
 	 }
 	 
-	 protected void showConvRateAlert(int errCode){
+	 protected void showConvRateAlert(float oldRate){
 		 final EditText rate = new EditText(ExpenseEditActivity.this);
-			String msg = "We couldn't find a conversion rate! You can use this rate from before or enter your own";
-			if(errCode == -1) {
-				msg = "Please enter valid a conversion rate from your currency choice to USD";
+		 String msg = "We couldn't find a conversion rate! You can use this rate ("+e_currency_edit+" to " + MainActivity.defaultCurrency+": "+oldRate+") from before or enter your own";
+			if(oldRate == -1) {
+				msg = "Please enter valid a conversion rate from "+e_currency_edit+" to "+ MainActivity.defaultCurrency;
 				} else {
 					//rate.setText(errCode);
 				}

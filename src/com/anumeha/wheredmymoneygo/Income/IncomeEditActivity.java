@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Locale;
 
 import com.anumeha.wheredmymoneygo.Globals;
+import com.anumeha.wheredmymoneygo.MainActivity;
 import com.anumeha.wheredmymoneygo.category.CategoryCursorLoader;
 import com.anumeha.wheredmymoneygo.currency.CurrencyCursorLoader;
 import com.anumeha.wheredmymoneygo.dbhelpers.IncomeDbHelper;
@@ -278,8 +279,8 @@ public class IncomeEditActivity extends Activity implements OnClickListener, Loa
 	 						startRecActivity(incId);
 	 					}	
 	 					@Override
-	 					public void OnFaiure(int errCode) {
-	 						showConvRateAlert(errCode);	
+	 					public void OnFaiure(float oldRate) {
+	 						showConvRateAlert(oldRate);	
 	 						//endActivity("edited");
 	 					}  },new Income(incId,i_name_edit,i_desc_edit,i_date_edit,i_currency_edit,amount,i_source_edit,i_freq_edit,i_notify_edit),true); 
 					} else {
@@ -322,11 +323,11 @@ public class IncomeEditActivity extends Activity implements OnClickListener, Loa
 			}	 
 	 }
 	 
-	 protected void showConvRateAlert(int errCode){
+	 protected void showConvRateAlert(float oldRate){
 		 final EditText rate = new EditText(IncomeEditActivity.this);
-			String msg = "We couldn't find a conversion rate! You can use this rate from before or enter your own";
-			if(errCode == -1) {
-				msg = "Please enter valid a conversion rate from your currency choice to USD";
+			String msg = "We couldn't find a conversion rate! You can use this rate ("+i_currency_edit+" to " + MainActivity.defaultCurrency+": "+oldRate+") from before or enter your own";
+			if(oldRate == -1) {
+				msg = "Please enter valid a conversion rate from "+i_currency_edit+" to "+ MainActivity.defaultCurrency;
 				} else {
 					//rate.setText(errCode);
 				}
@@ -367,7 +368,7 @@ public class IncomeEditActivity extends Activity implements OnClickListener, Loa
 	 public String getCurrentDate() {			 
 		    Calendar cal = Calendar.getInstance();	    
 		    Date  myDate = cal.getTime();
-		    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); 
+		    SimpleDateFormat sdf = new SimpleDateFormat(Globals.INTERNAL_DATE_FORMAT,Locale.ENGLISH); 
 		    String date = sdf.format(myDate);
 		    return date;
 		 }
@@ -419,7 +420,7 @@ public class IncomeEditActivity extends Activity implements OnClickListener, Loa
 	        cal.set(Calendar.YEAR, yy);
 	        myDate = cal.getTime();
 	        //set Date into SQLIte date format
-	        SimpleDateFormat dateFormat = new SimpleDateFormat(Globals.INTERNAL_DATE_FORMAT); 
+	        SimpleDateFormat dateFormat = new SimpleDateFormat(Globals.INTERNAL_DATE_FORMAT,Locale.ENGLISH); 
 	        i_date_edit = dateFormat.format(myDate);
 	        dateFormat = new SimpleDateFormat(Globals.USER_DATE_FORMAT,Locale.ENGLISH);     
 			incomeDate.setText(dateFormat.format(myDate));
@@ -476,8 +477,8 @@ public class IncomeEditActivity extends Activity implements OnClickListener, Loa
 				i_date_edit = i_date;
 			
 				String tempdate="";
-				SimpleDateFormat sdf = new SimpleDateFormat(Globals.INTERNAL_DATE_FORMAT);
-				SimpleDateFormat sdf1 = new SimpleDateFormat(dateFormat);
+				SimpleDateFormat sdf = new SimpleDateFormat(Globals.INTERNAL_DATE_FORMAT,Locale.ENGLISH);
+				SimpleDateFormat sdf1 = new SimpleDateFormat(dateFormat,Locale.ENGLISH);
 				try {
 					tempdate = sdf1.format((sdf.parse(i_date))); //show the date in user specified format
 				} catch (ParseException e) {

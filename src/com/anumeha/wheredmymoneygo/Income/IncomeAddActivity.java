@@ -8,9 +8,13 @@ import java.util.List;
 import java.util.Locale;
 
 import com.anumeha.wheredmymoneygo.Globals;
+import com.anumeha.wheredmymoneygo.MainActivity;
 import com.anumeha.wheredmymoneygo.category.CategoryCursorLoader;
 import com.anumeha.wheredmymoneygo.currency.CurrencyCursorLoader;
+import com.anumeha.wheredmymoneygo.dbhelpers.ExpenseDbHelper;
 import com.anumeha.wheredmymoneygo.dbhelpers.IncomeDbHelper;
+import com.anumeha.wheredmymoneygo.expense.Expense;
+import com.anumeha.wheredmymoneygo.expense.ExpenseAddActivity;
 import com.anumeha.wheredmymoneygo.income.Income;
 import com.anumeha.wheredmymoneygo.services.CurrencyConverter;
 import com.anumeha.wheredmymoneygo.services.WmmgAlarmManager;
@@ -195,8 +199,9 @@ public class IncomeAddActivity extends Activity implements OnClickListener, Load
 	 						startRecActivity(id);
 	 					}	
 	 					@Override
-	 					public void OnFaiure(int errCode) {
-	 						endActivity("added");
+	 					public void OnFaiure(float oldRate) {
+	 						//endActivity("added");
+	 						showConvRateAlert(oldRate);
 	 					}  },new Income(i_name,i_desc,i_date,i_currency,amount,i_source,freq,notify),false);     
             		
 				}
@@ -228,6 +233,47 @@ public class IncomeAddActivity extends Activity implements OnClickListener, Load
 		 }
 		
 	}
+
+	 protected void showConvRateAlert(float oldRate){
+		 final EditText rate = new EditText(IncomeAddActivity.this);
+			String msg = "We couldn't find a conversion rate! You can use this rate ("+i_currency+" to " + MainActivity.defaultCurrency+": "+oldRate+") from before or enter your own";
+			if(oldRate == -1) {
+				msg = "Please enter valid a conversion rate from "+i_currency+" to "+ MainActivity.defaultCurrency;
+				} else {
+					//rate.setText(errCode);
+				}
+
+				AlertDialog.Builder builder = new AlertDialog.Builder(IncomeAddActivity.this);
+		        builder.setTitle("Could not find conversion rate!")
+		        .setMessage(msg)
+		        .setView(rate)
+		        .setCancelable(true)
+		        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+				  String value = rate.getText().toString();
+				  try {
+					  float convRate = Float.parseFloat(value);
+					  IncomeDbHelper incDb= new IncomeDbHelper(IncomeAddActivity.this);
+					  long insert_id = incDb.addIncome(new Income(i_name,i_desc,i_date,i_currency,amount,i_source,convRate,freq,notify));
+					  startRecActivity(insert_id);
+				  } catch (Exception e) {  
+					  showConvRateAlert(-1);
+				  }
+				  }
+				})
+		        .setNegativeButton("Close",new DialogInterface.OnClickListener() {
+		            public void onClick(DialogInterface dialog, int id) {
+		                dialog.cancel();
+		                endActivity("cancelled");
+		            }
+		        });
+		       
+		        AlertDialog alert = builder.create();
+		        
+		        alert.show();	        
+		    
+	 }
+	 
 	 
 	 @Override
 		protected void onActivityResult(int requestCode, int resultCode, Intent data) {
