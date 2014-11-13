@@ -91,6 +91,6 @@
               android:layout_weight="1"
               android:layout_width="fill_parent"
               android:layout_height="match_parent"
-              class="com.anumeha.wheredmymoneygo.category.CategoryListFragment" />
+              class="com.smc.wheredmymoneygo.category.CategoryListFragment" />
      
 </LinearLayout>

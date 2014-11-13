@@ -41,6 +41,6 @@
               android:layout_weight="1"
               android:layout_width="fill_parent"
               android:layout_height="match_parent"
-              class="com.anumeha.wheredmymoneygo.source.SourceListFragment" />
+              class="com.smc.wheredmymoneygo.source.SourceListFragment" />
      
 </LinearLayout>
