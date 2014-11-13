@@ -14,10 +14,10 @@
 
        <TextView
            android:id="@+id/categoryNameLabel"
-           android:layout_width="wrap_content"
+           android:layout_width="0dp"
            android:layout_height="wrap_content"
            android:layout_weight="3.34"
-           android:text="Category Name :"
+           android:text="@string/category_name"
            android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <EditText
@@ -33,10 +33,10 @@
      <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
         android:gravity="center_horizontal"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:visibility="gone" >
 
        <TextView
         android:id="@+id/categoryBudgetLabel"
@@ -58,7 +58,8 @@
  <RadioGroup
         android:id="@+id/radioBudgetEdit"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content" 
+        android:visibility="gone">
        
         <RadioButton
             android:id="@+id/radioMonthlyEdit"
@@ -87,13 +88,13 @@
         android:id="@+id/catSaveEdit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Save" />
+        android:text="@string/options_save" />
         
         <Button
         android:id="@+id/catCancelEdit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Cancel"
+        android:text="@string/options_cancel"
         />
         
     </LinearLayout>
