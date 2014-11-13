@@ -49,6 +49,10 @@ public class SourceListFragment extends Fragment implements LoaderCallbacks<Curs
 	
 	}
 	
+	public void restartLoader()	{
+		getLoaderManager().restartLoader(4, null,this);
+	}
+	
 	@Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -105,7 +109,7 @@ public class SourceListFragment extends Fragment implements LoaderCallbacks<Curs
 		  //start edit activity
 		  Intent i = new Intent(activity,SourceEditActivity.class);
 		  i.putExtra("souName",souName); //pass id of item to be edited
-		  startActivity(i);
+		  startActivityForResult(i,SourceActivity.SOU_EDIT);
 	  }
 	  else
 	  {
@@ -145,5 +149,18 @@ public class SourceListFragment extends Fragment implements LoaderCallbacks<Curs
 
 	  return true;
 	} 
+	
+	 @Override
+		public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		  if (resultCode == Activity.RESULT_OK ) {
+			  
+			  switch(requestCode) {
+			  case 1: 
+						restartLoader(); 
+				    
+				  break;
+				 }
+		   }
+		}
 
 }

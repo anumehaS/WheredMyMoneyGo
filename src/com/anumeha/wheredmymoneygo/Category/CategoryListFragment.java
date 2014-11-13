@@ -33,6 +33,7 @@ public class CategoryListFragment extends Fragment implements LoaderCallbacks<Cu
 	String catName;
 	int catId;
 	
+	
 	@Override
 	  public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	      Bundle savedInstanceState) {
@@ -57,6 +58,9 @@ public class CategoryListFragment extends Fragment implements LoaderCallbacks<Cu
        
     }
 	
+	public void restartLoader()	{
+		getLoaderManager().restartLoader(1, null,this);
+	}
 	
 	@Override
 	public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
@@ -103,7 +107,7 @@ public class CategoryListFragment extends Fragment implements LoaderCallbacks<Cu
 		  //start edit activity
 		  Intent i = new Intent(activity, CategoryEditActivity.class);
 		  i.putExtra("catName",catName); //pass id of item to be edited
-		  startActivity(i);
+		  startActivityForResult(i,CategoryActivity.CAT_EDIT);
 	  }
 	  else
 	  {
@@ -143,5 +147,18 @@ public class CategoryListFragment extends Fragment implements LoaderCallbacks<Cu
 
 	  return true;
 	} 
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+	  if (resultCode == Activity.RESULT_OK ) {
+		  
+		  switch(requestCode) {
+		  case 1: 
+			  restartLoader(); 
+			  break;
+			 }
+	   }
+	}
+
 
 }

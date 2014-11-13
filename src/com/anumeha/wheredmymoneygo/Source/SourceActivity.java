@@ -23,6 +23,7 @@ public class SourceActivity extends FragmentActivity implements OnClickListener 
 	private Button add;
 	private String souName;
 	private SourceDbHelper dbh;
+	static int SOU_EDIT = 1;
 	
 	 @Override
 	    public void onCreate(Bundle savedInstanceState) {
@@ -150,5 +151,5 @@ public class SourceActivity extends FragmentActivity implements OnClickListener 
 		    }
 		}
 		
-
+		
 }

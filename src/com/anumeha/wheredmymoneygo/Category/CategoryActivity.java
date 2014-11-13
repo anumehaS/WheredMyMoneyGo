@@ -2,6 +2,7 @@ package com.anumeha.wheredmymoneygo.category;
 
 import com.anumeha.wheredmymoneygo.MainActivity;
 import com.anumeha.wheredmymoneygo.dbhelpers.CategoryDbHelper;
+import com.anumeha.wheredmymoneygo.expense.ExpenseListFragment;
 import com.example.wheredmymoneygo.*;
 import android.app.ActionBar;
 import android.app.AlertDialog;
@@ -23,6 +24,8 @@ public class CategoryActivity extends FragmentActivity implements OnClickListene
 	private String catName, catFreq;
 	float catBudget;
 	private CategoryDbHelper dbh;
+	static int CAT_EDIT = 1;
+
 	
 	 @Override
 	    public void onCreate(Bundle savedInstanceState) {
@@ -183,6 +186,5 @@ public class CategoryActivity extends FragmentActivity implements OnClickListene
 		    }
 		}
 		
-
-
+		
 }
