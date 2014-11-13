@@ -5,6 +5,8 @@ import com.smc.wheredmymoneygo.MainActivity;
 import com.smc.wheredmymoneygo.R;
 import com.smc.wheredmymoneygo.dbhelpers.CategoryDbHelper;
 import com.smc.wheredmymoneygo.expense.ExpenseListFragment;
+import com.smc.wheredmymoneygo.services.BackupOps;
+import com.smc.wheredmymoneygo.services.BackupOps.BackupCreatedListener;
 
 import android.app.ActionBar;
 import android.app.AlertDialog;
@@ -19,6 +21,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.Toast;
 
 public class CategoryActivity extends FragmentActivity implements OnClickListener {
 	
@@ -161,24 +164,32 @@ public class CategoryActivity extends FragmentActivity implements OnClickListene
 		@Override
 		public boolean onCreateOptionsMenu(Menu menu) {
 			// Inflate the menu; this adds items to the action bar if it is present.
-			getMenuInflater().inflate(R.menu.main, menu);
+			getMenuInflater().inflate(R.menu.menu2, menu);
 			return true;
 		}
 		
 		@Override
 		public boolean onOptionsItemSelected(MenuItem item) {
+			Intent intent;
 		    // Handle item selection
 		    switch (item.getItemId()) {
 		        case R.id.action_categories:
 		        	//define a new Intent for the add expense form Activity
-					Intent intent = new Intent(this,CategoryActivity.class);
+					 intent = new Intent(this,com.smc.wheredmymoneygo.category.CategoryActivity.class);
 			 
 					//start the add expense form Activity
 					this.startActivity(intent);
 		            return true;
 		            
+		        case R.id.action_sources:
+		        	
+					 intent = new Intent(this,com.smc.wheredmymoneygo.source.SourceActivity.class);
+
+					this.startActivity(intent);
+		            return true;
+		            
 		        case android.R.id.home:
-		        	  Intent intent1 = new Intent(this, MainActivity.class);
+		        	 Intent intent1 = new Intent(this, MainActivity.class);
 		        	  intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		        	  startActivity(intent1);
 		        	  return true;
