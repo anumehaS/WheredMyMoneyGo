@@ -10,6 +10,7 @@ import java.util.List;
 
 
 import com.anumeha.wheredmymoneygo.Globals;
+import com.anumeha.wheredmymoneygo.MainActivity;
 import com.anumeha.wheredmymoneygo.category.CategoryCursorLoader;
 import com.anumeha.wheredmymoneygo.currency.CurrencyCursorLoader;
 import com.anumeha.wheredmymoneygo.dbhelpers.ExpenseDbHelper;
@@ -204,9 +205,9 @@ public class ExpenseAddActivity extends Activity implements OnClickListener, Loa
 	 		
 	 					}	
 	 					@Override
-	 					public void OnFaiure(int errCode) {
+	 					public void OnFaiure(float rate) {
 	 						//add code for asking user to input rate manually
-	 						showConvRateAlert(errCode);	 						
+	 						showConvRateAlert(rate);	 						
 	 						
 	 					}  },new Expense(e_name,e_desc,e_date,e_currency,amount,e_category1,freq,notify),false);          		
 				}
@@ -240,11 +241,11 @@ public class ExpenseAddActivity extends Activity implements OnClickListener, Loa
 		
 	}
 	
-	 protected void showConvRateAlert(int errCode){
+	 protected void showConvRateAlert(float oldRate){
 		 final EditText rate = new EditText(ExpenseAddActivity.this);
-			String msg = "We couldn't find a conversion rate! You can use this rate from before or enter your own";
-			if(errCode == -1) {
-				msg = "Please enter valid a conversion rate from your currency choice to USD";
+			String msg = "We couldn't find a conversion rate! You can use this rate ("+e_currency+" to " + MainActivity.defaultCurrency+": "+oldRate+") from before or enter your own";
+			if(oldRate == -1) {
+				msg = "Please enter valid a conversion rate from "+e_currency+" to "+ MainActivity.defaultCurrency;
 				} else {
 					//rate.setText(errCode);
 				}
@@ -260,8 +261,8 @@ public class ExpenseAddActivity extends Activity implements OnClickListener, Loa
 				  try {
 					  float convRate = Float.parseFloat(value);
 					  ExpenseDbHelper expDb= new ExpenseDbHelper(ExpenseAddActivity.this);
-					  long temp = expDb.addExpense(new Expense(e_name,e_desc,e_date,e_currency,amount,e_category1,convRate,freq,notify));
-					  startRecActivity(temp);
+					  long insert_id = expDb.addExpense(new Expense(e_name,e_desc,e_date,e_currency,amount,e_category1,convRate,freq,notify));
+					  startRecActivity(insert_id);
 				  } catch (Exception e) {  
 					  showConvRateAlert(-1);
 				  }

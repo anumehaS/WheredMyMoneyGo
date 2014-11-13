@@ -47,6 +47,7 @@ public class DefaultsLoader {
 				//not the first time, just return value of list/pie for income and expense
 				data.add(prefs.getString(Globals.EXP_DEF_VIEWAS, "list"));
 				data.add(prefs.getString(Globals.INC_DEF_VIEWAS, "list"));
+				data.add(prefs.getString(Globals.DEF_CURRENCY, "USD"));
 				firstLoad = false;
 			} else {
 				//add defaults

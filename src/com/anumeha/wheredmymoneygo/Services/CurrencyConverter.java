@@ -16,6 +16,7 @@ import java.util.Date;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.anumeha.wheredmymoneygo.Globals;
 import com.anumeha.wheredmymoneygo.dbhelpers.CurrencyDbHelper;
 import com.anumeha.wheredmymoneygo.dbhelpers.ExpenseDbHelper;
 import com.anumeha.wheredmymoneygo.dbhelpers.IncomeDbHelper;
@@ -56,12 +57,12 @@ public class CurrencyConverter extends Fragment{
 	
 	public static interface ResultListener<T> {
 		void OnSuccess(T data);
-		void OnFaiure(int errCode);
+		void OnFaiure(float rate);
 	}
 	
 	public void getConvertedRate(ResultListener<Long> lstnr, Expense e, boolean update) {
 		
-		String to = prefs.getString("def_currency","USD" );
+		String to = prefs.getString(Globals.DEF_CURRENCY,"USD" );
 		ConvertCurrencyTask task = new ConvertCurrencyTask(lstnr,context, e, update);
 		task.execute(e.getCurrency(),to); //to is the default currency
 		
@@ -69,7 +70,7 @@ public class CurrencyConverter extends Fragment{
 	
 	public void getConvertedRate(ResultListener<Long> lstnr, Income i, boolean update) {
 		
-		String to = prefs.getString("def_currency","USD" );
+		String to = prefs.getString(Globals.DEF_CURRENCY,"USD" );
 		ConvertCurrencyTask task = new ConvertCurrencyTask(lstnr,context, i,update);
 		task.execute(i.getCurrency(),to); //to is the default currency
 		
@@ -83,7 +84,8 @@ public class CurrencyConverter extends Fragment{
 		IncomeDbHelper incDb;
 		Expense e;
 		Income i;
-		Boolean isExpense = true;
+		Boolean isExpense = true, isRecent = true;
+		
 		
 		boolean update = false;
 		ConnectivityManager cm;
@@ -155,10 +157,10 @@ public class CurrencyConverter extends Fragment{
 		@Override
 		protected void onPostExecute(Float rate) {
 			
-			if(rate.isNaN() || rate == -1) {
+			if(rate.isNaN() || rate == -1 || !isRecent) {
 				if(pd.isShowing())
 				pd.dismiss();
-				lstnr.OnFaiure(0);
+				lstnr.OnFaiure(rate);
 			} else {
 				pd.dismiss();
 				lstnr.OnSuccess(id); 
@@ -180,11 +182,17 @@ public class CurrencyConverter extends Fragment{
 			if(isTSValid(timeStamp)) {
 				rate = Float.parseFloat(c.getString(1));
 				return rate;
-			}
+			} 
 			
+
 			if(timeStamp.equals("") && !networkPresent()) {		
 				return rate;
 			}
+			else if(!isTSValid(timeStamp) && !networkPresent()) {
+				rate = Float.parseFloat(c.getString(1));
+				isRecent = false;
+				return rate;
+			} 
 			else if(networkPresent()) {
 				
 				StringBuffer sb = new StringBuffer("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.xchange%20where%20pair%20in%20(%22");
@@ -239,7 +247,7 @@ public class CurrencyConverter extends Fragment{
 			while((s = br.readLine())!= null){
 				sb.append(s);
 			}
-			System.out.println(sb.toString());
+			
 			obj = new JSONObject(sb.toString());
 			
 			return obj;

@@ -10,9 +10,11 @@ import android.widget.TextView;
 
 public class PieLegendCursorAdapter extends ResourceCursorAdapter{
 
+	String currency;
 	
-	public PieLegendCursorAdapter(Context context, int layout, Cursor c) {
-		super(context, layout, c);		
+	public PieLegendCursorAdapter(Context context, int layout, Cursor c, String currency) {
+		super(context, layout, c);	
+		this.currency = currency;
 	}
 
 	@Override
@@ -22,10 +24,10 @@ public class PieLegendCursorAdapter extends ResourceCursorAdapter{
 		colorPatch.setBackgroundColor(c.getInt(3));
 		
 		TextView catName = (TextView) view.findViewById(R.id.legendCatName);
-		catName.setText(" - "+c.getString(1));
+		catName.setText(" "+c.getString(1));
 		
 		TextView catAmount = (TextView) view.findViewById(R.id.legendCatAmount);
-		catAmount.setText(" : "+c.getString(2));
+		catAmount.setText(" : "+currency+" "+c.getString(2));
 	}
 
 }
