@@ -92,7 +92,7 @@ public class PieFragment extends Fragment implements LoaderCallbacks<Cursor>{
 	public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
 		
 		if(cursor.getCount()!= 0) {
-			noExp.setVisibility(0);
+			noExp.setVisibility(View.GONE);
 			pie.setCursor(cursor);
 			pie.setPieView(view);
 			pie.invalidate();
@@ -100,7 +100,15 @@ public class PieFragment extends Fragment implements LoaderCallbacks<Cursor>{
 			legend.setAdapter(legendAdapter);
 		}
 		else {
-			noExp.setText("No expenses present!");
+			pie.setCursor(null);
+			pie.setPieView(view);
+			pie.invalidate();
+			
+			noExp.setVisibility(View.VISIBLE);
+			if(isExpense)
+				noExp.setText("No expenses found!");
+			else
+				noExp.setText("No transactions found!");
 		}
 	}
 

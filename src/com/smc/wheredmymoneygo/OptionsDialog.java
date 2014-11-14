@@ -24,6 +24,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -149,6 +150,13 @@ public class OptionsDialog extends Activity implements LoaderCallbacks<Cursor>{
 					//OptionsDialog.this.getLoaderManager().initLoader(2,null, OptionsDialog.this ); // 2 for sources
 				}
 				
+				if(defStartDateVal !=null) {
+					startDateBtn.setText(getDateInUserFormat(defStartDateVal));
+				}
+				
+				if(defEndDateVal !=null) {
+					endDateBtn.setText(getDateInUserFormat(defEndDateVal));
+				}
 				
 				
 				viewBy = (RadioGroup) findViewById(R.id.radioViewin);
@@ -211,14 +219,13 @@ public class OptionsDialog extends Activity implements LoaderCallbacks<Cursor>{
 	
 	public void saveOptions(View v){
 		
-		//save filters , sort order, category and if in date range then date range
-		
-		String item = (String)sortOrder.getSelectedItem();
-		String sortBy = item.split(" ")[0].trim();
-		String order = item.split(" ")[2].trim();
-		
 		List<String> keys = new ArrayList<String>();
 		List<String> values = new ArrayList<String>();
+		//save filters , sort order, category and if in date range then date range
+		if(!isPie) {
+		String item = (String)sortOrder.getSelectedItem();
+		String sortBy = item.split(" ")[0].trim();
+		String order = item.split(" ")[2].trim();		
 		
 		 if(currentTab.equals(MainActivity.EXPENSE_TAG)) {
 			  if(sortBy.equals("Date")) 			  
@@ -247,14 +254,7 @@ public class OptionsDialog extends Activity implements LoaderCallbacks<Cursor>{
 	   			  sortOrderVal = "DESC";
 	   	  else 
 	   			  sortOrderVal = "ASC";
-	   	  
-	   	  //view by
-	   	  if(dateRange) {
-	   		  viewByVal = "inRange";
-	   	  } else {
-	   		  viewByVal = "all";
-	   	  } 
-	   	  
+	   	 
 	   	  //currency conversion to default currency
 	   	  if(convert.isChecked()) {
 	   		  convVal = "on";
@@ -268,43 +268,72 @@ public class OptionsDialog extends Activity implements LoaderCallbacks<Cursor>{
 	   	  } else {
 	   		  onlyRecVal = "off";
 	   	  }
-	   	  keys.add(filterKey);
+	   	  
+		}
+		
+		 //view by
+	   	  if(dateRange) {
+	   		  viewByVal = "inRange";
+	   	  } else {
+	   		  viewByVal = "all";
+	   	  } 
+		
+		if(!isPie){
+		  keys.add(filterKey);
 	   	  values.add(filterVal);
 	   	  keys.add(sortOrderKey);
 	   	  values.add(sortOrderVal);
 	   	  keys.add(orderByKey);
 	   	  values.add(orderByVal);
+		}
 	   	  keys.add(viewByKey);
 	   	  values.add(viewByVal);
+		
+	   	  
 	   	  if(dateRange) {
+	   		if(startDateVal == null || startDateVal.equals("")) {
+		   		  startDateVal = defStartDateVal;
+		   	  }
+	   		if(endDateVal == null || endDateVal.equals("")) {
+		   		  endDateVal = defEndDateVal;
+		   	  }
 	   		  keys.add(startDateKey);
 	   		  values.add(startDateVal);
 	   		  keys.add(endDateKey);
 	   		  values.add(endDateVal);
 	   	  }
+	   	  
+	   	  if(!isPie) {
 	   	  keys.add(convKey);
 	   	  values.add(convVal);
 	   	  keys.add(onlyRecKey);
 	   	  values.add(onlyRecVal);
+	   	  }
 	   	  
+	   	  if(keys.size() > 0) {
 	   	  
-	   	  prefAccess.addValues(new PrefAddedListener<List<String>>(){
-
-			@Override
-			public void OnSuccess() {
-				 Intent data = new Intent();
-				 data.putExtra("refresh","yes");
-				 // Activity finished ok, return the data
-				 setResult(RESULT_OK, data);	 		 
-				 OptionsDialog.this.finish();			
-			}
-
-			@Override
-			public void OnFaiure(int errCode) {
-				
-			}
-	   		  
-	   	  }, keys, values, this);
+		   	  prefAccess.addValues(new PrefAddedListener<List<String>>(){
+	
+				@Override
+				public void OnSuccess() {
+					 Intent data = new Intent();
+					 data.putExtra("refresh","yes");
+					 setResult(RESULT_OK, data);	 		 
+					 OptionsDialog.this.finish();			
+				}
+	
+				@Override
+				public void OnFaiure(int errCode) {
+					
+				}
+		   		  
+		   	  }, keys, values, this); 
+	   	  } else {
+	   		Intent data = new Intent();
+			 data.putExtra("refresh","yes");
+			 setResult(RESULT_OK, data);	 		 
+			 OptionsDialog.this.finish();	
+	   	  }
 		
 	}
 
@@ -422,4 +451,21 @@ public class OptionsDialog extends Activity implements LoaderCallbacks<Cursor>{
 		dateFragment = new SelectDateFragment();
 		dateFragment.show(getFragmentManager(), "DatePicker");
 	}
+	
+		public String getDateInUserFormat(String date)
+		{
+			String dateInUserFormat = null;
+			try {
+				Date d = new SimpleDateFormat(Globals.INTERNAL_DATE_FORMAT).parse(date);
+				dateInUserFormat = new SimpleDateFormat(Globals.USER_DATE_FORMAT).format(d);
+				
+			} catch (ParseException e) {
+				Log.e("Options Dilaog", "Failed to parse date");
+				e.printStackTrace();
+			}
+			
+			return dateInUserFormat;
+			
+		}
+
 }

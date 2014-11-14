@@ -50,8 +50,8 @@ public class ColorDbHelper {
 	        }
     	 
   	    ContentValues values = new ContentValues();
-  	    values.put(KEY_Co_COLOR, color_code); // Category Name
-  	    values.put(KEY_Co_TAKEN, taken); // Category  budget
+  	    values.put(KEY_Co_COLOR, color_code); 
+  	    values.put(KEY_Co_TAKEN, taken); 
   	   
   	    // Updating Row
   	    db.update(TABLE_COLORS, values, KEY_Co_COLOR+"=\""+ color_code+"\"", null);

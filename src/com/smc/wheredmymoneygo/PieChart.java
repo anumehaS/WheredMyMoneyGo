@@ -16,7 +16,7 @@ import android.view.WindowManager;
 
 public class PieChart extends View {
 	
-	static Cursor cursor = null;
+	Cursor cursor = null;
 	RectF pieBounds;
 	Paint paint;
 	View pieView;
@@ -156,8 +156,8 @@ public class PieChart extends View {
 
 
 	public void setCursor(Cursor c) {
-		PieChart.cursor = null;
-		PieChart.cursor = c;
+		this.cursor = null;
+		this.cursor = c;
 	}
 
 

@@ -2,6 +2,7 @@ package com.smc.wheredmymoneygo;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ResourceCursorAdapter;
@@ -18,6 +19,11 @@ public class PieLegendCursorAdapter extends ResourceCursorAdapter{
 
 	@Override
 	public void bindView(View view, Context ctx, Cursor c) {
+		
+		int pos = c.getPosition();
+		
+		/*if(pos % 2 == 0)
+			view.setBackgroundColor(Color.rgb(220,220,220));*/
 		
 		ImageView colorPatch = (ImageView)view.findViewById(R.id.catColor);
 		colorPatch.setBackgroundColor(c.getInt(3));
