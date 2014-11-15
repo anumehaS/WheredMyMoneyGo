@@ -245,26 +245,29 @@ public class DBHandler extends SQLiteOpenHelper{
 	    	
 	    	cur = new Currency ("USD",1,"","","");
 	    	addCurrency(cur,db);
-	    	cur = new Currency ("EUR",0,"","","");
+	    	cur = new Currency ("INR",0,"","","");
 	    	addCurrency(cur,db);
-	    	cur = new Currency ("JPY",0,"","","");
+	    	cur = new Currency ("AED",0,"","","");
 	    	addCurrency(cur,db);
 	    	cur = new Currency ("AUD",0,"","","");
 	    	addCurrency(cur,db);
 	    	cur = new Currency ("CAD",0,"","","");
 	    	addCurrency(cur,db);
-	    	cur = new Currency ("SGD",0,"","","");
-	    	addCurrency(cur,db);
 	    	cur = new Currency ("CHF",0,"","","");
-	    	addCurrency(cur,db);
-	    	cur = new Currency ("INR",0,"","","");
 	    	addCurrency(cur,db);
 	    	cur = new Currency ("CNY",0,"","","");
 	    	addCurrency(cur,db);
+	    	cur = new Currency ("EUR",0,"","","");
+	    	addCurrency(cur,db);
 	    	cur = new Currency ("HKD",0,"","","");
 	    	addCurrency(cur,db);
-	    	cur = new Currency ("AED",0,"","","");
+	    	cur = new Currency ("JPY",0,"","","");
 	    	addCurrency(cur,db);
+	    	cur = new Currency ("SGD",0,"","","");
+	    	addCurrency(cur,db);
+	    	
+	    	
+	    	
 	    	
 	    	System.out.println("populating currency");
 	    	
