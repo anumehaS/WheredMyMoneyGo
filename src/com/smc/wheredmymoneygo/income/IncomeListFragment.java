@@ -83,12 +83,12 @@ public class IncomeListFragment extends Fragment implements LoaderCallbacks<Curs
 		if(cursor.getCount()==0)
 		{
 			t.setText("No income added yet!");
-			
+			listview.setVisibility(View.GONE); //invisible
 		}
 		else
 		{
 			t.setText("");
-		
+			listview.setVisibility(View.VISIBLE); //invisible
 		    // incAdapter is a CursorAdapter 
 		    incAdapter = new IncomeCursorAdapter(activity, R.layout.income_row, cursor, 0);
 		    listview.setAdapter(incAdapter);

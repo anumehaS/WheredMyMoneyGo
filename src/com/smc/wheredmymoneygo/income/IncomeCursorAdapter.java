@@ -71,15 +71,15 @@ String defaultCurrency;
 		final float convRate = Float.parseFloat(cursor.getString(7));		   
 			if(prefs.getString(Globals.INC_CONV, "off").equals("off") || currency.equals(defaultCurrency)) { //conversion not required
 				
-				i_Amount.setText(currency + " "+cursor.getString(5));
+				i_Amount.setText(currency + " "+String.format("%.2f",Double.parseDouble(cursor.getString(5))));
 			} else { //conversion to default
 				
 				final float amount = Float.parseFloat(cursor.getString(5));
 				 if(convRate == -1) {
-					 i_Amount.setText(currency + " " + amount);
+					 i_Amount.setText(currency + " " + String.format("%.2f",amount));
 					 i_Amount.setTextColor(Color.RED);			    	
 				  } else {
-					  i_Amount.setText(defaultCurrency + " " + amount*convRate);
+					  i_Amount.setText(defaultCurrency + " " + String.format("%.2f",amount*convRate));
 				  }
 			}
 		

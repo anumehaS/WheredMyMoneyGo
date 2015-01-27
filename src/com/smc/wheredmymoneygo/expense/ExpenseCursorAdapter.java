@@ -75,15 +75,15 @@ public class ExpenseCursorAdapter extends ResourceCursorAdapter{
 	   
 		if(prefs.getString(Globals.EXP_CONV, "off").equals("off") || currency.equals(defaultCurrency)) { //conversion not required
 			
-			e_Amount.setText(currency + " "+cursor.getString(5));
+			e_Amount.setText(currency + " "+String.format("%.2f",Double.parseDouble(cursor.getString(5))));
 		} else { //conversion to default
 			
 			final float amount = Float.parseFloat(cursor.getString(5));
 			 if(convRate == 0) {
-				 e_Amount.setText(currency + " " + amount);
+				 e_Amount.setText(currency + " " + String.format("%.2f",amount));
 				 e_Amount.setTextColor(Color.RED);			    	
 			  } else {
-				  e_Amount.setText(defaultCurrency + " " + amount*convRate);
+				  e_Amount.setText(defaultCurrency + " " + String.format("%.2f",amount*convRate));
 			  }
 		}
 	
